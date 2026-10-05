@@ -1,4 +1,4 @@
-#include "../Pch.h"
+ï»¿#include "../Pch.h"
 #include "ShaderRenderer.h"
 #include "../Application.h" 
 
@@ -22,7 +22,7 @@ void ShaderRenderer::Initialize(void)
 
 void ShaderRenderer::BeginBatch(void)
 {
-	// ƒLƒƒƒbƒVƒ…‚ğ‰Šú‰»‚·‚é
+	// ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’åˆæœŸåŒ–ã™ã‚‹
 	currentVertexShaderHandleId_ = -1;
 	currentPixelShaderHandleId_ = -1;
 	currentTexture0HandleId_ = -1;
@@ -41,7 +41,7 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 		UpdateAndSetConstantBuffer(_renderCommand.pixelParameterData.data(), _renderCommand.pixelParameterSize, DX_SHADERTYPE_PIXEL, CONSTANT_BUFFER_SLOT_BEGIN_PIXEL_SHADER);
 	}
 
-	// ƒeƒNƒXƒ`ƒƒ‚ÌƒoƒCƒ“ƒh
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒã‚¤ãƒ³ãƒ‰
 	if (_renderCommand.textureHandleId != -1)
 	{
 		if (currentTexture0HandleId_ != _renderCommand.textureHandleId)
@@ -76,7 +76,7 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 		}
 	}
 
-	// ’¸“_ƒVƒF[ƒ_‚Ìİ’è
+	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®š
 	if (_renderCommand.vertexShaderHandleId != -1)
 	{
 		if (currentVertexShaderHandleId_ != _renderCommand.vertexShaderHandleId)
@@ -94,10 +94,10 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 		}
 	}
 
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚Ìİ’è
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®š
 	if (_renderCommand.pixelShaderHandleId != -1)
 	{
-		// ‘O‰ñ‚Æˆá‚¤ƒVƒF[ƒ_‚ªw’è‚³‚ê‚½‚¾‚¯ƒZƒbƒg‚·‚é
+		// å‰å›ã¨é•ã†ã‚·ã‚§ãƒ¼ãƒ€ãŒæŒ‡å®šã•ã‚ŒãŸæ™‚ã ã‘ã‚»ãƒƒãƒˆã™ã‚‹
 		if (currentPixelShaderHandleId_ != _renderCommand.pixelShaderHandleId)
 		{
 			SetUsePixelShader(_renderCommand.pixelShaderHandleId);
@@ -152,7 +152,7 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 
 void ShaderRenderer::EndBatch(void)
 {
-	// ‘S‚Ä‚Ì•`‰æ‚ªI‚í‚Á‚½Œã‚É‚Ü‚Æ‚ß‚Äó‘Ô‚ğƒAƒ“ƒoƒCƒ“ƒh‚·‚é
+	// å…¨ã¦ã®æç”»ãŒçµ‚ã‚ã£ãŸå¾Œã«ã¾ã¨ã‚ã¦çŠ¶æ…‹ã‚’ã‚¢ãƒ³ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹
 	SetUseTextureToShader(0, -1);
 	SetUseTextureToShader(1, -1);
 	SetUsePixelShader(-1);
@@ -162,7 +162,7 @@ void ShaderRenderer::EndBatch(void)
 	SetShaderConstantBuffer(-1, DX_SHADERTYPE_PIXEL, CONSTANT_BUFFER_SLOT_BEGIN_PIXEL_SHADER);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	// ƒLƒƒƒbƒVƒ…‚ğƒŠƒZƒbƒg‚·‚é
+	// ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	currentVertexShaderHandleId_ = -1;
 	currentPixelShaderHandleId_ = -1;
 	currentTexture0HandleId_ = -1;
@@ -228,22 +228,22 @@ void ShaderRenderer::ApplyVertices(std::array<VERTEX2DSHADER, 4>& _vertices, flo
 		vertex.sv = 1.0f;
 	}
 
-	// ¶ã
+	// å·¦ä¸Š
 	_vertices[0].pos = VGet(0.0f, 0.0f, 0.0f);
 	_vertices[0].u = 0.0f;
 	_vertices[0].v = 0.0f;
 
-	// ‰Eã
+	// å³ä¸Š
 	_vertices[1].pos = VGet(_width, 0.0f, 0.0f);
 	_vertices[1].u = 1.0f;
 	_vertices[1].v = 0.0f;
 
-	// ¶‰º
+	// å·¦ä¸‹
 	_vertices[2].pos = VGet(0.0f, _height, 0.0f);
 	_vertices[2].u = 0.0f;
 	_vertices[2].v = 1.0f;
 
-	// ‰E‰º
+	// å³ä¸‹
 	_vertices[3].pos = VGet(_width, _height, 0.0f);
 	_vertices[3].u = 1.0f;
 	_vertices[3].v = 1.0f;

@@ -1,12 +1,14 @@
 #pragma once
 
 #include <DxLib.h>
+
+#include "ISystem.h"
 #include "../../Ecs/EcsRegistry.h"
 #include "../../Ecs/Entity.h"
 #include "../Component/TransformComponent.h"
 
 /// @brief TransformComponentの計算や操作を処理するシステムクラス
-class TransformSystem
+class TransformSystem : public ISystem
 {
 public:
 
@@ -14,9 +16,13 @@ public:
 	TransformSystem(void) = default;
 
 	/// @brief デストラクタ
-	~TransformSystem(void) = default;
+	~TransformSystem(void) override = default;
 
-	/// @brief エンティティのTransform行列を更新する
+	/// @brief Transformを持つすべてのエンティティの行列を一括更新する
+	/// @param registry ECSデータベース
+	void Update(EcsRegistry& registry) override;
+
+	/// @brief 単一エンティティのTransform行列を更新する
 	/// @param registry ECSデータベース
 	/// @param entity 対象のエンティティID
 	void UpdateTransform(EcsRegistry& registry, Entity entity);

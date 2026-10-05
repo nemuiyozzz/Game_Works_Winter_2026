@@ -1,4 +1,4 @@
-#include "../../Pch.h"
+ï»¿#include "../../Pch.h"
 #include "KeyConfInputManager.h"
 #include "../../Utility/UtilityMath.h"
 #include "../../Application.h"
@@ -187,7 +187,7 @@ void KeyConfInputManager::Update(void)
 {
 	previousInputState_ = currentInputState_;
 
-	// ƒL[ƒ{[ƒh‚Ì¶ƒf[ƒ^
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®ç”Ÿãƒ‡ãƒ¼ã‚¿
 	std::array<char, 256> keyState{};
 	GetHitKeyStateAll(keyState.data());
 
@@ -198,7 +198,7 @@ void KeyConfInputManager::Update(void)
 
 	mouseWheelVol_ = GetMouseWheelRotVol();
 
-	// XInput‚Ìó‘Ô
+	// XInputã®çŠ¶æ…‹
 	XINPUT_STATE xInput{};
 	if (GetJoypadXInputState(usePadNo_, &xInput) == 0)
 	{
@@ -324,12 +324,12 @@ Vector2F KeyConfInputManager::GetMouseVelocityAndFixCenter(void)
 	int centerX = Application::SCREEN_HALF_X;
 	int centerY = Application::SCREEN_HALF_Y;
 
-	int currentX = 0; // Œ»İ‚Ìƒ}ƒEƒXX
-	int currentY = 0; // Œ»İ‚Ìƒ}ƒEƒXY
+	int currentX = 0; // ç¾åœ¨ã®ãƒã‚¦ã‚¹X
+	int currentY = 0; // ç¾åœ¨ã®ãƒã‚¦ã‚¹Y
 	GetMousePoint(&currentX, &currentY);
 
-	float diffX = static_cast<float>(currentX - centerX); // X‚ÌˆÚ“®—Ê
-	float diffY = static_cast<float>(currentY - centerY); // Y‚ÌˆÚ“®—Ê
+	float diffX = static_cast<float>(currentX - centerX); // Xã®ç§»å‹•é‡
+	float diffY = static_cast<float>(currentY - centerY); // Yã®ç§»å‹•é‡
 
 	if (abs(diffX) <= 1.0f)
 	{
@@ -418,8 +418,8 @@ bool KeyConfInputManager::CheckKeyboardInput(const InputInfo& _inputInfo,
 bool KeyConfInputManager::CheckXInputAnalog(const InputInfo& _inputInfo,
 	const XINPUT_STATE& _xInputState) const
 {
-	const int TRIGGER_THRESHOLD = 128; // ƒgƒŠƒK[‚Ì‚µ‚«‚¢’l
-	const int STICK_THRESHOLD = 16000; // ƒXƒeƒBƒbƒN‚Ì‚µ‚«‚¢’l
+	const int TRIGGER_THRESHOLD = 128; // ãƒˆãƒªã‚¬ãƒ¼ã®ã—ãã„å€¤
+	const int STICK_THRESHOLD = 16000; // ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ã—ãã„å€¤
 
 	switch (static_cast<XINPUT_ANALOG_ID>(_inputInfo.id))
 	{
@@ -571,8 +571,8 @@ VECTOR KeyConfInputManager::GetLeftStickDirection(void) const
 
 Vector2F KeyConfInputManager::GetRIghtStick(void) const
 {
-	float x = 0.0f; // ˆ—Œã‚ÌX
-	float y = 0.0f; // ˆ—Œã‚ÌY
+	float x = 0.0f; // å‡¦ç†å¾Œã®X
+	float y = 0.0f; // å‡¦ç†å¾Œã®Y
 
 	ApplyRightStickSensitivity(stickInfo_.rightStickX, stickInfo_.rightStickY, x, y);
 
@@ -599,7 +599,7 @@ Vector2F KeyConfInputManager::GetRightStickRaw(void) const
 	float normalX = static_cast<float>(stickInfo_.rightStickX) / XINPUT_VAL_MAX;
 	float normalY = static_cast<float>(stickInfo_.rightStickY) / XINPUT_VAL_MAX;
 
-	// ƒXƒeƒBƒbƒN‚ÌŒX‚«‚Ì’·‚³
+	// ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾ãã®é•·ã•
 	float length = sqrtf(normalX * normalX + normalY * normalY);
 
 	if (length < rStickSensitivity_.deadZone)
@@ -630,7 +630,7 @@ void KeyConfInputManager::SaveInputTable(void)
 		return;
 	}
 
-	// ƒwƒbƒ_[î•ñ
+	// ãƒ˜ãƒƒãƒ€ãƒ¼æƒ…å ±
 	KeyConfigHeader header{};
 	memcpy(header.signature, "kcnf", 4);
 	header.version = 1.0f;
@@ -639,12 +639,12 @@ void KeyConfInputManager::SaveInputTable(void)
 
 	for (const auto& pair : inputTable_)
 	{
-		// –¼‘O‚Ì•¶š”
+		// åå‰ã®æ–‡å­—æ•°
 		uint8_t nameSize = static_cast<uint8_t>(pair.first.size());
 		fwrite(&nameSize, sizeof(nameSize), 1, file);
 		fwrite(pair.first.data(), sizeof(wchar_t), nameSize, file);
 
-		// Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒL[‚Ì”
+		// å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ã‚­ãƒ¼ã®æ•°
 		uint8_t dataSize = static_cast<uint8_t>(pair.second.size());
 		fwrite(&dataSize, sizeof(dataSize), 1, file);
 		fwrite(pair.second.data(), sizeof(InputInfo), dataSize, file);
@@ -655,7 +655,7 @@ void KeyConfInputManager::SaveInputTable(void)
 
 void KeyConfInputManager::LoadInputTable(void)
 {
-	// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	auto handle = FileRead_open(Application::PATH_KEY_CONFIG.c_str());
 
 	if (handle == 0)
@@ -663,7 +663,7 @@ void KeyConfInputManager::LoadInputTable(void)
 		return;
 	}
 
-	// ƒwƒbƒ_[î•ñ
+	// ãƒ˜ãƒƒãƒ€ãƒ¼æƒ…å ±
 	KeyConfigHeader header{};
 	FileRead_read(&header, sizeof(header), handle);
 
@@ -675,16 +675,16 @@ void KeyConfInputManager::LoadInputTable(void)
 
 	for (uint32_t i = 0; i < header.dataNum; ++i)
 	{
-		// –¼‘O‚Ì•¶š”
+		// åå‰ã®æ–‡å­—æ•°
 		uint8_t nameSize = 0;
 
 		FileRead_read(&nameSize, sizeof(nameSize), handle);
 
-		// ƒCƒxƒ“ƒg–¼
+		// ã‚¤ãƒ™ãƒ³ãƒˆå
 		std::wstring eventName(nameSize, L'\0');
 		FileRead_read(eventName.data(), nameSize * sizeof(wchar_t), handle);
 
-		// Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒL[‚Ì”
+		// å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ã‚­ãƒ¼ã®æ•°
 		uint8_t dataSize = 0;
 		FileRead_read(&dataSize, sizeof(dataSize), handle);
 
@@ -705,7 +705,7 @@ void KeyConfInputManager::SaveSensitivitySettings(void) const
 		return;
 	}
 
-	// Š´“xİ’è—p‚Ìƒwƒbƒ_[
+	// æ„Ÿåº¦è¨­å®šç”¨ã®ãƒ˜ãƒƒãƒ€ãƒ¼
 	SensitivityHeader header{};
 
 	memcpy(header.signature, "sens", 4);
@@ -718,7 +718,7 @@ void KeyConfInputManager::SaveSensitivitySettings(void) const
 
 void KeyConfInputManager::LoadSensitivitySettings(void)
 {
-	// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	auto handle = FileRead_open(Application::PATH_SENSITIVITY.c_str());
 
 	if (handle == 0)

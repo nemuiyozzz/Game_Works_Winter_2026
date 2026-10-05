@@ -1,5 +1,17 @@
+#include "../../Pch.h"
 #include "TransformSystem.h"
 #include "../Component/TransformComponent.h"
+
+void TransformSystem::Update(EcsRegistry& registry)
+{
+	// Transformコンポーネントを持つすべてのエンティティを取得
+	auto entities = registry.GetEntitiesWith<TransformComponent>();
+
+	for (Entity entity : entities)
+	{
+		UpdateTransform(registry, entity);
+	}
+}
 
 void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 {

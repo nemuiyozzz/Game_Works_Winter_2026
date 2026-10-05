@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <memory>
 #include <typeindex>
+#include <vector>
+
 #include "Entity.h"
 #include "ComponentPool.h"
 
@@ -54,6 +56,28 @@ public:
 	bool HasComponent(Entity entity)
 	{
 		return GetComponentPool<TargetComponent>()->HasComponent(entity);
+	}
+
+	/// @brief 指定した複数のコンポーネントをすべて持つエンティティのリストを取得する
+	/// @tparam ...TargetComponents 条件となるコンポーネント群
+	/// @return 条件を満たすエンティティIDのリスト
+	template <typename... TargetComponents>
+	std::vector<Entity> GetEntitiesWith(void)
+	{
+		std::vector<Entity> result;
+
+		// 存在するすべてのエンティティをチェックする
+		for (Entity entity = 0; entity < nextEntityId_; ++entity)
+		{
+			bool hasAll = (... && HasComponent<TargetComponents>(entity));
+
+			if (hasAll)
+			{
+				result.push_back(entity);
+			}
+		}
+
+		return result;
 	}
 
 private:

@@ -3,10 +3,19 @@
 #include "../Component/VelocityComponent.h"
 #include "../../System/Time/TimeManager.h"
 
+void MovementSystem::Update(EcsRegistry& registry)
+{
+	auto entities = registry.GetEntitiesWith<TransformComponent, VelocityComponent>();
+
+	for (Entity entity : entities)
+	{
+		UpdatePosition(registry, entity);
+	}
+}
 void MovementSystem::UpdatePosition(EcsRegistry& registry, Entity entity)
 {
 	if (!registry.HasComponent<TransformComponent>(entity) ||
-		!registry.HasComponent<TransformComponent>(entity))
+		!registry.HasComponent<VelocityComponent>(entity))
 	{
 		return;
 	}

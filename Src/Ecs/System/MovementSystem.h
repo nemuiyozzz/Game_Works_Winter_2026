@@ -2,11 +2,12 @@
 
 #include <DxLib.h>
 
+#include "ISystem.h"
 #include "../../Ecs/EcsRegistry.h"
 #include "../../Ecs/Entity.h"
 
 /// @brief VelocityComponentのデータをもとにTransformを更新するシステムクラス
-class MovementSystem
+class MovementSystem : public ISystem
 {
 public:
 
@@ -15,6 +16,10 @@ public:
 
 	/// @brief デストラクタ 
 	~MovementSystem(void) = default;
+
+	/// @brief 速度を持つすべてのエンティティの座標を一括更新する
+	/// @param registry ECSデータベース
+	void Update(EcsRegistry& registry) override;
 
 	/// @brief エンティティの速度を計算し、座標を更新する
 	/// @param registry ECSデータベース

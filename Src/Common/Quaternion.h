@@ -1,248 +1,248 @@
-#pragma once
+ï»¿#pragma once
 
 #include<DxLib.h>
 
-// @brief ‰ñ“]‚ğ•\Œ»‚·‚é‚½‚ß‚ÌƒNƒH[ƒ^ƒjƒIƒ“ƒNƒ‰ƒX
+// @brief å›è»¢ã‚’è¡¨ç¾ã™ã‚‹ãŸã‚ã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚¯ãƒ©ã‚¹
 class Quaternion
 {
 public:
 
-	// ³‹K‰»‚Ì‹É¬’liƒ[ƒŠ„–h~j
+	// æ­£è¦åŒ–æ™‚ã®æ¥µå°å€¤ï¼ˆã‚¼ãƒ­å‰²é˜²æ­¢ï¼‰
 	static constexpr float kEpsilonNorMalSqrt = 1e-15F;
 
-	// ƒNƒH[ƒ^ƒjƒIƒ“‚ÌƒXƒJƒ‰[¬•ªi‰ñ“]—Ê‚Ì—]Œ·j
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®ã‚¹ã‚«ãƒ©ãƒ¼æˆåˆ†ï¼ˆå›è»¢é‡ã®ä½™å¼¦ï¼‰
 	double w;
 
-	// ƒNƒH[ƒ^ƒjƒIƒ“‚ÌX¬•ªiƒxƒNƒgƒ‹•”j
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®Xæˆåˆ†ï¼ˆãƒ™ã‚¯ãƒˆãƒ«éƒ¨ï¼‰
 	double x;
 
-	// ƒNƒH[ƒ^ƒjƒIƒ“‚ÌY¬•ªiƒxƒNƒgƒ‹•”j
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®Yæˆåˆ†ï¼ˆãƒ™ã‚¯ãƒˆãƒ«éƒ¨ï¼‰
 	double y;
 
-	// ƒNƒH[ƒ^ƒjƒIƒ“‚ÌZ¬•ªiƒxƒNƒgƒ‹•”j
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®Zæˆåˆ†ï¼ˆãƒ™ã‚¯ãƒˆãƒ«éƒ¨ï¼‰
 	double z;
 
-	// @brief ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^i‘S¬•ª0j
+	// @brief ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆå…¨æˆåˆ†0ï¼‰
 	Quaternion(void);
 
-	// @brief ƒIƒCƒ‰[Šp‚©‚ç‰Šú‰»
-	// @param rad Še²‚Ì‰ñ“]Špiƒ‰ƒWƒAƒ“j
+	// @brief ã‚ªã‚¤ãƒ©ãƒ¼è§’ã‹ã‚‰åˆæœŸåŒ–
+	// @param rad å„è»¸ã®å›è»¢è§’ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰
 	Quaternion(const VECTOR& rad);
 
-	// @brief Še¬•ª‚©‚ç‰Šú‰»
-	// @param w ƒXƒJƒ‰[¬•ª
-	// @param x X¬•ª
-	// @param y Y¬•ª
-	// @param z Z¬•ª
+	// @brief å„æˆåˆ†ã‹ã‚‰åˆæœŸåŒ–
+	// @param w ã‚¹ã‚«ãƒ©ãƒ¼æˆåˆ†
+	// @param x Xæˆåˆ†
+	// @param y Yæˆåˆ†
+	// @param z Zæˆåˆ†
 	Quaternion(double w, double x, double y, double z);
 
-	// @brief ƒfƒXƒgƒ‰ƒNƒ^
+	// @brief ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Quaternion(void) = default;
 
-	// @brief ƒIƒCƒ‰[Šp‚©‚çƒNƒH[ƒ^ƒjƒIƒ“¶¬
-	// @param rad Še²‰ñ“]iƒ‰ƒWƒAƒ“j
-	// @return ¶¬‚³‚ê‚½ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief ã‚ªã‚¤ãƒ©ãƒ¼è§’ã‹ã‚‰ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ç”Ÿæˆ
+	// @param rad å„è»¸å›è»¢ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰
+	// @return ç”Ÿæˆã•ã‚ŒãŸã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion Euler(const VECTOR& rad);
 
-	// @brief XYZŠp‚©‚çƒNƒH[ƒ^ƒjƒIƒ“¶¬
-	// @param radX X‰ñ“]
-	// @param radY Y‰ñ“]
-	// @param radZ Z‰ñ“]
-	// @return ¶¬‚³‚ê‚½ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief XYZè§’ã‹ã‚‰ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ç”Ÿæˆ
+	// @param radX Xå›è»¢
+	// @param radY Yå›è»¢
+	// @param radZ Zå›è»¢
+	// @return ç”Ÿæˆã•ã‚ŒãŸã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion Euler(double radX, double radY, double radZ);
 
-	// @brief ƒNƒH[ƒ^ƒjƒIƒ“‡¬
-	// @param q1 ‘æ1ƒNƒH[ƒ^ƒjƒIƒ“
-	// @param q2 ‘æ2ƒNƒH[ƒ^ƒjƒIƒ“
-	// @return ‡¬Œ‹‰Ê
+	// @brief ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³åˆæˆ
+	// @param q1 ç¬¬1ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @param q2 ç¬¬2ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @return åˆæˆçµæœ
 	static Quaternion Mult(const Quaternion& q1, const Quaternion& q2);
 
-	// @brief Œ»İ‚Ì‰ñ“]‚Æ‡¬
-	// @param q ‡¬‘ÎÛ
-	// @return ‡¬Œ‹‰Ê
+	// @brief ç¾åœ¨ã®å›è»¢ã¨åˆæˆ
+	// @param q åˆæˆå¯¾è±¡
+	// @return åˆæˆçµæœ
 	Quaternion Mult(const Quaternion& q) const;
 
-	// @brief ²‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“¶¬
-	// @param rad ‰ñ“]Šp
-	// @param axis ‰ñ“]²
-	// @return ‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief è»¸å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ç”Ÿæˆ
+	// @param rad å›è»¢è§’
+	// @param axis å›è»¢è»¸
+	// @return å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion AngleAxis(double rad, VECTOR axis);
 
-	// @brief ƒxƒNƒgƒ‹‚ğ‰ñ“]iÃ“Ij
-	// @param q ‰ñ“]
-	// @param axis ‘ÎÛƒxƒNƒgƒ‹
-	// @return ‰ñ“]ŒãƒxƒNƒgƒ‹
+	// @brief ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ï¼ˆé™çš„ï¼‰
+	// @param q å›è»¢
+	// @param axis å¯¾è±¡ãƒ™ã‚¯ãƒˆãƒ«
+	// @return å›è»¢å¾Œãƒ™ã‚¯ãƒˆãƒ«
 	static VECTOR PosAxis(const Quaternion& q, VECTOR axis);
 
-	// @brief ƒxƒNƒgƒ‹‚ğ‰ñ“]iƒƒ“ƒoj
-	// @param pos ‘ÎÛƒxƒNƒgƒ‹
-	// @return ‰ñ“]ŒãƒxƒNƒgƒ‹
+	// @brief ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ï¼ˆãƒ¡ãƒ³ãƒï¼‰
+	// @param pos å¯¾è±¡ãƒ™ã‚¯ãƒˆãƒ«
+	// @return å›è»¢å¾Œãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR PosAxis(VECTOR pos) const;
 
-	// @brief ƒIƒCƒ‰[Šp•ÏŠ·iÃ“Ij
-	// @param q ‘ÎÛƒNƒH[ƒ^ƒjƒIƒ“
-	// @return ƒIƒCƒ‰[Šp
+	// @brief ã‚ªã‚¤ãƒ©ãƒ¼è§’å¤‰æ›ï¼ˆé™çš„ï¼‰
+	// @param q å¯¾è±¡ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @return ã‚ªã‚¤ãƒ©ãƒ¼è§’
 	static VECTOR ToEuler(const Quaternion& q);
 
-	// @brief ƒIƒCƒ‰[Šp•ÏŠ·iƒƒ“ƒoj
-	// @return ƒIƒCƒ‰[Šp
+	// @brief ã‚ªã‚¤ãƒ©ãƒ¼è§’å¤‰æ›ï¼ˆãƒ¡ãƒ³ãƒï¼‰
+	// @return ã‚ªã‚¤ãƒ©ãƒ¼è§’
 	VECTOR ToEuler(void) const;
 
-	// @brief s—ñ•ÏŠ·iÃ“Ij
-	// @param q ‘ÎÛƒNƒH[ƒ^ƒjƒIƒ“
-	// @return ‰ñ“]s—ñ
+	// @brief è¡Œåˆ—å¤‰æ›ï¼ˆé™çš„ï¼‰
+	// @param q å¯¾è±¡ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @return å›è»¢è¡Œåˆ—
 	static MATRIX ToMatrix(const Quaternion& q);
 
-	// @brief s—ñ•ÏŠ·iƒƒ“ƒoj
-	// @return ‰ñ“]s—ñ
+	// @brief è¡Œåˆ—å¤‰æ›ï¼ˆãƒ¡ãƒ³ãƒï¼‰
+	// @return å›è»¢è¡Œåˆ—
 	MATRIX ToMatrix(void) const;
 
-	// @brief •ûŒü‚©‚ç‰ñ“]¶¬
-	// @param dir ‘O•ûŒü
-	// @return ‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief æ–¹å‘ã‹ã‚‰å›è»¢ç”Ÿæˆ
+	// @param dir å‰æ–¹å‘
+	// @return å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion LookRotation(VECTOR dir);
 
-	// @brief •ûŒü{ã•ûŒü‚©‚ç‰ñ“]¶¬
-	// @param dir ‘O•ûŒü
-	// @param up ã•ûŒü
-	// @return ‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief æ–¹å‘ï¼‹ä¸Šæ–¹å‘ã‹ã‚‰å›è»¢ç”Ÿæˆ
+	// @param dir å‰æ–¹å‘
+	// @param up ä¸Šæ–¹å‘
+	// @return å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion LookRotation(VECTOR dir, VECTOR up);
 
-	// @brief s—ñ‚©‚ç‰ñ“]’Šo
-	// @param mat s—ñ
-	// @return ‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief è¡Œåˆ—ã‹ã‚‰å›è»¢æŠ½å‡º
+	// @param mat è¡Œåˆ—
+	// @return å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion GetRotation(MATRIX mat);
 
-	// @brief ‘O•ûŒüæ“¾
-	// @return ‘O•ûŒüƒxƒNƒgƒ‹
+	// @brief å‰æ–¹å‘å–å¾—
+	// @return å‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetForward(void) const;
 
-	// @brief Œã•ûŒüæ“¾
-	// @return Œã•ûŒüƒxƒNƒgƒ‹
+	// @brief å¾Œæ–¹å‘å–å¾—
+	// @return å¾Œæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetBack(void) const;
 
-	// @brief ‰E•ûŒüæ“¾
-	// @return ‰E•ûŒüƒxƒNƒgƒ‹
+	// @brief å³æ–¹å‘å–å¾—
+	// @return å³æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetRight(void) const;
 
-	// @brief ¶•ûŒüæ“¾
-	// @return ¶•ûŒüƒxƒNƒgƒ‹
+	// @brief å·¦æ–¹å‘å–å¾—
+	// @return å·¦æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetLeft(void) const;
 
-	// @brief ã•ûŒüæ“¾
-	// @return ã•ûŒüƒxƒNƒgƒ‹
+	// @brief ä¸Šæ–¹å‘å–å¾—
+	// @return ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetUp(void) const;
 
-	// @brief ‰º•ûŒüæ“¾
-	// @return ‰º•ûŒüƒxƒNƒgƒ‹
+	// @brief ä¸‹æ–¹å‘å–å¾—
+	// @return ä¸‹æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetDown(void) const;
 
-	// @brief “àÏŒvZiÃ“Ij
-	// @param q1 ƒNƒH[ƒ^ƒjƒIƒ“1
-	// @param q2 ƒNƒH[ƒ^ƒjƒIƒ“2
-	// @return “àÏ’l
+	// @brief å†…ç©è¨ˆç®—ï¼ˆé™çš„ï¼‰
+	// @param q1 ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³1
+	// @param q2 ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³2
+	// @return å†…ç©å€¤
 	static double Dot(const Quaternion& q1, const Quaternion& q2);
 
-	// @brief “àÏŒvZiƒƒ“ƒoj
-		// @param b ”äŠr‘ÎÛ
-		// @return “àÏ’l
+	// @brief å†…ç©è¨ˆç®—ï¼ˆãƒ¡ãƒ³ãƒï¼‰
+		// @param b æ¯”è¼ƒå¯¾è±¡
+		// @return å†…ç©å€¤
 	double Dot(const Quaternion& b) const;
 
-	// @brief ³‹K‰»iÃ“Ij
-	// @param q ‘ÎÛ
-	// @return ³‹K‰»Œ‹‰Ê
+	// @brief æ­£è¦åŒ–ï¼ˆé™çš„ï¼‰
+	// @param q å¯¾è±¡
+	// @return æ­£è¦åŒ–çµæœ
 	static Quaternion Normalize(const Quaternion& q);
 
-	// @brief ³‹K‰»i”ñ”j‰ój
-	// @return ³‹K‰»Œ‹‰Ê
+	// @brief æ­£è¦åŒ–ï¼ˆéç ´å£Šï¼‰
+	// @return æ­£è¦åŒ–çµæœ
 	Quaternion Normalized(void) const;
 
-	// @brief ³‹K‰»i”j‰ój
+	// @brief æ­£è¦åŒ–ï¼ˆç ´å£Šï¼‰
 	void Normalize(void);
 
-	// @brief ‹tƒNƒH[ƒ^ƒjƒIƒ“
-	// @return ‹t‰ñ“]
+	// @brief é€†ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @return é€†å›è»¢
 	Quaternion Inverse(void) const;
 
-	// @brief ‹…–ÊüŒ`•âŠÔ
-	// @param from ŠJn
-	// @param to I—¹
-	// @param t •âŠÔ—¦
-	// @return •âŠÔŒ‹‰Ê
+	// @brief çƒé¢ç·šå½¢è£œé–“
+	// @param from é–‹å§‹
+	// @param to çµ‚äº†
+	// @param t è£œé–“ç‡
+	// @return è£œé–“çµæœ
 	static Quaternion Slerp(Quaternion from, Quaternion to, double t);
 
-	// @brief •ûŒü·‚©‚ç‰ñ“]¶¬
-	// @param fromDir ŠJn•ûŒü
-	// @param toDir –Ú•W•ûŒü
-	// @return ‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	// @brief æ–¹å‘å·®ã‹ã‚‰å›è»¢ç”Ÿæˆ
+	// @param fromDir é–‹å§‹æ–¹å‘
+	// @param toDir ç›®æ¨™æ–¹å‘
+	// @return å›è»¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	static Quaternion FromToRotation(VECTOR fromDir, VECTOR toDir);
 
-	// @brief Å‘åŠp§ŒÀ•t‚«•âŠÔ
-	// @param from Œ»İ
-	// @param to –Ú•W
-	// @param maxDegreesDelta Å‘åŠp“x
-	// @return •âŠÔŒ‹‰Ê
+	// @brief æœ€å¤§è§’åˆ¶é™ä»˜ãè£œé–“
+	// @param from ç¾åœ¨
+	// @param to ç›®æ¨™
+	// @param maxDegreesDelta æœ€å¤§è§’åº¦
+	// @return è£œé–“çµæœ
 	static Quaternion RotateTowards(const Quaternion& from, const Quaternion& to, float maxDegreesDelta);
 
-	// @brief Šp“x·æ“¾
-	// @param q1 ƒNƒH[ƒ^ƒjƒIƒ“1
-	// @param q2 ƒNƒH[ƒ^ƒjƒIƒ“2
-	// @return Šp“x·
+	// @brief è§’åº¦å·®å–å¾—
+	// @param q1 ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³1
+	// @param q2 ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³2
+	// @return è§’åº¦å·®
 	static double Angle(const Quaternion& q1, const Quaternion& q2);
 
-	// @brief §ŒÀ‚È‚µ•âŠÔ
-	// @param a ŠJn
-	// @param b I—¹
-	// @param t •âŠÔ—¦
-	// @return •âŠÔŒ‹‰Ê
+	// @brief åˆ¶é™ãªã—è£œé–“
+	// @param a é–‹å§‹
+	// @param b çµ‚äº†
+	// @param t è£œé–“ç‡
+	// @return è£œé–“çµæœ
 	static Quaternion SlerpUnclamped(Quaternion a, Quaternion b, float t);
 
-	// @brief ’PˆÊƒNƒH[ƒ^ƒjƒIƒ“
-	// @return ‰ñ“]‚È‚µ
+	// @brief å˜ä½ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+	// @return å›è»¢ãªã—
 	static Quaternion Identity(void);
 
-	// @brief ’·‚³æ“¾
-	// @return ’·‚³
+	// @brief é•·ã•å–å¾—
+	// @return é•·ã•
 	double Length(void) const;
 
-	// @brief ’·‚³‚Ì2æ
-	// @return ’·‚³‚Ì2æ
+	// @brief é•·ã•ã®2ä¹—
+	// @return é•·ã•ã®2ä¹—
 	double LengthSquared(void) const;
 
-	// @brief x, y, zæ“¾
-	// @return ƒxƒNƒgƒ‹
+	// @brief x, y, zå–å¾—
+	// @return ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR xyz(void) const;
 
-	// @brief Šp“x‚Æ²‚É•ª‰ğ
-	// @param angle o—ÍŠp“x
-	// @param axis o—Í²
+	// @brief è§’åº¦ã¨è»¸ã«åˆ†è§£
+	// @param angle å‡ºåŠ›è§’åº¦
+	// @param axis å‡ºåŠ›è»¸
 	void ToAngleAxis(float* angle, VECTOR* axis);
 
 private:
 
-	// @brief w’è•ûŒü‚ğ‰ñ“]
-	// @param dir “ü—Í•ûŒü
-	// @return ‰ñ“]Œã
+	// @brief æŒ‡å®šæ–¹å‘ã‚’å›è»¢
+	// @param dir å…¥åŠ›æ–¹å‘
+	// @return å›è»¢å¾Œ
 	VECTOR GetDir(VECTOR dir) const;
 
-	// @brief ƒXƒJƒ‰[æZi”j‰ój
-	// @param rhs ’l
-	// @return Œ‹‰Ê
+	// @brief ã‚¹ã‚«ãƒ©ãƒ¼ä¹—ç®—ï¼ˆç ´å£Šï¼‰
+	// @param rhs å€¤
+	// @return çµæœ
 	Quaternion operator*(float& rhs);
 
-	// @brief ƒXƒJƒ‰[æZi”ñ”j‰ój
-		// @param rhs ’l
-		// @return Œ‹‰Ê
+	// @brief ã‚¹ã‚«ãƒ©ãƒ¼ä¹—ç®—ï¼ˆéç ´å£Šï¼‰
+		// @param rhs å€¤
+		// @return çµæœ
 	const Quaternion operator*(const float& rhs);
 
-	// @brief ‰ÁZi”j‰ój
-	// @param rhs ‘Šè
-	// @return Œ‹‰Ê
+	// @brief åŠ ç®—ï¼ˆç ´å£Šï¼‰
+	// @param rhs ç›¸æ‰‹
+	// @return çµæœ
 	Quaternion operator+(Quaternion& rhs);
 
-	// @brief ‰ÁZi”ñ”j‰ój
-	// @param rhs ‘Šè
-	// @return Œ‹‰Ê
+	// @brief åŠ ç®—ï¼ˆéç ´å£Šï¼‰
+	// @param rhs ç›¸æ‰‹
+	// @return çµæœ
 	const Quaternion operator+(const Quaternion& rhs);
 
 };

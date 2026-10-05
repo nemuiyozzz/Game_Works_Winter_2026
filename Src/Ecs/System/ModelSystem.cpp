@@ -3,6 +3,16 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/ModelComponent.h"
 
+void ModelSystem::Update(EcsRegistry& registry)
+{
+	auto entities = registry.GetEntitiesWith<TransformComponent, ModelComponent>();
+
+	for (Entity entity : entities)
+	{
+		DrawModel(registry, entity);
+	}
+}
+
 void ModelSystem::DrawModel(EcsRegistry& registry, Entity entity)
 {
 	// 座標情報とモデル情報の両方を持っていなければ描画しない

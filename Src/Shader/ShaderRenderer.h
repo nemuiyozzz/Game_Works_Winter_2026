@@ -1,63 +1,63 @@
-#pragma once
+ï»¿#pragma once
 
 #include <DxLib.h>
 #include <unordered_map>
 #include <array>
 #include "RenderCommand.h"
 
-/// @brief ƒVƒF[ƒ_[•`‰æ‚ğŠÇ—‚·‚éƒŒƒ“ƒ_ƒ‰[ƒNƒ‰ƒX
+/// @brief ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼æç”»ã‚’ç®¡ç†ã™ã‚‹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚¯ãƒ©ã‚¹
 class ShaderRenderer
 {
 public:
 
-	// ƒXƒƒbƒgŠÖ˜A’è”
-	static constexpr int CONSTANT_BUFFER_SLOT_BEGIN_VERTEX_SHADER = 7; // ’¸“_ƒVƒF[ƒ_—p’è”ƒoƒbƒtƒ@‚ÌŠJnƒXƒƒbƒg
-	static constexpr int CONSTANT_BUFFER_SLOT_BEGIN_PIXEL_SHADER = 4;  // ƒsƒNƒZƒ‹ƒVƒF[ƒ_—p’è”ƒoƒbƒtƒ@‚ÌŠJnƒXƒƒbƒg
+	// ã‚¹ãƒ­ãƒƒãƒˆé–¢é€£å®šæ•°
+	static constexpr int CONSTANT_BUFFER_SLOT_BEGIN_VERTEX_SHADER = 7; // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®é–‹å§‹ã‚¹ãƒ­ãƒƒãƒˆ
+	static constexpr int CONSTANT_BUFFER_SLOT_BEGIN_PIXEL_SHADER = 4;  // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®é–‹å§‹ã‚¹ãƒ­ãƒƒãƒˆ
 
-	/// @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	ShaderRenderer(void);
 
-	/// @brief ƒfƒXƒgƒ‰ƒNƒ^
+	/// @brief ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~ShaderRenderer(void);
 
-	/// @brief ‰Šú‰»ˆ—
+	/// @brief åˆæœŸåŒ–å‡¦ç†
 	void Initialize(void);
 
-	/// @brief ƒoƒbƒ`ˆ—‚ÌŠJni•`‰æƒ‹[ƒv‚Ì’¼‘O‚ÉŒÄ‚Ôj
+	/// @brief ãƒãƒƒãƒå‡¦ç†ã®é–‹å§‹ï¼ˆæç”»ãƒ«ãƒ¼ãƒ—ã®ç›´å‰ã«å‘¼ã¶ï¼‰
 	void BeginBatch(void);
 
-	/// @brief •`‰æƒRƒ}ƒ“ƒh‚ÌÀs
-	/// @param _renderCommand •`‰æƒRƒ}ƒ“ƒhî•ñ
+	/// @brief æç”»ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œ
+	/// @param _renderCommand æç”»ã‚³ãƒãƒ³ãƒ‰æƒ…å ±
 	void ExecuteCommand(const RenderCommand& _renderCommand);
 
-	/// @brief ƒoƒbƒ`ˆ—‚ÌI—¹i‚·‚×‚Ä‚Ì•`‰æ‚ªI‚í‚Á‚½Œã‚ÉŒÄ‚Ôj
+	/// @brief ãƒãƒƒãƒå‡¦ç†ã®çµ‚äº†ï¼ˆã™ã¹ã¦ã®æç”»ãŒçµ‚ã‚ã£ãŸå¾Œã«å‘¼ã¶ï¼‰
 	void EndBatch(void);
 
-	/// @brief ‰ğ•úˆ—
+	/// @brief è§£æ”¾å‡¦ç†
 	void Release(void);
 
 private:
 
-	/// @brief ’è”ƒoƒbƒtƒ@‚ğXV‚µ‚ÄƒVƒF[ƒ_‚Éİ’è
-	/// @param _parameterPointer ƒpƒ‰ƒ[ƒ^ƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	/// @param _parameterSize ƒpƒ‰ƒ[ƒ^ƒTƒCƒY
-	/// @param _shaderType ƒVƒF[ƒ_ƒ^ƒCƒv
-	/// @param _slotBegin ƒXƒƒbƒgŠJn”Ô†
-	/// @return g—p‚µ‚½’è”ƒoƒbƒtƒ@ƒnƒ“ƒhƒ‹
+	/// @brief å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’æ›´æ–°ã—ã¦ã‚·ã‚§ãƒ¼ãƒ€ã«è¨­å®š
+	/// @param _parameterPointer ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	/// @param _parameterSize ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
+	/// @param _shaderType ã‚·ã‚§ãƒ¼ãƒ€ã‚¿ã‚¤ãƒ—
+	/// @param _slotBegin ã‚¹ãƒ­ãƒƒãƒˆé–‹å§‹ç•ªå·
+	/// @return ä½¿ç”¨ã—ãŸå®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒ³ãƒ‰ãƒ«
 	int UpdateAndSetConstantBuffer(const void* _parameterPointer, int _parameterSize, int _shaderType, int _slotBegin);
 
-	/// @brief 2D•`‰æ—p‚Ì’¸“_ƒf[ƒ^‚ğ“K—p
-	/// @param _vertices ’¸“_”z—ñ
-	/// @param _width •`‰æ•
-	/// @param _height •`‰æ‚‚³
+	/// @brief 2Dæç”»ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã‚’é©ç”¨
+	/// @param _vertices é ‚ç‚¹é…åˆ—
+	/// @param _width æç”»å¹…
+	/// @param _height æç”»é«˜ã•
 	void ApplyVertices(std::array<VERTEX2DSHADER, 4>& _vertices, float _width, float _height) const;
 
-	// ’è”ƒoƒbƒtƒ@ƒ}ƒbƒv
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ—
 	std::unordered_map<int, int> constantBufferMap_;                      
 
-	// ƒLƒƒƒbƒVƒ…Eó‘ÔŠÇ—ŠÖ˜A
-	int currentVertexShaderHandleId_;                                     // Œ»İİ’è‚³‚ê‚Ä‚¢‚é’¸“_ƒVƒF[ƒ_‚Ìƒnƒ“ƒhƒ‹
-	int currentPixelShaderHandleId_;                                      // Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒsƒNƒZƒ‹ƒVƒF[ƒ_‚Ìƒnƒ“ƒhƒ‹
-	int currentTexture0HandleId_;                                         // Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒeƒNƒXƒ`ƒƒ0‚Ìƒnƒ“ƒhƒ‹
-	int currentTexture1HandleId_;                                         // Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒeƒNƒXƒ`ƒƒ1‚Ìƒnƒ“ƒhƒ‹
+	// ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ»çŠ¶æ…‹ç®¡ç†é–¢é€£
+	int currentVertexShaderHandleId_;                                     // ç¾åœ¨è¨­å®šã•ã‚Œã¦ã„ã‚‹é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã®ãƒãƒ³ãƒ‰ãƒ«
+	int currentPixelShaderHandleId_;                                      // ç¾åœ¨è¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®ãƒãƒ³ãƒ‰ãƒ«
+	int currentTexture0HandleId_;                                         // ç¾åœ¨è¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£0ã®ãƒãƒ³ãƒ‰ãƒ«
+	int currentTexture1HandleId_;                                         // ç¾åœ¨è¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£1ã®ãƒãƒ³ãƒ‰ãƒ«
 };

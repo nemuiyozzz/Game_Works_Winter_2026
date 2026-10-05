@@ -3,6 +3,16 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/ImageComponent.h"
 
+void ImageSystem::Update(EcsRegistry& registry)
+{
+	auto entities = registry.GetEntitiesWith<TransformComponent, ImageComponent>();
+
+	for (Entity entity : entities)
+	{
+		DrawImage(registry, entity);
+	}
+}
+
 void ImageSystem::DrawImage(EcsRegistry& registry, Entity entity)
 {
 	// 座標情報と画像情報の両方を持っていなければ描画しない

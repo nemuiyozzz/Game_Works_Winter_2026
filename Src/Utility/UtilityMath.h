@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include<string>
 #include<vector>
@@ -8,391 +8,391 @@
 #include"../Common/Quaternion.h"
 
 /// <summary>
-/// ŠeíƒxƒNƒgƒ‹EŠp“xE•âŠÔ‚È‚Ç‚Ìƒ†[ƒeƒBƒŠƒeƒBŠÖ”ŒQ‚ğ’ñ‹Ÿ‚·‚éÃ“IƒNƒ‰ƒX
+/// å„ç¨®ãƒ™ã‚¯ãƒˆãƒ«ãƒ»è§’åº¦ãƒ»è£œé–“ãªã©ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£é–¢æ•°ç¾¤ã‚’æä¾›ã™ã‚‹é™çš„ã‚¯ãƒ©ã‚¹
 /// </summary>
 class UtilityMath
 {
 public:
 
-	// ƒ‰ƒWƒAƒ“‚©‚ç“x‚Ö‚Ì•ÏŠ·’è”ifloat
+	// ãƒ©ã‚¸ã‚¢ãƒ³ã‹ã‚‰åº¦ã¸ã®å¤‰æ›å®šæ•°ï¼ˆfloat
 	static constexpr float RAD2DEG = (180 / DX_PI_F);
 
-	// “x‚©‚çƒ‰ƒWƒAƒ“‚Ö‚Ì•ÏŠ·’è”ifloat)
+	// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã¸ã®å¤‰æ›å®šæ•°ï¼ˆfloat)
 	static constexpr float DEG2RAD = (DX_PI_F / 180.0f);
 
-	/// @brief ƒ[ƒƒxƒNƒgƒ‹(0, 0, 0)
+	/// @brief ã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«(0, 0, 0)
 	static constexpr VECTOR VECTOR_ZERO = { 0.0f, 0.0f, 0.0f };
 	static constexpr Vector2 VECTOR2_ZERO = { 0, 0 };
 	static constexpr Vector2F VECTOR2F_ZERO = { 0.0f, 0.0f };
 
-	/// @brief ’PˆÊƒxƒNƒgƒ‹(1, 1, 1)
+	/// @brief å˜ä½ãƒ™ã‚¯ãƒˆãƒ«(1, 1, 1)
 	static constexpr VECTOR VECTOR_ONE = { 1.0f, 1.0f, 1.0f };
 	static constexpr Vector2 VECTOR2_ONE = { 1, 1 };
 	static constexpr Vector2F VECTOR2F_ONE = { 1.0f, 1.0f };
 
-	//‰ñ“]²
+	//å›è»¢è»¸
 
-	/// <summary>X²•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹</summary>
+	/// <summary>Xè»¸æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«</summary>
 	static constexpr VECTOR AXIS_X = { 1.0f, 0.0f, 0.0f };
 
-	/// <summary>Y²•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹</summary>
+	/// <summary>Yè»¸æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«</summary>
 	static constexpr VECTOR AXIS_Y = { 0.0f, 1.0f, 0.0f };
 
-	/// <summary>Z²•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹</summary>
+	/// <summary>Zè»¸æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«</summary>
 	static constexpr VECTOR AXIS_Z = { 0.0f, 0.0f, 1.0f };
 
-	//•ûŒü
+	//æ–¹å‘
 
-	/// <summary>‘O•û•ûŒü (Z+)</summary>
+	/// <summary>å‰æ–¹æ–¹å‘ (Z+)</summary>
 	static constexpr VECTOR DIR_FORWARD = { 0.0f, 0.0f, 1.0f };
 
-	/// <summary>Œã•û•ûŒü (Z-)</summary>
+	/// <summary>å¾Œæ–¹æ–¹å‘ (Z-)</summary>
 	static constexpr VECTOR DIR_BACK = { 0.0f, 0.0f, -1.0f };
 
-	/// <summary>‰E•ûŒü (X+)</summary>
+	/// <summary>å³æ–¹å‘ (X+)</summary>
 	static constexpr VECTOR DIR_R = { 1.0f, 0.0f, 0.0f };
 
-	/// <summary>¶•ûŒü (X-)</summary>
+	/// <summary>å·¦æ–¹å‘ (X-)</summary>
 	static constexpr VECTOR DIR_L = { -1.0f, 0.0f, 0.0f };
 
-	/// <summary>ã•ûŒü (Y+)</summary>
+	/// <summary>ä¸Šæ–¹å‘ (Y+)</summary>
 	static constexpr VECTOR DIR_UP = { 0.0f, 1.0f, 0.0f };
 
-	/// <summary>‰º•ûŒü (Y-)</summary>
+	/// <summary>ä¸‹æ–¹å‘ (Y-)</summary>
 	static constexpr VECTOR DIR_DOWN = { 0.0f, -1.0f, 0.0f };
 
-	/// <summary>•‚“®¬”“_‚ÌŒë·”äŠr—p‚ÌÅ¬’l</summary>
+	/// <summary>æµ®å‹•å°æ•°ç‚¹ã®èª¤å·®æ¯”è¼ƒç”¨ã®æœ€å°å€¤</summary>
 	static constexpr float kEpsilonNormalSqrt = 1e-15F;
 
 	static constexpr float HALF_NUM = 0.5f;
 
 	/// <summary>
-	/// ¬”‚ğlÌŒÜ“ü‚µ‚Ä®”‚É•ÏŠ·‚·‚é
+	/// å°æ•°ã‚’å››æ¨äº”å…¥ã—ã¦æ•´æ•°ã«å¤‰æ›ã™ã‚‹
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚Ì’l</param>
-	/// <returns>lÌŒÜ“ü‚³‚ê‚½®”</returns>
+	/// <param name="v">å¯¾è±¡ã®å€¤</param>
+	/// <returns>å››æ¨äº”å…¥ã•ã‚ŒãŸæ•´æ•°</returns>
 	static int Round(float v);
 
 	/// <summary>
-	/// •¶š—ñ‚ğw’è•¶š‚Å•ªŠ„‚·‚é
+	/// æ–‡å­—åˆ—ã‚’æŒ‡å®šæ–‡å­—ã§åˆ†å‰²ã™ã‚‹
 	/// </summary>
-	/// <param name="line">•ªŠ„‘ÎÛ‚Ì•¶š—ñ</param>
-	/// <param name="delimiter">‹æØ‚è•¶š</param>
-	/// <returns>•ªŠ„‚³‚ê‚½•¶š—ñ‚Ì”z—ñ</returns>
+	/// <param name="line">åˆ†å‰²å¯¾è±¡ã®æ–‡å­—åˆ—</param>
+	/// <param name="delimiter">åŒºåˆ‡ã‚Šæ–‡å­—</param>
+	/// <returns>åˆ†å‰²ã•ã‚ŒãŸæ–‡å­—åˆ—ã®é…åˆ—</returns>
 	static std::vector < std::wstring> Split(const std::wstring& line, wchar_t delimiter);
 
 	/// <summary>
-	/// ƒ‰ƒWƒAƒ“‚©‚ç“xidoublej‚Ö•ÏŠ·
+	/// ãƒ©ã‚¸ã‚¢ãƒ³ã‹ã‚‰åº¦ï¼ˆdoubleï¼‰ã¸å¤‰æ›
 	/// </summary>
-	/// <param name="rad">ƒ‰ƒWƒAƒ“Šp</param>
-	/// <returns>“x</returns>
+	/// <param name="rad">ãƒ©ã‚¸ã‚¢ãƒ³è§’</param>
+	/// <returns>åº¦</returns>
 	static double Rad2DegD(double rad);
 
 	/// <summary>
-	/// “x‚©‚çƒ‰ƒWƒAƒ“ifloatj‚Ö•ÏŠ·
+	/// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ï¼ˆfloatï¼‰ã¸å¤‰æ›
 	/// </summary>
-	/// <param name="deg">“x</param>
-	/// <returns>ƒ‰ƒWƒAƒ“Šp</returns>
+	/// <param name="deg">åº¦</param>
+	/// <returns>ãƒ©ã‚¸ã‚¢ãƒ³è§’</returns>
 	static float Rad2DegF(float rad);
 
 	/// <summary>
-	/// ƒ‰ƒWƒAƒ“‚©‚ç“x‚É•ÏŠ·iintj
+	/// ãƒ©ã‚¸ã‚¢ãƒ³ã‹ã‚‰åº¦ã«å¤‰æ›ï¼ˆintï¼‰
 	/// </summary>
-	/// <param name="rad">ƒ‰ƒWƒAƒ“’l</param>
-	/// <returns>“x”’l</returns>
+	/// <param name="rad">ãƒ©ã‚¸ã‚¢ãƒ³å€¤</param>
+	/// <returns>åº¦æ•°å€¤</returns>
 	static int Rad2DegI(int rad);
 
 	/// <summary>
-	/// “x‚©‚çƒ‰ƒWƒAƒ“‚É•ÏŠ·idoublej
+	/// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›ï¼ˆdoubleï¼‰
 	/// </summary>
-	/// <param name="deg">“x”’l</param>
-	/// <returns>ƒ‰ƒWƒAƒ“’l</returns>
+	/// <param name="deg">åº¦æ•°å€¤</param>
+	/// <returns>ãƒ©ã‚¸ã‚¢ãƒ³å€¤</returns>
 	static double Deg2RadD(double deg);
 
 	/// <summary>
-	/// “x‚©‚çƒ‰ƒWƒAƒ“‚É•ÏŠ·ifloatj
+	/// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›ï¼ˆfloatï¼‰
 	/// </summary>
-	/// <param name="deg">“x”’l</param>
-	/// <returns>ƒ‰ƒWƒAƒ“’l</returns>
+	/// <param name="deg">åº¦æ•°å€¤</param>
+	/// <returns>ãƒ©ã‚¸ã‚¢ãƒ³å€¤</returns>
 	static float Deg2RadF(float deg);
 
 	/// <summary>
-	/// “x‚©‚çƒ‰ƒWƒAƒ“‚É•ÏŠ·iintj
+	/// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›ï¼ˆintï¼‰
 	/// </summary>
-	/// <param name="deg">“x”’l</param>
-	/// <returns>ƒ‰ƒWƒAƒ“’l</returns>
+	/// <param name="deg">åº¦æ•°å€¤</param>
+	/// <returns>ãƒ©ã‚¸ã‚¢ãƒ³å€¤</returns>
 	static int Deg2RadI(int deg);
 
 	/// <summary>
-	/// Šp“x‚ğ0`360‚É³‹K‰»
+	/// è§’åº¦ã‚’0ï½360ã«æ­£è¦åŒ–
 	/// </summary>
-	/// <param name="deg">“ü—ÍŠp“xi“xj</param>
-	/// <returns>0`360“x‚Ì”ÍˆÍ‚É³‹K‰»‚³‚ê‚½Šp“x</returns>
+	/// <param name="deg">å…¥åŠ›è§’åº¦ï¼ˆåº¦ï¼‰</param>
+	/// <returns>0ï½360åº¦ã®ç¯„å›²ã«æ­£è¦åŒ–ã•ã‚ŒãŸè§’åº¦</returns>
 	static double DegIn360(double deg);
 
 	/// <summary>
-	/// Šp“x‚ğ0`2ƒÎ‚É³‹K‰»
+	/// è§’åº¦ã‚’0ï½2Ï€ã«æ­£è¦åŒ–
 	/// </summary>
-	/// <param name="rad">“ü—ÍŠp“xiƒ‰ƒWƒAƒ“j</param>
-	/// <returns>0`2ƒÎ‚Ì”ÍˆÍ‚É³‹K‰»‚³‚ê‚½Šp“x</returns>
+	/// <param name="rad">å…¥åŠ›è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰</param>
+	/// <returns>0ï½2Ï€ã®ç¯„å›²ã«æ­£è¦åŒ–ã•ã‚ŒãŸè§’åº¦</returns>
 	static double RadIn2PI(double rad);
 
 	/// <summary>
-	/// ‰ñ“]‚ª­‚È‚¢•û‚Ì•ûŒü‚ğ”»’èiƒ‰ƒWƒAƒ“jBŒv‰ñ‚è‚È‚ç1A”½Œv‰ñ‚è‚È‚ç-1‚ğ•Ô‚·B
+	/// å›è»¢ãŒå°‘ãªã„æ–¹ã®æ–¹å‘ã‚’åˆ¤å®šï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰ã€‚æ™‚è¨ˆå›ã‚Šãªã‚‰1ã€åæ™‚è¨ˆå›ã‚Šãªã‚‰-1ã‚’è¿”ã™ã€‚
 	/// </summary>
-	/// <param name="from">ŠJnŠp“xiƒ‰ƒWƒAƒ“j</param>
-	/// <param name="to">I—¹Šp“xiƒ‰ƒWƒAƒ“j</param>
-	/// <returns>‰ñ“]•ûŒüi1: Œv‰ñ‚è, -1: ”½Œv‰ñ‚èj</returns>
+	/// <param name="from">é–‹å§‹è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰</param>
+	/// <param name="to">çµ‚äº†è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰</param>
+	/// <returns>å›è»¢æ–¹å‘ï¼ˆ1: æ™‚è¨ˆå›ã‚Š, -1: åæ™‚è¨ˆå›ã‚Šï¼‰</returns>
 	static int DirNearAroundRad(float from, float to);
 
 	/// <summary>
-	/// ‰ñ“]‚ª­‚È‚¢•û‚Ì•ûŒü‚ğ”»’èi“xjBŒv‰ñ‚è‚È‚ç1A”½Œv‰ñ‚è‚È‚ç-1‚ğ•Ô‚·B
+	/// å›è»¢ãŒå°‘ãªã„æ–¹ã®æ–¹å‘ã‚’åˆ¤å®šï¼ˆåº¦ï¼‰ã€‚æ™‚è¨ˆå›ã‚Šãªã‚‰1ã€åæ™‚è¨ˆå›ã‚Šãªã‚‰-1ã‚’è¿”ã™ã€‚
 	/// </summary>
-	/// <param name="from">ŠJnŠp“xi“xj</param>
-	/// <param name="to">I—¹Šp“xi“xj</param>
-	/// <returns>‰ñ“]•ûŒüi1: Œv‰ñ‚è, -1: ”½Œv‰ñ‚èj</returns>
+	/// <param name="from">é–‹å§‹è§’åº¦ï¼ˆåº¦ï¼‰</param>
+	/// <param name="to">çµ‚äº†è§’åº¦ï¼ˆåº¦ï¼‰</param>
+	/// <returns>å›è»¢æ–¹å‘ï¼ˆ1: æ™‚è¨ˆå›ã‚Š, -1: åæ™‚è¨ˆå›ã‚Šï¼‰</returns>
 	static int DirNearAroundDeg(float from, float to);
 
-	//üŒ`•âŠÔ
+	//ç·šå½¢è£œé–“
 
 	/// <summary>
-	/// üŒ`•âŠÔiintj
+	/// ç·šå½¢è£œé–“ï¼ˆintï¼‰
 	/// </summary>
-	/// <param name="start">ŠJn’l</param>
-	/// <param name="end">I—¹’l</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚Ì’l</returns>
+	/// <param name="start">é–‹å§‹å€¤</param>
+	/// <param name="end">çµ‚äº†å€¤</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®å€¤</returns>
 	static int Lerp(int start, int end, float t);
 
 	/// <summary>
-	/// üŒ`•âŠÔifloatj
+	/// ç·šå½¢è£œé–“ï¼ˆfloatï¼‰
 	/// </summary>
-	/// <param name="start">ŠJn’l</param>
-	/// <param name="end">I—¹’l</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚Ì’l</returns>
+	/// <param name="start">é–‹å§‹å€¤</param>
+	/// <param name="end">çµ‚äº†å€¤</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®å€¤</returns>
 	static float Lerp(float start, float end, float t);
 
 	/// <summary>
-	/// üŒ`•âŠÔidoublej
+	/// ç·šå½¢è£œé–“ï¼ˆdoubleï¼‰
 	/// </summary>
-	/// <param name="start">ŠJn’l</param>
-	/// <param name="end">I—¹’l</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚Ì’l</returns>
+	/// <param name="start">é–‹å§‹å€¤</param>
+	/// <param name="end">çµ‚äº†å€¤</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®å€¤</returns>
 	static double Lerp(double start, double end, double t);
 
 	/// <summary>
-	/// üŒ`•âŠÔiVector2j
+	/// ç·šå½¢è£œé–“ï¼ˆVector2ï¼‰
 	/// </summary>
-	/// <param name="start">ŠJnƒxƒNƒgƒ‹</param>
-	/// <param name="end">I—¹ƒxƒNƒgƒ‹</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌƒxƒNƒgƒ‹</returns>
+	/// <param name="start">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="end">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®ãƒ™ã‚¯ãƒˆãƒ«</returns>
 	static Vector2 Lerp(const Vector2& start, const Vector2& end, float t);
 
 	/// <summary>
-	/// üŒ`•âŠÔiVECTORj
+	/// ç·šå½¢è£œé–“ï¼ˆVECTORï¼‰
 	/// </summary>
-	/// <param name="start">ŠJnƒxƒNƒgƒ‹</param>
-	/// <param name="end">I—¹ƒxƒNƒgƒ‹</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌƒxƒNƒgƒ‹</returns>
+	/// <param name="start">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="end">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®ãƒ™ã‚¯ãƒˆãƒ«</returns>
 	static VECTOR Lerp(const VECTOR& start, const VECTOR& end, float t);
 
 	/// <summary>
-	/// Šp“x‚ÌüŒ`•âŠÔi“xj
+	/// è§’åº¦ã®ç·šå½¢è£œé–“ï¼ˆåº¦ï¼‰
 	/// </summary>
-	/// <param name="start">ŠJnŠp“xi“xj</param>
-	/// <param name="end">I—¹Šp“xi“xj</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌŠp“xi“xj</returns>
+	/// <param name="start">é–‹å§‹è§’åº¦ï¼ˆåº¦ï¼‰</param>
+	/// <param name="end">çµ‚äº†è§’åº¦ï¼ˆåº¦ï¼‰</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®è§’åº¦ï¼ˆåº¦ï¼‰</returns>
 	static double LerpDeg(double start, double end, double t);
 
 	/// <summary>
-	/// F‚ÌüŒ`•âŠÔ
+	/// è‰²ã®ç·šå½¢è£œé–“
 	/// </summary>
-	/// <param name="start">ŠJnF</param>
-	/// <param name="end">I—¹F</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌF</returns>
+	/// <param name="start">é–‹å§‹è‰²</param>
+	/// <param name="end">çµ‚äº†è‰²</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®è‰²</returns>
 	static COLOR_F Lerp(const COLOR_F& start, const COLOR_F& end, float t);
 
 	/// <summary>
-	/// 2DƒxƒWƒF‹ÈüiVector2j‚Å‚ÌˆÊ’uŒvZ
+	/// 2Dãƒ™ã‚¸ã‚§æ›²ç·šï¼ˆVector2ï¼‰ã§ã®ä½ç½®è¨ˆç®—
 	/// </summary>
-	/// <param name="p1">ŠJn“_</param>
-	/// <param name="p2">’†ŠÔ“_</param>
-	/// <param name="p3">I—¹“_</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌˆÊ’uiƒxƒWƒF‹Èüãj</returns>
+	/// <param name="p1">é–‹å§‹ç‚¹</param>
+	/// <param name="p2">ä¸­é–“ç‚¹</param>
+	/// <param name="p3">çµ‚äº†ç‚¹</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®ä½ç½®ï¼ˆãƒ™ã‚¸ã‚§æ›²ç·šä¸Šï¼‰</returns>
 	static Vector2 Bezier(const Vector2& p1, const Vector2& p2, const Vector2& p3, float t);
 
 	/// <summary>
-	/// 3DƒxƒWƒF‹ÈüiVECTORj‚Å‚ÌˆÊ’uŒvZ
+	/// 3Dãƒ™ã‚¸ã‚§æ›²ç·šï¼ˆVECTORï¼‰ã§ã®ä½ç½®è¨ˆç®—
 	/// </summary>
-	/// <param name="p1">ŠJn“_</param>
-	/// <param name="p2">’†ŠÔ“_</param>
-	/// <param name="p3">I—¹“_</param>
-	/// <param name="t">•âŠÔŒW”i0`1j</param>
-	/// <returns>•âŠÔŒã‚ÌˆÊ’uiƒxƒWƒF‹Èüãj</returns>
+	/// <param name="p1">é–‹å§‹ç‚¹</param>
+	/// <param name="p2">ä¸­é–“ç‚¹</param>
+	/// <param name="p3">çµ‚äº†ç‚¹</param>
+	/// <param name="t">è£œé–“ä¿‚æ•°ï¼ˆ0ï½1ï¼‰</param>
+	/// <returns>è£œé–“å¾Œã®ä½ç½®ï¼ˆãƒ™ã‚¸ã‚§æ›²ç·šä¸Šï¼‰</returns>
 	static VECTOR Bezier(const VECTOR& p1, const VECTOR& p2, const VECTOR& p3, float t);
 
 	/// <summary>
-	/// Y²‚ğ’†S‚Æ‚µ‚½XZ•½–Ê‚Å‚Ì‰ñ“]À•W‚ğ‹‚ß‚é
+	/// Yè»¸ã‚’ä¸­å¿ƒã¨ã—ãŸXZå¹³é¢ã§ã®å›è»¢åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 	/// </summary>
-	/// <param name="centerPos">‰ñ“]’†SˆÊ’u</param>
-	/// <param name="radiusPos">‰ñ“]‚³‚¹‚é‘ÎÛ‚ÌˆÊ’u</param>
-	/// <param name="rad">‰ñ“]Šp“xiƒ‰ƒWƒAƒ“j</param>
-	/// <returns>‰ñ“]Œã‚ÌˆÊ’u</returns>
+	/// <param name="centerPos">å›è»¢ä¸­å¿ƒä½ç½®</param>
+	/// <param name="radiusPos">å›è»¢ã•ã›ã‚‹å¯¾è±¡ã®ä½ç½®</param>
+	/// <param name="rad">å›è»¢è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰</param>
+	/// <returns>å›è»¢å¾Œã®ä½ç½®</returns>
 	static VECTOR RotXZPos(const VECTOR& centerPos, const VECTOR& radiusPos, float rad);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³i2Dj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ï¼ˆ2Dï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i2Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ2Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•</returns>
 	static double Magnitude(const Vector2& v);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³i3Dj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ï¼ˆ3Dï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•</returns>
 	static double Magnitude(const VECTOR& v);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³i3DEfloat”Åj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ï¼ˆ3Dãƒ»floatç‰ˆï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•</returns>
 	static float MagnitudeF(const VECTOR& v);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æi2Dj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—ï¼ˆ2Dï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i2Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æ</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ2Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—</returns>
 	static int SqrMagnitude(const Vector2& v);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æi3DEfloat”Åj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—ï¼ˆ3Dãƒ»floatç‰ˆï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æ</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—</returns>
 	static float SqrMagnitudeF(const VECTOR& v);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æi3Dj
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—ï¼ˆ3Dï¼‰
 	/// </summary>
-	/// <param name="v">‘ÎÛ‚ÌƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>ƒxƒNƒgƒ‹‚Ì’·‚³‚Ì2æ</returns>
+	/// <param name="v">å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã®2ä¹—</returns>
 	static double SqrMagnitude(const VECTOR& v);
 
 	/// <summary>
-	/// 2“_ŠÔ‚Ì‹——£‚Ì2æi3Dj
+	/// 2ç‚¹é–“ã®è·é›¢ã®2ä¹—ï¼ˆ3Dï¼‰
 	/// </summary>
-	/// <param name="v1">ŠJnƒxƒNƒgƒ‹i3Dj</param>
-	/// <param name="v2">I—¹ƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>2“_ŠÔ‚Ì‹——£‚Ì2æ</returns>
+	/// <param name="v1">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <param name="v2">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>2ç‚¹é–“ã®è·é›¢ã®2ä¹—</returns>
 	static double SqrMagnitude(const VECTOR& v1, const VECTOR& v2);
 
 	/// <summary>
-	/// 2“_ŠÔ‚Ì‹——£i2Dj
+	/// 2ç‚¹é–“ã®è·é›¢ï¼ˆ2Dï¼‰
 	/// </summary>
-	/// <param name="v1">ŠJnƒxƒNƒgƒ‹i2Dj</param>
-	/// <param name="v2">I—¹ƒxƒNƒgƒ‹i2Dj</param>
-	/// <returns>2“_ŠÔ‚Ì‹——£</returns>
+	/// <param name="v1">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ2Dï¼‰</param>
+	/// <param name="v2">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ2Dï¼‰</param>
+	/// <returns>2ç‚¹é–“ã®è·é›¢</returns>
 	static double Distance(const Vector2& v1, const Vector2& v2);
 
 	/// <summary>
-	/// 2“_ŠÔ‚Ì‹——£i3Dj
+	/// 2ç‚¹é–“ã®è·é›¢ï¼ˆ3Dï¼‰
 	/// </summary>
-	/// <param name="v1">ŠJnƒxƒNƒgƒ‹i3Dj</param>
-	/// <param name="v2">I—¹ƒxƒNƒgƒ‹i3Dj</param>
-	/// <returns>2“_ŠÔ‚Ì‹——£</returns>
+	/// <param name="v1">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <param name="v2">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ3Dï¼‰</param>
+	/// <returns>2ç‚¹é–“ã®è·é›¢</returns>
 	static double Distance(const VECTOR& v1, const VECTOR& v2);
 
 	
-	/// @brief 2‚Â‚ÌƒxƒNƒgƒ‹‚ª“™‚µ‚¢‚©”»’è
-	/// @param _vec1 ”äŠr‚·‚éƒxƒNƒgƒ‹‚P
-	/// @param _vec2 ”äŠr‚·‚éƒxƒNƒgƒ‹‚Q
+	/// @brief 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ãŒç­‰ã—ã„ã‹åˆ¤å®š
+	/// @param _vec1 æ¯”è¼ƒã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ï¼‘
+	/// @param _vec2 æ¯”è¼ƒã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ï¼’
 	static bool Equals(const VECTOR& vec1, const VECTOR& vec2);
 
-	/// @brief ƒxƒNƒgƒ‹‚ªƒ[ƒƒxƒNƒgƒ‹‚©”»’è
-	/// @param _vec ‘ÎÛ‚ÌƒxƒNƒgƒ‹
+	/// @brief ãƒ™ã‚¯ãƒˆãƒ«ãŒã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«ã‹åˆ¤å®š
+	/// @param _vec å¯¾è±¡ã®ãƒ™ã‚¯ãƒˆãƒ«
 	static bool EqualsVZero(const VECTOR& vec);
 	static bool EqualsVZero(const Vector2& vec);
 	static bool EqualsVZero(const Vector2F& vec);
 
 
-	/// @brief 2DƒxƒNƒgƒ‹‚ğ³‹K‰»‚µ3DƒxƒNƒgƒ‹‚É•ÏŠ·
-	/// @param _vec ‘ÎÛ‚Ì2DƒxƒNƒgƒ‹
+	/// @brief 2Dãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–ã—3Dãƒ™ã‚¯ãƒˆãƒ«ã«å¤‰æ›
+	/// @param _vec å¯¾è±¡ã®2Dãƒ™ã‚¯ãƒˆãƒ«
 	static VECTOR Normalize(const Vector2& vec);
 
 	
-	/// @brief ƒxƒNƒgƒ‹‚ğ³‹K‰»
-	/// @param _vec ‘ÎÛ‚Ì3DƒxƒNƒgƒ‹
+	/// @brief ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–
+	/// @param _vec å¯¾è±¡ã®3Dãƒ™ã‚¯ãƒˆãƒ«
 	static VECTOR VNormalize(const VECTOR& _vec);
 	static Vector2 VNormalize(const Vector2& vec);
 	static Vector2F VNormalize(const Vector2F& _vec);
 
 	/// <summary>
-	/// 2‚Â‚ÌƒxƒNƒgƒ‹‚ÌŠÔ‚ÌŠp“xi“xj‚ğ•Ô‚·
+	/// 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®é–“ã®è§’åº¦ï¼ˆåº¦ï¼‰ã‚’è¿”ã™
 	/// </summary>
-	/// <param name="from">ŠJnƒxƒNƒgƒ‹</param>
-	/// <param name="to">I—¹ƒxƒNƒgƒ‹</param>
-	/// <returns>ƒxƒNƒgƒ‹ŠÔ‚ÌŠp“xi“xj</returns>
+	/// <param name="from">é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="to">çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <returns>ãƒ™ã‚¯ãƒˆãƒ«é–“ã®è§’åº¦ï¼ˆåº¦ï¼‰</returns>
 	static double AngleDeg(const VECTOR& from, const VECTOR& to);
 
-	//•`‰æŒn
+	//æç”»ç³»
 
 	/// <summary>
-	/// w’èˆÊ’u‚©‚ç•ûŒüƒxƒNƒgƒ‹‚ÉŒü‚¯‚Äü‚ğ•`‰æ‚·‚é
+	/// æŒ‡å®šä½ç½®ã‹ã‚‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã«å‘ã‘ã¦ç·šã‚’æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="pos">ŠJnˆÊ’u</param>
-	/// <param name="dir">•ûŒüƒxƒNƒgƒ‹</param>
-	/// <param name="color">FiDxLib‚ÌFƒR[ƒhj</param>
-	/// <param name="len">ü‚Ì’·‚³iƒfƒtƒHƒ‹ƒg‚Í50.0fj</param>
-	/// <returns>‚È‚µ</returns>
+	/// <param name="pos">é–‹å§‹ä½ç½®</param>
+	/// <param name="dir">æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«</param>
+	/// <param name="color">è‰²ï¼ˆDxLibã®è‰²ã‚³ãƒ¼ãƒ‰ï¼‰</param>
+	/// <param name="len">ç·šã®é•·ã•ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯50.0fï¼‰</param>
+	/// <returns>ãªã—</returns>
 	static void DrawLineDir(const VECTOR& pos, const VECTOR& dir, int color, float len = 50.0f);
 
 	/// <summary>
-	/// w’èˆÊ’u‚©‚ç‰ñ“]s—ñ‚Ì²•ûŒü‚Éü‚ğ•`‰æ‚·‚é
+	/// æŒ‡å®šä½ç½®ã‹ã‚‰å›è»¢è¡Œåˆ—ã®è»¸æ–¹å‘ã«ç·šã‚’æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="pos">ŠJnˆÊ’u</param>
-	/// <param name="rot">‰ñ“]s—ñ</param>
-	/// <param name="len">ü‚Ì’·‚³iƒfƒtƒHƒ‹ƒg‚Í50.0fj</param>
-	/// <returns>‚È‚µ</returns>
+	/// <param name="pos">é–‹å§‹ä½ç½®</param>
+	/// <param name="rot">å›è»¢è¡Œåˆ—</param>
+	/// <param name="len">ç·šã®é•·ã•ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯50.0fï¼‰</param>
+	/// <returns>ãªã—</returns>
 	static void DrawLineXYZ(const VECTOR& pos, const MATRIX& rot, float len = 50.0f);
 
 	/// <summary>
-	/// w’èˆÊ’u‚©‚çƒNƒH[ƒ^ƒjƒIƒ“‚Ì²•ûŒü‚Éü‚ğ•`‰æ‚·‚é
+	/// æŒ‡å®šä½ç½®ã‹ã‚‰ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®è»¸æ–¹å‘ã«ç·šã‚’æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="pos">ŠJnˆÊ’u</param>
-	/// <param name="rot">ƒNƒH[ƒ^ƒjƒIƒ“‰ñ“]</param>
-	/// <param name="len">ü‚Ì’·‚³iƒfƒtƒHƒ‹ƒg‚Í50.0fj</param>
-	/// <returns>‚È‚µ</returns>
+	/// <param name="pos">é–‹å§‹ä½ç½®</param>
+	/// <param name="rot">ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³å›è»¢</param>
+	/// <param name="len">ç·šã®é•·ã•ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯50.0fï¼‰</param>
+	/// <returns>ãªã—</returns>
 	static void DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len = 50.0f);
 
-	/// @brief w’è‚µ‚½’†S“_‚©‚ç‰~üã‚ÌˆÊ’u‚ğŒvZ‚·‚é
-    /// @param center ’†SÀ•W
-    /// @param radius ”¼Œa
-    /// @param angle Šp“xiƒ‰ƒWƒAƒ“j
-    /// @return ‰~üã‚ÌˆÊ’uÀ•W
+	/// @brief æŒ‡å®šã—ãŸä¸­å¿ƒç‚¹ã‹ã‚‰å††å‘¨ä¸Šã®ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹
+    /// @param center ä¸­å¿ƒåº§æ¨™
+    /// @param radius åŠå¾„
+    /// @param angle è§’åº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³ï¼‰
+    /// @return å††å‘¨ä¸Šã®ä½ç½®åº§æ¨™
 	static VECTOR GetCirclePos(const VECTOR& center, float radius, float angle);
 
-	//‘Ò‹@ŠÔ
+	//å¾…æ©Ÿæ™‚é–“
 	//static bool IsTimeOver(float& totalTime, const float& waitTime);
 
-	// ƒ‰ƒ“ƒ_ƒ€‚È”’l‚ğ•Ô‚·(float—p)
+	// ãƒ©ãƒ³ãƒ€ãƒ ãªæ•°å€¤ã‚’è¿”ã™(floatç”¨)
 	static float  RandRangeF(float min, float max);
 
-	/// @brief ü•ªã‚ÌÅ‚àƒ^[ƒQƒbƒg‚É‹ß‚¢À•W‚ğZo
-	/// @param startPos ü•ª‚ÌŠJn“_
-	/// @param endPos ü•ª‚ÌI—¹“_
-	/// @param targetPos ƒ^[ƒQƒbƒgÀ•W
-	/// @return ü•ªã‚ÌÅ‹ßÚÀ•W
+	/// @brief ç·šåˆ†ä¸Šã®æœ€ã‚‚ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«è¿‘ã„åº§æ¨™ã‚’ç®—å‡º
+	/// @param startPos ç·šåˆ†ã®é–‹å§‹ç‚¹
+	/// @param endPos ç·šåˆ†ã®çµ‚äº†ç‚¹
+	/// @param targetPos ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåº§æ¨™
+	/// @return ç·šåˆ†ä¸Šã®æœ€è¿‘æ¥åº§æ¨™
 	static VECTOR GetNearestPointOnSegment(const VECTOR& _startPos,
 		const VECTOR& _endPos, const VECTOR& _targetPos);
 };

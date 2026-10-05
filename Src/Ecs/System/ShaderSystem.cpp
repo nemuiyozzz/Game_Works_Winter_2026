@@ -21,6 +21,16 @@ void ShaderSystem::Release(void)
 	renderCommandQueue_.clear();
 }
 
+void ShaderSystem::Update(EcsRegistry& registry)
+{
+	auto entities = registry.GetEntitiesWith<TransformComponent, ShaderComponent>();
+
+	for (Entity entity : entities)
+	{
+		QueueDrawCommand(registry, entity);
+	}
+}
+
 void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
 {
 	// 必須コンポーネント（Transform と Shader）の確認

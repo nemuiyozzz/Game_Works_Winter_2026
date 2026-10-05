@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+#include <memory>
 #include "../SceneBase.h"
-#include "../../Ecs/System/TransformSystem.h"
 #include "../../Ecs/Entity.h"
+#include "../../Ecs/System/ISystem.h"
+#include "../../Ecs/System/ModelSystem.h"
 
 /// @brief ゲーム本編シーンクラス
 class SceneGame : public SceneBase
@@ -15,11 +18,11 @@ public:
 	/// @brief デストラクタ
 	~SceneGame(void) override;
 
-	/// @brief リソースの非同期ロード処理
+	/// @brief 非同期ロード処理
 	void Load(void) override;
 
 	/// @brief ロード完了時の処理
-	void EndLoad(void) override;
+	void EndLoad(void) override {}
 
 	/// @brief 初期化処理
 	void Initialize(void) override;
@@ -36,13 +39,14 @@ public:
 protected:
 
 	/// @brief ImGui用の更新処理
-	void UpdateGui(void) override;
+	void UpdateGui(void) override {}
 
 private:
 
-	// Transform計算用のシステム
-	TransformSystem transformSystem_; 
+	// ECSシステムパイプライン
+	std::vector<std::shared_ptr<ISystem>> updateSystems_;
+	std::shared_ptr<ModelSystem> modelSystem_;
 
-	// テスト用のエンティティID
-	Entity testPlayerEntity_;
+	// エンティティID
+	Entity playerEntity_;
 };

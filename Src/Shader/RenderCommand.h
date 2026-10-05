@@ -1,40 +1,40 @@
-#pragma once
+ï»¿#pragma once
 
 #include <vector>
 
-/// @brief •`‰æ–½—ß‚Ìí•Ê
+/// @brief æç”»å‘½ä»¤ã®ç¨®åˆ¥
 enum class RENDER_TYPE
 {
-	DRAW_2D, // ‰æ‘œ‚È‚Ç‚Ì”Âƒ|ƒŠƒSƒ“•`‰æ
-	DRAW_3D  // 3Dƒ‚ƒfƒ‹‚Ì•`‰æ
+	DRAW_2D, // ç”»åƒãªã©ã®æ¿ãƒãƒªã‚´ãƒ³æç”»
+	DRAW_3D  // 3Dãƒ¢ãƒ‡ãƒ«ã®æç”»
 };
 
-/// @brief •`‰æ–½—ß‚ğ•Û‚·‚é\‘¢‘Ì
+/// @brief æç”»å‘½ä»¤ã‚’ä¿æŒã™ã‚‹æ§‹é€ ä½“
 struct RenderCommand
 {
-	// •`‰æí•ÊŠÖ˜A
-	RENDER_TYPE renderType;                                   // 2D‚©3D‚©‚Ì”»•Ê
+	// æç”»ç¨®åˆ¥é–¢é€£
+	RENDER_TYPE renderType;                                   // 2Dã‹3Dã‹ã®åˆ¤åˆ¥
 
-	// ƒŠƒ\[ƒXŠÖ˜A
-	int vertexShaderHandleId;                                 // ’¸“_ƒVƒF[ƒ_‚ÌIDi-1‚Å•sg—pj
-	int pixelShaderHandleId;                                  // ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚ÌID
-	int modelHandleId;                                        // 3Dƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹
+	// ãƒªã‚½ãƒ¼ã‚¹é–¢é€£
+	int vertexShaderHandleId;                                 // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã®IDï¼ˆ-1ã§ä¸ä½¿ç”¨ï¼‰
+	int pixelShaderHandleId;                                  // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®ID
+	int modelHandleId;                                        // 3Dãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ³ãƒ‰ãƒ«
 
-	// 2D•`‰æÀ•WŠÖ˜A
-	float positionX;                                          // •`‰æXÀ•W
-	float positionY;                                          // •`‰æYÀ•W
-	float scaleSize;                                          // •`‰æƒXƒP[ƒ‹
+	// 2Dæç”»åº§æ¨™é–¢é€£
+	float positionX;                                          // æç”»Xåº§æ¨™
+	float positionY;                                          // æç”»Yåº§æ¨™
+	float scaleSize;                                          // æç”»ã‚¹ã‚±ãƒ¼ãƒ«
 
-	// ƒeƒNƒXƒ`ƒƒŠÖ˜A
-	int textureHandleId;                                      // ƒƒCƒ“ƒeƒNƒXƒ`ƒƒ‚Ìƒnƒ“ƒhƒ‹
-	int normalMapHandleId;                                    // ƒm[ƒ}ƒ‹ƒ}ƒbƒv‚Ìƒnƒ“ƒhƒ‹
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£é–¢é€£
+	int textureHandleId;                                      // ãƒ¡ã‚¤ãƒ³ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒãƒ³ãƒ‰ãƒ«
+	int normalMapHandleId;                                    // ãƒãƒ¼ãƒãƒ«ãƒãƒƒãƒ—ã®ãƒãƒ³ãƒ‰ãƒ«
 
-	// ƒpƒ‰ƒ[ƒ^ŠÖ˜A
-	std::vector<unsigned char> vertexParameterData;           // ’¸“_ƒVƒF[ƒ_—p’è”ƒoƒbƒtƒ@‚Ìƒf[ƒ^
-	int vertexParameterSize;                                  // ’¸“_ƒVƒF[ƒ_—pƒpƒ‰ƒ[ƒ^‚ÌƒTƒCƒY
-	std::vector<unsigned char> pixelParameterData;            // ƒsƒNƒZƒ‹ƒVƒF[ƒ_—p’è”ƒoƒbƒtƒ@‚Ìƒf[ƒ^
-	int pixelParameterSize;                                   // ƒsƒNƒZƒ‹ƒVƒF[ƒ_—pƒpƒ‰ƒ[ƒ^‚ÌƒTƒCƒY
+	// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢é€£
+	std::vector<unsigned char> vertexParameterData;           // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿
+	int vertexParameterSize;                                  // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
+	std::vector<unsigned char> pixelParameterData;            // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿
+	int pixelParameterSize;                                   // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 
-	// ƒNƒ‰ƒ“ƒv‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+	// ã‚¯ãƒ©ãƒ³ãƒ—ã™ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 	bool isClamp = false;                                     
 };

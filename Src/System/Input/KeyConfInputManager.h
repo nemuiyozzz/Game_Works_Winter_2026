@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <unordered_map>
 #include <DxLib.h>
@@ -7,248 +7,248 @@
 
 #include "../../Common/Vector2.h"
 
-/// @brief “ü—ÍŠÇ—ƒNƒ‰ƒX
+/// @brief å…¥åŠ›ç®¡ç†ã‚¯ãƒ©ã‚¹
 class KeyConfInputManager
 {
 public:
 
-	/// @brief ƒ}ƒEƒX‚ÌŠ´“xİ’è
+	/// @brief ãƒã‚¦ã‚¹ã®æ„Ÿåº¦è¨­å®š
 	struct MouseSensitivity
 	{
-		float x = 1.0f;         // X²Š´“x
-		float y = 1.0f;         // Y²Š´“x
-		bool invertX = false;   // X²”½“]
-		bool invertY = false;   // Y²”½“]
+		float x = 1.0f;         // Xè»¸æ„Ÿåº¦
+		float y = 1.0f;         // Yè»¸æ„Ÿåº¦
+		bool invertX = false;   // Xè»¸åè»¢
+		bool invertY = false;   // Yè»¸åè»¢
 	};
 
-	/// @brief ‰EƒXƒeƒBƒbƒN‚ÌŠ´“xİ’è
+	/// @brief å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®æ„Ÿåº¦è¨­å®š
 	struct RStickSensitivity
 	{
-		float x = 1.0f;          // X²Š´“x
-		float y = 1.0f;          // Y²Š´“x
-		bool invertX = false;    // X²”½“]
-		bool invertY = false;    // Y²”½“]
-		float deadZone = 0.35f;  // ƒfƒbƒgƒ][ƒ“‚Ì‚µ‚«‚¢’l
+		float x = 1.0f;          // Xè»¸æ„Ÿåº¦
+		float y = 1.0f;          // Yè»¸æ„Ÿåº¦
+		bool invertX = false;    // Xè»¸åè»¢
+		bool invertY = false;    // Yè»¸åè»¢
+		float deadZone = 0.35f;  // ãƒ‡ãƒƒãƒˆã‚¾ãƒ¼ãƒ³ã®ã—ãã„å€¤
 	};
 
-	/// @brief ƒCƒ“ƒXƒ^ƒ“‚Ì¶¬
+	/// @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã®ç”Ÿæˆ
 	static void CreateInstance(void);
 
-	/// @brief ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾ 
-	/// @return ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌQÆ
+	/// @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾— 
+	/// @return ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å‚ç…§
 	static KeyConfInputManager& GetInstance(void);
 
-	/// @brief ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”jŠü
+	/// @brief ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç ´æ£„
 	void DestroyInstance(void);
 
-	/// @brief XVˆ—
+	/// @brief æ›´æ–°å‡¦ç†
 	void Update(void);
 
-	/// @brief ‰Ÿ‚µ‘±‚¯‚Ä‚¢‚éŠÔ true ‚ğ•Ô‚·
-	/// @param _name ƒCƒxƒ“ƒg–¼
-	/// @return ‰Ÿ‚³‚ê‚Ä‚¢‚ê‚Î true
+	/// @brief æŠ¼ã—ç¶šã‘ã¦ã„ã‚‹é–“ true ã‚’è¿”ã™
+	/// @param _name ã‚¤ãƒ™ãƒ³ãƒˆå
+	/// @return æŠ¼ã•ã‚Œã¦ã„ã‚Œã° true
 	bool isPressed(const std::wstring& _name) const;
 
-	/// @brief —£‚µ‚½uŠÔ‚Ì‚İ true ‚ğ•Ô‚·
-	/// @param _name ƒCƒxƒ“ƒg–¼
-	/// @return —£‚µ‚½uŠÔ‚Ì‚İ true
+	/// @brief é›¢ã—ãŸç¬é–“ã®ã¿ true ã‚’è¿”ã™
+	/// @param _name ã‚¤ãƒ™ãƒ³ãƒˆå
+	/// @return é›¢ã—ãŸç¬é–“ã®ã¿ true
 	bool isTrigerUp(const std::wstring& _name) const;
 
-	/// @brief ‰Ÿ‚µ‚½uŠÔ‚Ì‚İ true ‚ğ•Ô‚·
-	/// @param _name ƒCƒxƒ“ƒg–¼
-	/// @return ‰Ÿ‚µ‚½uŠÔ‚Ì‚İ true
+	/// @brief æŠ¼ã—ãŸç¬é–“ã®ã¿ true ã‚’è¿”ã™
+	/// @param _name ã‚¤ãƒ™ãƒ³ãƒˆå
+	/// @return æŠ¼ã—ãŸç¬é–“ã®ã¿ true
 	bool isTrigerDown(const std::wstring& _name) const;
 
-	/// @brief ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ÌÀ•W‚ğæ“¾ 
-	/// @return ƒXƒNƒŠ[ƒ“À•W‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹ˆÊ’u
+	/// @brief ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®åº§æ¨™ã‚’å–å¾— 
+	/// @return ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®
 	Vector2 GetMousePosition(void) const;
 
-	/// @brief ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ğæ“¾‚µAƒJ[ƒ\ƒ‹‚ğ‰æ–Ê’†‰›‚ÉŒÅ’èE”ñ•\¦‚É‚·‚é
-	/// @return ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌˆÚ“®—Ê
+	/// @brief ãƒã‚¦ã‚¹ã®ç§»å‹•é‡ã‚’å–å¾—ã—ã€ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç”»é¢ä¸­å¤®ã«å›ºå®šãƒ»éè¡¨ç¤ºã«ã™ã‚‹
+	/// @return å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®ç§»å‹•é‡
 	Vector2F GetMouseVelocityAndFixCenter(void);
 
-	/// @brief ƒ}ƒEƒX‚ÌŠ´“xİ’è‚ğ•ÏX‚·‚é
-	/// @param _sensitivity İ’è‚·‚éŠ´“xƒf[ƒ^
+	/// @brief ãƒã‚¦ã‚¹ã®æ„Ÿåº¦è¨­å®šã‚’å¤‰æ›´ã™ã‚‹
+	/// @param _sensitivity è¨­å®šã™ã‚‹æ„Ÿåº¦ãƒ‡ãƒ¼ã‚¿
 	void SetMouseSensitivity(const MouseSensitivity& _sensitivity);
 
-	/// @brief Œ»İ‚Ìƒ}ƒEƒXŠ´“xİ’è‚ğæ“¾‚·‚é
-	/// @return Œ»İ‚ÌŠ´“xİ’è
+	/// @brief ç¾åœ¨ã®ãƒã‚¦ã‚¹æ„Ÿåº¦è¨­å®šã‚’å–å¾—ã™ã‚‹
+	/// @return ç¾åœ¨ã®æ„Ÿåº¦è¨­å®š
 	const MouseSensitivity& GetMouseSensitivity(void) const;
 
-	/// @brief ¶ƒXƒeƒBƒbƒN‚Ì“ü—Í•ûŒü‚ğ³‹K‰»‚µ‚½XZƒxƒNƒgƒ‹‚Å•Ô‚·
-	/// @return ³‹K‰»Ï‚İ‚Ì•ûŒüƒxƒNƒgƒ‹
+	/// @brief å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›æ–¹å‘ã‚’æ­£è¦åŒ–ã—ãŸXZãƒ™ã‚¯ãƒˆãƒ«ã§è¿”ã™
+	/// @return æ­£è¦åŒ–æ¸ˆã¿ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR GetLeftStickDirection(void) const;
 
-	/// @brief ‰EƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚ğ•Ô‚·
-	/// @return ‰EƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê
+	/// @brief å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã‚’è¿”ã™
+	/// @return å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡
 	Vector2F GetRIghtStick(void) const;
 
-	/// @brief ¶ƒXƒeƒBƒbƒN‚Ì¶‚Ì“ü—Í’l‚ğ•Ô‚·
-	/// @return ¶ƒXƒeƒBƒbƒN‚Ì¶‚Ì“ü—Í’l
+	/// @brief å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ç”Ÿã®å…¥åŠ›å€¤ã‚’è¿”ã™
+	/// @return å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ç”Ÿã®å…¥åŠ›å€¤
 	Vector2F GetLeftStickRaw(void) const;
 
-	/// @brief ‰EƒXƒeƒBƒbƒN‚Ì¶‚Ì“ü—Í’l‚ğ•Ô‚·
-	/// @return ‰EƒXƒeƒBƒbƒN‚Ì¶‚Ì“ü—Í’l
+	/// @brief å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ç”Ÿã®å…¥åŠ›å€¤ã‚’è¿”ã™
+	/// @return å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ç”Ÿã®å…¥åŠ›å€¤
 	Vector2F GetRightStickRaw(void) const;
 
-	/// @brief ‰EƒXƒeƒBƒbƒN‚ÌŠ´“xİ’è‚ğ•ÏX‚·‚é
-	/// @param _sensitivity İ’è‚·‚éŠ´“xƒf[ƒ^
+	/// @brief å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®æ„Ÿåº¦è¨­å®šã‚’å¤‰æ›´ã™ã‚‹
+	/// @param _sensitivity è¨­å®šã™ã‚‹æ„Ÿåº¦ãƒ‡ãƒ¼ã‚¿
 	void SetRStickSensitivity(const RStickSensitivity& _sensitivity);
 
-	/// @brief Œ»İ‚Ì‰EƒXƒeƒBƒbƒN‚ÌŠ´“xİ’è‚ğæ“¾‚·‚é
-	/// @return Œ»İ‚ÌŠ´“xİ’è
+	/// @brief ç¾åœ¨ã®å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®æ„Ÿåº¦è¨­å®šã‚’å–å¾—ã™ã‚‹
+	/// @return ç¾åœ¨ã®æ„Ÿåº¦è¨­å®š
 	const RStickSensitivity& GetRStickSensitivity(void) const;
 
-	/// @brief Œ»İ‚Ì“ü—Íƒe[ƒuƒ‹‚ğƒtƒ@ƒCƒ‹‚É•Û‘¶‚·‚é
+	/// @brief ç¾åœ¨ã®å…¥åŠ›ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã™ã‚‹
 	void SaveInputTable(void);
 
-	/// @brief ƒtƒ@ƒCƒ‹‚©‚ç“ü—Íƒe[ƒuƒ‹‚ğ“Ç‚İ‚Ş
+	/// @brief ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å…¥åŠ›ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	void LoadInputTable(void);
 
-	/// @brief Š´“xİ’è‚ğƒtƒ@ƒCƒ‹‚É•Û‘¶‚·‚é
+	/// @brief æ„Ÿåº¦è¨­å®šã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã™ã‚‹
 	void SaveSensitivitySettings(void) const;
 
-	/// @brief Š´“xİ’è‚ğƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚Ş
+	/// @brief æ„Ÿåº¦è¨­å®šã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚€
 	void LoadSensitivitySettings(void);
 
-	/// @brief g—p‚·‚éƒpƒbƒh‚Ì”Ô†‚ğİ’è‚·‚é
-	/// @param _padNo DxLib’è”
+	/// @brief ä½¿ç”¨ã™ã‚‹ãƒ‘ãƒƒãƒ‰ã®ç•ªå·ã‚’è¨­å®šã™ã‚‹
+	/// @param _padNo DxLibå®šæ•°
 	void SetUsePadNo(int _padNo);
 
-	/// @brief ƒ}ƒEƒXƒzƒC[ƒ‹‚Ì‰ñ“]—Ê‚ğæ“¾‚·‚é
-	/// @return ‘OƒtƒŒ[ƒ€‚©‚ç‚Ì‰ñ“]—Ê 
+	/// @brief ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é‡ã‚’å–å¾—ã™ã‚‹
+	/// @return å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®å›è»¢é‡ 
 	int GetMouseWheel(void) const;
 
 private:
 
-	/// @brief “ü—ÍƒfƒoƒCƒX–¼
+	/// @brief å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹å
 	enum class INPUT_TYPE
 	{
-		KEY_BOARD,      // ƒL[ƒ{[ƒh
-		MOUSE,          // ƒ}ƒEƒX
-		JOYPAD,         // ƒWƒ‡ƒCƒpƒbƒg
-		XINPUT_ANALOG,  // XInput‚ÌƒAƒiƒƒO“ü—Í
+		KEY_BOARD,      // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰
+		MOUSE,          // ãƒã‚¦ã‚¹
+		JOYPAD,         // ã‚¸ãƒ§ã‚¤ãƒ‘ãƒƒãƒˆ
+		XINPUT_ANALOG,  // XInputã®ã‚¢ãƒŠãƒ­ã‚°å…¥åŠ›
 	};
 
-	/// @brief À“ü—Íî•ñ
+	/// @brief å®Ÿå…¥åŠ›æƒ…å ±
 	struct InputInfo
 	{
-		INPUT_TYPE type = INPUT_TYPE::KEY_BOARD; // “ü—ÍƒfƒoƒCƒX‚Ìí—Ş
-		unsigned int id = -1;                    // ƒL[ƒR[ƒh‚âƒ{ƒ^ƒ“ID‚È‚Ç‚Ì¯•Êq
+		INPUT_TYPE type = INPUT_TYPE::KEY_BOARD; // å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
+		unsigned int id = -1;                    // ã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚„ãƒœã‚¿ãƒ³IDãªã©ã®è­˜åˆ¥å­
 	};
 
-	/// @brief •Û‘¶ƒf[ƒ^‚Ìƒwƒbƒ_\‘¢
+	/// @brief ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã®ãƒ˜ãƒƒãƒ€æ§‹é€ 
 	struct KeyConfigHeader
 	{
-		char     signature[4] = { "" };  // ƒtƒ@ƒCƒ‹¯•Ê‚æ‚¤‚ÌƒVƒOƒlƒ`ƒƒ
-		float    version = 1.0f;         // ƒo[ƒWƒ‡ƒ“
-		uint32_t dataNum = 0;            // “ü—ÍƒCƒxƒ“ƒg‚Ì”
+		char     signature[4] = { "" };  // ãƒ•ã‚¡ã‚¤ãƒ«è­˜åˆ¥ã‚ˆã†ã®ã‚·ã‚°ãƒãƒãƒ£
+		float    version = 1.0f;         // ãƒãƒ¼ã‚¸ãƒ§ãƒ³
+		uint32_t dataNum = 0;            // å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆã®æ•°
 	};
 
-	/// @brief ƒXƒeƒBƒbƒN‚Ì“ü—Í’l
+	/// @brief ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›å€¤
 	struct StickInfo
 	{
-		int leftStickX = 0;     // ¶ƒXƒeƒBƒbƒN ¶‰E
-		int leftStickY = 0;     // ¶ƒXƒeƒBƒbƒN ã‰º
-		int rightStickX = 0;    // ‰EƒXƒeƒBƒbƒN ¶‰E
-		int rightStickY = 0;    // ‰EƒXƒeƒBƒbƒN ã‰º
+		int leftStickX = 0;     // å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ å·¦å³
+		int leftStickY = 0;     // å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ ä¸Šä¸‹
+		int rightStickX = 0;    // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ å·¦å³
+		int rightStickY = 0;    // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ ä¸Šä¸‹
 	};
 
-	/// @brief Š´“xİ’èƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_\‘¢
+	/// @brief æ„Ÿåº¦è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€æ§‹é€ 
 	struct SensitivityHeader
 	{
-		char  signature[4] = { "" };   // ƒtƒ@ƒCƒ‹¯•Ê—p‚ÌƒVƒOƒlƒ`ƒƒ
-		float version = 1.0f;          // ƒo[ƒWƒ‡ƒ“
+		char  signature[4] = { "" };   // ãƒ•ã‚¡ã‚¤ãƒ«è­˜åˆ¥ç”¨ã®ã‚·ã‚°ãƒãƒãƒ£
+		float version = 1.0f;          // ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 	};
 
-	/// @brief XInput‚ÌƒAƒiƒƒO“ü—Í‚ğƒ{ƒ^ƒ“‚Æ‚µ‚Äˆµ‚¤‚½‚ß‚ÌID
+	/// @brief XInputã®ã‚¢ãƒŠãƒ­ã‚°å…¥åŠ›ã‚’ãƒœã‚¿ãƒ³ã¨ã—ã¦æ‰±ã†ãŸã‚ã®ID
 	enum class XINPUT_ANALOG_ID
 	{
-		LEFT_TRIGGER,      // ¶ƒgƒŠƒK[
-		RIGHT_TRIGGER,     // ‰EƒgƒŠƒK[
-		LEFT_STICK_UP,     // ¶ƒXƒeƒbƒNã
-		LEFT_STICK_DOWN,   // ¶ƒXƒeƒbƒN‰º
-		LEFT_STICK_LEFT,   // ¶ƒXƒeƒbƒN¶
-		LEFT_STICK_RIGHT,  // ¶ƒXƒeƒbƒN‰E
-		RIGHT_STICK_UP,    // ‰EƒXƒeƒBƒbƒNã
-		RIGHT_STICK_DOWN,  // ‰EƒXƒeƒBƒbƒN‰º
-		RIGHT_STICK_LEFT,  // ‰EƒXƒeƒBƒbƒN¶
-		RIGHT_STICK_RIGHT, // ‰EƒXƒeƒBƒbƒN‰E
-		LEFT_SHOULDER,     // Lƒ{ƒ^ƒ“/LB
-		RIGHT_SHOULDER,    // Rƒ{ƒ^ƒ“/RB
-		LEFT_STICK_PUSH,   // ¶ƒXƒeƒBƒbƒN‰Ÿ‚µ‚İ
-		RIGHT_STICK_PUSH,  // ‰EƒXƒeƒBƒbƒN‰Ÿ‚µ‚İ
+		LEFT_TRIGGER,      // å·¦ãƒˆãƒªã‚¬ãƒ¼
+		RIGHT_TRIGGER,     // å³ãƒˆãƒªã‚¬ãƒ¼
+		LEFT_STICK_UP,     // å·¦ã‚¹ãƒ†ãƒƒã‚¯ä¸Š
+		LEFT_STICK_DOWN,   // å·¦ã‚¹ãƒ†ãƒƒã‚¯ä¸‹
+		LEFT_STICK_LEFT,   // å·¦ã‚¹ãƒ†ãƒƒã‚¯å·¦
+		LEFT_STICK_RIGHT,  // å·¦ã‚¹ãƒ†ãƒƒã‚¯å³
+		RIGHT_STICK_UP,    // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ä¸Š
+		RIGHT_STICK_DOWN,  // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ä¸‹
+		RIGHT_STICK_LEFT,  // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯å·¦
+		RIGHT_STICK_RIGHT, // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯å³
+		LEFT_SHOULDER,     // Lãƒœã‚¿ãƒ³/LB
+		RIGHT_SHOULDER,    // Rãƒœã‚¿ãƒ³/RB
+		LEFT_STICK_PUSH,   // å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯æŠ¼ã—è¾¼ã¿
+		RIGHT_STICK_PUSH,  // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯æŠ¼ã—è¾¼ã¿
 	};
 
-	// XInput‚ÌƒAƒiƒƒO’l‚ÌÅ‘å’l
+	// XInputã®ã‚¢ãƒŠãƒ­ã‚°å€¤ã®æœ€å¤§å€¤
 	static constexpr float XINPUT_VAL_MAX = 32767.0f;
 
-	/// @brief ¶ƒXƒeƒBƒbƒN‚Ìƒfƒbƒhƒ][ƒ“‚µ‚«‚¢’l
+	/// @brief å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³ã—ãã„å€¤
 	static constexpr float LEFT_STICK_DEAD_ZONE = 0.35f;
 
-	// “ü—Íƒe[ƒuƒ‹ŠÖ˜A
+	// å…¥åŠ›ãƒ†ãƒ¼ãƒ–ãƒ«é–¢é€£
 	using InputTable_t = std::unordered_map<std::wstring, std::vector<InputInfo>>;
-	InputTable_t inputTable_;                                   // ƒCƒxƒ“ƒg–¼‚ÆÀ“ü—Í‚Ìƒ}ƒbƒsƒ“ƒOƒe[ƒuƒ‹
-	std::unordered_map<std::wstring, bool> currentInputState_;   // Œ»ƒtƒŒ[ƒ€‚Ì“ü—Íó‘Ô(ƒCƒxƒ“ƒg–¼ ¨ ‰Ÿ‚³‚ê‚Ä‚¢‚é‚©)
-	std::unordered_map<std::wstring, bool> previousInputState_;  // ‘OƒtƒŒ[ƒ€‚Ì“ü—Íó‘Ô(ƒgƒŠƒK[”»’è‚Ég—p)
+	InputTable_t inputTable_;                                   // ã‚¤ãƒ™ãƒ³ãƒˆåã¨å®Ÿå…¥åŠ›ã®ãƒãƒƒãƒ”ãƒ³ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«
+	std::unordered_map<std::wstring, bool> currentInputState_;   // ç¾ãƒ•ãƒ¬ãƒ¼ãƒ ã®å…¥åŠ›çŠ¶æ…‹(ã‚¤ãƒ™ãƒ³ãƒˆå â†’ æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹)
+	std::unordered_map<std::wstring, bool> previousInputState_;  // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å…¥åŠ›çŠ¶æ…‹(ãƒˆãƒªã‚¬ãƒ¼åˆ¤å®šã«ä½¿ç”¨)
 
-	// ƒXƒeƒBƒbƒNŠÖ˜A
-	StickInfo stickInfo_;                  // Œ»ƒtƒŒ[ƒ€‚ÌƒXƒeƒBƒbƒN“ü—Í’l
-	RStickSensitivity rStickSensitivity_;  // ‰EƒXƒeƒBƒbƒN‚ÌŠ´“xİ’è
+	// ã‚¹ãƒ†ã‚£ãƒƒã‚¯é–¢é€£
+	StickInfo stickInfo_;                  // ç¾ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚¹ãƒ†ã‚£ãƒƒã‚¯å…¥åŠ›å€¤
+	RStickSensitivity rStickSensitivity_;  // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®æ„Ÿåº¦è¨­å®š
 
-	// ƒ}ƒEƒXŠÖ˜A
-	Vector2 mousePosition_;               // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ÌÀ•W
-	MouseSensitivity mouseSensitivity_;   // ƒ}ƒEƒXŠ´“x
-	int mouseWheelVol_;                   // ƒ}ƒEƒXƒzƒC[ƒ‹‚Ì‰ñ“]—Ê
+	// ãƒã‚¦ã‚¹é–¢é€£
+	Vector2 mousePosition_;               // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®åº§æ¨™
+	MouseSensitivity mouseSensitivity_;   // ãƒã‚¦ã‚¹æ„Ÿåº¦
+	int mouseWheelVol_;                   // ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã®å›è»¢é‡
 
-	// g—p‚·‚éƒpƒbƒh‚Ì”Ô†
+	// ä½¿ç”¨ã™ã‚‹ãƒ‘ãƒƒãƒ‰ã®ç•ªå·
 	int usePadNo_;
 
-	// ƒVƒ“ƒOƒ‹ƒgƒ“—pƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ç”¨ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static KeyConfInputManager* instance_;
 
-	/// @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	KeyConfInputManager(void);
 
-	/// @brief ƒfƒXƒgƒ‰ƒNƒ^ 
+	/// @brief ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ 
 	~KeyConfInputManager(void) = default;
 
-	/// @brief “ü—Íƒe[ƒuƒ‹‚ğƒfƒtƒHƒ‹ƒgİ’è‚Å‰Šú‰»‚·‚é
+	/// @brief å…¥åŠ›ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®šã§åˆæœŸåŒ–ã™ã‚‹
 	void InitInputTable(void);
 
-	/// @brief ƒXƒeƒBƒbƒN‚Ì“ü—Í’l‚ğ³‹K‰»‚µAƒfƒbƒhƒ][ƒ“ˆ—‚ğs‚¤‹¤’ÊŠÖ”
-	/// @param _rawX ¶‚ÌX“ü—Í’l
-	/// @param _rawY ¶‚ÌY“ü—Í’l
-	/// @param _deadZone “K—p‚·‚éƒfƒbƒhƒ][ƒ“
-	/// @param _outNormalX ³‹K‰»Œã‚ÌX’l‚ğó‚¯æ‚éQÆ
-	/// @param _outNormalY ³‹K‰»Œã‚ÌY’l‚ğó‚¯æ‚éQÆ
+	/// @brief ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›å€¤ã‚’æ­£è¦åŒ–ã—ã€ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³å‡¦ç†ã‚’è¡Œã†å…±é€šé–¢æ•°
+	/// @param _rawX ç”Ÿã®Xå…¥åŠ›å€¤
+	/// @param _rawY ç”Ÿã®Yå…¥åŠ›å€¤
+	/// @param _deadZone é©ç”¨ã™ã‚‹ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³
+	/// @param _outNormalX æ­£è¦åŒ–å¾Œã®Xå€¤ã‚’å—ã‘å–ã‚‹å‚ç…§
+	/// @param _outNormalY æ­£è¦åŒ–å¾Œã®Yå€¤ã‚’å—ã‘å–ã‚‹å‚ç…§
 	void CalculateNormalizedStick(int _rawX, int _rawY, float _deadZone, float& _outNormalX, float& _outNormalY) const;
 
-	/// @brief ‰EƒXƒeƒBƒbƒN‚Ì“ü—Í’l‚Éƒfƒbƒhƒ][ƒ“‚ÆŠ´“x‚ğ“K—p‚µ³‹K‰»‚·‚é
-	/// @param _rightStickX ƒXƒeƒBƒbƒN‚ÌX“ü—Í’l
-	/// @param _rightStickY ƒXƒeƒBƒbƒN‚ÌY“ü—Í’l
-	/// @param _outNormalX ˆ—Œã‚ÌX’l
-	/// @param _outNormalY ˆ—Œã‚ÌY’l
+	/// @brief å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›å€¤ã«ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³ã¨æ„Ÿåº¦ã‚’é©ç”¨ã—æ­£è¦åŒ–ã™ã‚‹
+	/// @param _rightStickX ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Xå…¥åŠ›å€¤
+	/// @param _rightStickY ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Yå…¥åŠ›å€¤
+	/// @param _outNormalX å‡¦ç†å¾Œã®Xå€¤
+	/// @param _outNormalY å‡¦ç†å¾Œã®Yå€¤
 	void ApplyRightStickSensitivity(int _rightStickX, int _rightStickY, float& _outNormalX, float& _outNormalY) const;
 
-	/// @brief ƒL[ƒ{[ƒh‚Ì“ü—Í”»’è‚ğs‚¤
-	/// @param _inputInfo ”»’è‚·‚é“ü—Íî•ñ
-	/// @param _keyState ƒL[ƒ{[ƒh‚Ì¶ƒf[ƒ^
-	/// @return ‰Ÿ‚³‚ê‚Ä‚¢‚ê‚Î true
+	/// @brief ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®å…¥åŠ›åˆ¤å®šã‚’è¡Œã†
+	/// @param _inputInfo åˆ¤å®šã™ã‚‹å…¥åŠ›æƒ…å ±
+	/// @param _keyState ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®ç”Ÿãƒ‡ãƒ¼ã‚¿
+	/// @return æŠ¼ã•ã‚Œã¦ã„ã‚Œã° true
 	bool CheckKeyboardInput(const InputInfo& _inputInfo,
 		const std::array<char, 256>& _keyState) const;
 
-	/// @brief XInput‚ÌƒAƒiƒƒO“ü—ÍƒgƒŠƒK[‚âƒXƒeƒBƒbƒN‚Ì”»’è‚ğs‚¤
-	/// @param _inputInfo ”»’è‚·‚é“ü—Íî•ñ
-	/// @param _xInputState XInput‚Ì¶ƒf[ƒ^
-	/// @return è‡’l‚ğ’´‚¦‚Ä‚¢‚ê‚Î true
+	/// @brief XInputã®ã‚¢ãƒŠãƒ­ã‚°å…¥åŠ›ãƒˆãƒªã‚¬ãƒ¼ã‚„ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®åˆ¤å®šã‚’è¡Œã†
+	/// @param _inputInfo åˆ¤å®šã™ã‚‹å…¥åŠ›æƒ…å ±
+	/// @param _xInputState XInputã®ç”Ÿãƒ‡ãƒ¼ã‚¿
+	/// @return é–¾å€¤ã‚’è¶…ãˆã¦ã„ã‚Œã° true
 	bool CheckXInputAnalog(const InputInfo& _inputInfo, const XINPUT_STATE& _xInputState) const;
 
-	// ƒRƒs[‹Ö~ 
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢ 
 	KeyConfInputManager(const KeyConfInputManager&) = delete;
 	KeyConfInputManager& operator=(const KeyConfInputManager&) = delete;
 
-	// ƒ€[ƒu‹Ö~
+	// ãƒ ãƒ¼ãƒ–ç¦æ­¢
 	KeyConfInputManager(KeyConfInputManager&&) = delete;
 	KeyConfInputManager& operator=(KeyConfInputManager&&) = delete;
 };

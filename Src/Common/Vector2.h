@@ -1,70 +1,70 @@
-#pragma once
+ï»¿#pragma once
 
-/* intŒ^Vector2  */
+/* intå‹Vector2  */
 class Vector2
 {
 public:
 
-	int x; // XÀ•W
-	int y; // YÀ•W
+	int x; // Xåº§æ¨™
+	int y; // Yåº§æ¨™
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Vector2(void) = default;
 
-	// ‘ã“üˆ—
+	// ä»£å…¥å‡¦ç†
 	Vector2 operator=(const Vector2& _vec);
 
-	// ‰ÁZˆ—
+	// åŠ ç®—å‡¦ç†
 	Vector2 operator+(const Vector2& _vec)const;
 	void operator+=(const Vector2& _vec);
 
-	// Œ¸Zˆ—
+	// æ¸›ç®—å‡¦ç†
 	Vector2 operator-(const Vector2& _vec)const;
 	void operator-=(const Vector2& _vec);
 
-	// æZˆ—
+	// ä¹—ç®—å‡¦ç†
 	Vector2 operator*(const Vector2& _vec)const;
 	void operator*=(const Vector2& _vec);
 	void operator*=(int _value);
 	void operator*=(float _value);
 
-	// œZˆ—
+	// é™¤ç®—å‡¦ç†
 	Vector2 operator/(const Vector2& _vec)const;
 	void operator/=(const Vector2& _vec);
 	void operator/=(int _value);
 };
 
 
-/* floatŒ^Vector2  */
+/* floatå‹Vector2  */
 class Vector2F
 {
 public:
 
-	float x; // XÀ•W
-	float y; // YÀ•W
+	float x; // Xåº§æ¨™
+	float y; // Yåº§æ¨™
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Vector2F(void) = default;
 
-	// ‘ã“üˆ—
+	// ä»£å…¥å‡¦ç†
 	Vector2F operator=(const Vector2F& _vec);
 
-	// ‰ÁZˆ—
+	// åŠ ç®—å‡¦ç†
 	Vector2F operator+(const Vector2F& _vec)const;
 	void operator+=(const Vector2F& _vec);
 	void operator+=(float _value);
 
-	// Œ¸Zˆ—
+	// æ¸›ç®—å‡¦ç†
 	Vector2F operator-(const Vector2F& _vec)const;
 	void operator-=(const Vector2F& _vec);
 	void operator-=(float _value);
 
-	// æZˆ—
+	// ä¹—ç®—å‡¦ç†
 	Vector2F operator*(const Vector2F& _vec)const;
 	void operator*=(const Vector2F& _vec);
 	void operator*=(float _value);
 
-	// œZˆ—
+	// é™¤ç®—å‡¦ç†
 	Vector2F operator/(const Vector2F& _vec)const;
 	void operator/=(const Vector2F& _vec);
 	void operator/=(float _value);

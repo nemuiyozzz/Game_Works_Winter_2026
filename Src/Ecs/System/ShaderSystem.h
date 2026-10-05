@@ -2,13 +2,14 @@
 
 #include <memory>
 #include <vector>
+#include "ISystem.h"
 #include "../../Ecs/EcsRegistry.h"
 #include "../../Ecs/Entity.h"
 #include "../../Shader/RenderCommand.h"
 #include "../../Shader/ShaderRenderer.h"
 
 /// @brief シェーダを用いた描画命令を収集し、バッチ処理を実行するシステム
-class ShaderSystem
+class ShaderSystem : public ISystem
 {
 public:
 
@@ -23,6 +24,10 @@ public:
 
 	/// @brief 解放処理
 	void Release(void);
+
+	/// @brief 描画可能なエンティティをすべて検索し、描画命令をキューに登録する
+	/// @param registry ECSデータベース
+	void Update(EcsRegistry& registry) override;
 
 	/// @brief ECSデータベースから対象を検索し、描画命令をキューに登録する
 	/// @param registry ECSデータベース

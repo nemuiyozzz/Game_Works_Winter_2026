@@ -47,7 +47,7 @@ void ResourceManager::Initialize(void)
 
     // 3Dモデルのサンプル
     sampleResource = Resource(Resource::RESOURCE_TYPE::MODEL,
-        Application::PATH_MODEL + L"sample.mv1");
+        Application::PATH_MODEL + L"Player.mv1");
     registeredResourcesMap_.emplace(RESOURCE_ID::MODEL_SAMPLE, sampleResource);
 
     // アニメーションのサンプル
@@ -87,7 +87,6 @@ void ResourceManager::Release(void)
     }
 
     loadedResourcesMap_.clear();
-    // registeredResourcesMap_ は次回以降の読み込みのために残しておく
 }
 
 Resource ResourceManager::Load(RESOURCE_ID targetId)
