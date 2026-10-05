@@ -4,15 +4,8 @@
 struct ImageComponent
 {
 	// 画像のハンドルID
-	int imageHandle_;
+	int imageHandle_ = -1;
 
 	// 透過処理を有効にするかどうかのフラグ
-	bool isTransparent_; 
-
-	/// @brief コンストラクタ
-	ImageComponent(void)
-		: imageHandle_(-1)
-		, isTransparent_(true)
-	{
-	}
+	bool isTransparent_ = true; 
 };

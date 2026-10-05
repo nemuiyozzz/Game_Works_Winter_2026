@@ -167,6 +167,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\MovementSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\ShaderSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\ImageSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\ModelSystem.cpp" />
@@ -198,6 +199,8 @@
     <ClCompile Include="Src\Ecs\System\TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\MovementSystem.h" />
+    <ClInclude Include="Src\Ecs\Component\VelocityComponent.h" />
     <ClInclude Include="Src\Ecs\System\ShaderSystem.h" />
     <ClInclude Include="Src\Ecs\Component\ShaderComponent.h" />
     <ClInclude Include="Src\Ecs\System\ImageSystem.h" />

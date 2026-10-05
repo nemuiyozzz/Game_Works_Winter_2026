@@ -6,25 +6,15 @@
 struct ShaderComponent
 {
 	// シェーダのハンドル関連
-	int vertexShaderHandle_; // 頂点シェーダのID（-1で不使用）
-	int pixelShaderHandle_;  // ピクセルシェーダのID
-	int textureHandle_;      // メインテクスチャのハンドル
-	int normalMapHandle_;    // ノーマルマップのハンドル
-	bool isClamp_;           // テクスチャをクランプするか
+	int vertexShaderHandle_ = -1; // 頂点シェーダのID（-1で不使用）
+	int pixelShaderHandle_ = -1;  // ピクセルシェーダのID
+	int textureHandle_ = -1;      // メインテクスチャのハンドル
+	int normalMapHandle_ = -1;    // ノーマルマップのハンドル
+	bool isClamp_ = false;           // テクスチャをクランプするか
 
 	// シェーダのパラメータ関連
 	std::vector<unsigned char> vertexParameterData_; // 頂点シェーダ用パラメータデータ
 	std::vector<unsigned char> pixelParameterData_;  // ピクセルシェーダ用パラメータデータ
-
-	/// @brief コンストラクタ
-	ShaderComponent(void)
-		: vertexShaderHandle_(-1)
-		, pixelShaderHandle_(-1)
-		, textureHandle_(-1)
-		, normalMapHandle_(-1)
-		, isClamp_(false)
-	{
-	}
 
 	/// @brief 頂点シェーダ用のパラメータ構造体をセットする
 	/// @tparam ParameterType 定数バッファの構造体型

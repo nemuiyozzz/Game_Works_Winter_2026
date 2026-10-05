@@ -4,11 +4,5 @@
 struct ModelComponent
 {
 	// モデルのハンドルID
-	int modelHandle_; 
-
-	/// @brief コンストラクタ
-	ModelComponent(void)
-		: modelHandle_(-1)
-	{
-	}
+	int modelHandle_ = -1; 
 };

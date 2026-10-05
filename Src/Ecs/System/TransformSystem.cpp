@@ -1,4 +1,5 @@
 #include "TransformSystem.h"
+#include "../Component/TransformComponent.h"
 
 void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 {
