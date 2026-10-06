@@ -7,7 +7,6 @@
 void CameraSystem::Update(EcsRegistry& registry)
 {
 	auto cameras = registry.GetEntitiesWith<TransformComponent, CameraComponent>();
-	KeyConfInputManager& inputManager = KeyConfInputManager::GetInstance();
 
 	for (Entity cameraEntity : cameras)
 	{
@@ -23,8 +22,8 @@ void CameraSystem::Update(EcsRegistry& registry)
 		}
 
 		// マウスと右スティックの入力を取得
-		Vector2F mouseDelta = inputManager.GetMouseVelocityAndFixCenter();
-		Vector2F rightStick = inputManager.GetRIghtStick();
+		Vector2F mouseDelta = KeyConfInputManager::GetInstance().GetMouseVelocityAndFixCenter();
+		Vector2F rightStick = KeyConfInputManager::GetInstance().GetRIghtStick();
 
 		// 入力量を統合
 		constexpr float MOUSE_SENSITIVITY_SCALE = 0.01f;

@@ -22,6 +22,6 @@ public:
 	/// @brief プレイヤー入力に応じてエンティティの速度を変更する
 	/// @param registry ECSデータベース
 	/// @param entity 対象のエンティティID
-	void UpdatePlayerControl(EcsRegistry& reigstry, Entity entity);
+	void UpdatePlayerControl(EcsRegistry& registry, Entity entity);
 };
 
