@@ -6,7 +6,7 @@
 struct ShaderComponent
 {
 	// シェーダのハンドル関連
-	int vertexShaderHandle_ = -1; // 頂点シェーダのID（-1で不使用）
+	int vertexShaderHandle_ = -1; // 頂点シェーダのID
 	int pixelShaderHandle_ = -1;  // ピクセルシェーダのID
 	int textureHandle_ = -1;      // メインテクスチャのハンドル
 	int normalMapHandle_ = -1;    // ノーマルマップのハンドル

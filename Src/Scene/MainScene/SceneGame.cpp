@@ -5,10 +5,11 @@
 #include "../../Ecs/Component/VelocityComponent.h"
 #include "../../Ecs/Component/PlayerInputComponent.h"
 #include "../../Ecs/Component/ModelComponent.h"
-#include "../../Ecs/Component/ModelComponent.h"
+#include "../../Ecs/Component/CameraComponent.h"
 #include "../../Ecs/System/PlayerControlSystem.h"
 #include "../../Ecs/System/MovementSystem.h"
 #include "../../Ecs/System/TransformSystem.h"
+#include "../../Ecs/System/CameraSystem.h"
 
 SceneGame::SceneGame(void)
 	: playerEntity_(NULL_ENTITY)
@@ -33,6 +34,7 @@ void SceneGame::Initialize(void)
 	updateSystems_.push_back(std::make_shared<PlayerControlSystem>());
 	updateSystems_.push_back(std::make_shared<MovementSystem>());
 	updateSystems_.push_back(std::make_shared<TransformSystem>());
+	updateSystems_.push_back(std::make_shared<CameraSystem>());
 
 	modelSystem_ = std::make_shared<ModelSystem>();
 
@@ -47,10 +49,12 @@ void SceneGame::Initialize(void)
 	model.modelHandle_ = playerModelHandle;
 	ecsRegistry_.AddComponent<ModelComponent>(playerEntity_, model);
 
-	SetCameraPositionAndTarget_UpVecY(
-		VGet(0.0f, 200.0f, -400.0f),
-		VGet(0.0f, 0.0f, 0.0f)
-	);
+	cameraEntity_ = ecsRegistry_.CreateEntity();
+	ecsRegistry_.AddComponent<TransformComponent>(cameraEntity_, {});
+
+	CameraComponent cameraData{};
+	cameraData.targetEntity_ = playerEntity_;
+	ecsRegistry_.AddComponent<CameraComponent>(cameraEntity_, cameraData);
 }
 
 void SceneGame::Update(void)

@@ -9,7 +9,7 @@ struct TransformComponent
 {
 	// 基本情報関連
 	VECTOR scale_ = UtilityMath::VECTOR_ONE;             // 大きさ
-	VECTOR rotationEuler_ = UtilityMath::VECTOR_ZERO;    // 回転（オイラー角表示用）
+	VECTOR rotationEuler_ = UtilityMath::VECTOR_ZERO;    // 回転
 	VECTOR position_ = UtilityMath::VECTOR_ZERO;         // ワールド位置
 	VECTOR localPosition_ = UtilityMath::VECTOR_ZERO;    // ローカル位置
 	VECTOR previousPosition_ = UtilityMath::VECTOR_ZERO; // 1フレーム前の位置

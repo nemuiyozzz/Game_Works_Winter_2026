@@ -47,6 +47,7 @@ private:
 	std::vector<std::shared_ptr<ISystem>> updateSystems_;
 	std::shared_ptr<ModelSystem> modelSystem_;
 
-	// エンティティID
-	Entity playerEntity_;
+	// エンティテID関連
+	Entity playerEntity_;	// プレイヤー
+	Entity cameraEntity_;	// カメラ
 };
