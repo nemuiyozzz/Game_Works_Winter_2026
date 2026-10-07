@@ -1,7 +1,7 @@
-﻿#include "../../Pch.h"
+﻿#include "../../../Pch.h"
 #include "KeyConfInputManager.h"
 #include "../../Utility/UtilityMath.h"
-#include "../../Application.h"
+#include "../../../Application.h"
 
 KeyConfInputManager* KeyConfInputManager::instance_ = nullptr;
 

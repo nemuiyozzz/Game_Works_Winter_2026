@@ -4,8 +4,8 @@
 #include "../Component/VelocityComponent.h"
 #include "../Component/CameraComponent.h"
 #include "../Component/TransformComponent.h"
-#include "../../System/Input/KeyConfInputManager.h"
-#include "../../Utility/UtilityMath.h"
+#include "../../Engine/System/Input/KeyConfInputManager.h"
+#include "../../Engine/Utility/UtilityMath.h"
 
 void PlayerControlSystem::Update(EcsRegistry& registry)
 {

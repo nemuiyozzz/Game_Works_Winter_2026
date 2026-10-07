@@ -2,7 +2,7 @@
 #include "CameraSystem.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/CameraComponent.h"
-#include "../../System/Input/KeyConfInputManager.h"
+#include "../../Engine/System/Input/KeyConfInputManager.h"
 
 void CameraSystem::Update(EcsRegistry& registry)
 {

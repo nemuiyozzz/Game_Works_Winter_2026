@@ -1,6 +1,6 @@
-﻿#include "../Pch.h"
+﻿#include "../../../Pch.h"
 #include "ShaderRenderer.h"
-#include "../Application.h" 
+#include "../../../Application.h" 
 
 ShaderRenderer::ShaderRenderer(void)
 	: currentVertexShaderHandleId_(-1)

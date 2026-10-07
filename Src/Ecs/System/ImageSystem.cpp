@@ -37,7 +37,7 @@ void ImageSystem::DrawImage(EcsRegistry& registry, Entity entity)
 			drawScale,
 			drawAngle,
 			image.imageHandle_,
-			image.isTransparent_ ? TRUE : FALSE
+			image.isTransparent_ ? true : false
 		);
 	}
 }

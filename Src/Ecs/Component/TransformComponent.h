@@ -2,7 +2,7 @@
 
 #include <DxLib.h>
 #include "../../Common/Quaternion.h" 
-#include "../../Utility/UtilityMath.h"
+#include "../../Engine/Utility/UtilityMath.h"
 
 /// @brief 位置、回転、スケールのデータのみを保持するコンポーネント
 struct TransformComponent

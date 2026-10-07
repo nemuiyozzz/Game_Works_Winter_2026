@@ -1,7 +1,7 @@
 #pragma once
 
 #include <DxLib.h>
-#include "../../Utility/UtilityMath.h"
+#include "../../Engine/Utility/UtilityMath.h"
 
 /// @brief 移動に関する速度や加速度のデータを保持するコンポーネント
 struct VelocityComponent

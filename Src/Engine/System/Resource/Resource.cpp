@@ -1,4 +1,4 @@
-#include "../../Pch.h"
+#include "../../../Pch.h"
 #include "Resource.h"
 
 Resource::Resource(void)
@@ -77,7 +77,7 @@ void Resource::Load(void)
     case RESOURCE_TYPE::EFFEKSEER:
     {
         previousAsyncFlag = GetUseASyncLoadFlag();
-        SetUseASyncLoadFlag(FALSE);
+        SetUseASyncLoadFlag(false);
 
         handleId_ = LoadEffekseerEffect(filePath_.c_str());
 

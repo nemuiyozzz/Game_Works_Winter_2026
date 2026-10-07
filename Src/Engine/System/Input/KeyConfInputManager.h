@@ -5,7 +5,7 @@
 #include <string>
 #include <array>
 
-#include "../../Common/Vector2.h"
+#include "../../../Common/Vector2.h"
 
 /// @brief 入力管理クラス
 class KeyConfInputManager

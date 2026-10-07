@@ -4,8 +4,8 @@
 #include<vector>
 #include<DxLib.h>
 
-#include"../Common/Vector2.h"
-#include"../Common/Quaternion.h"
+#include "../../Common/Vector2.h"
+#include"../../Common/Quaternion.h"
 
 /// <summary>
 /// 各種ベクトル・角度・補間などのユーティリティ関数群を提供する静的クラス

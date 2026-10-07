@@ -167,6 +167,20 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\CollisionSystem.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionSphere.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionLine.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionCircle.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionCapsule.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DCircle.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DBox.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DBase.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderLine.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderModel.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderCapsule.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderSphere.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderBase.cpp" />
     <ClCompile Include="Src\Ecs\System\CameraSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\PlayerControlSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\MovementSystem.cpp" />
@@ -178,13 +192,13 @@
     <ClCompile Include="Src\Scene\MainScene\SceneGame.cpp" />
     <ClCompile Include="Src\Scene\MainScene\SceneTitle.cpp" />
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
-    <ClCompile Include="Src\Shader\ShaderRenderer.cpp" />
-    <ClCompile Include="Src\System\Resource\ResourceManager.cpp" />
-    <ClCompile Include="Src\System\Resource\Resource.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\ShaderRenderer.cpp" />
+    <ClCompile Include="Src\Engine\System\Resource\ResourceManager.cpp" />
+    <ClCompile Include="Src\Engine\System\Resource\Resource.cpp" />
     <ClCompile Include="Src\Common\Loading.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
-    <ClCompile Include="Src\System\Fps\FpsController.cpp" />
+    <ClCompile Include="Src\Engine\System\Fps\FpsController.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
     <ClCompile Include="Src\Common\Vector2.cpp" />
@@ -195,12 +209,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Main.cpp" />
-    <ClCompile Include="Src\System\Input\KeyConfInputManager.cpp" />
-    <ClCompile Include="Src\Utility\UtilityMath.cpp" />
-    <ClCompile Include="Src\System\Time\TimeManager.cpp" />
+    <ClCompile Include="Src\Engine\System\Input\KeyConfInputManager.cpp" />
+    <ClCompile Include="Src\Engine\Utility\UtilityMath.cpp" />
+    <ClCompile Include="Src\Engine\System\Time\TimeManager.cpp" />
     <ClCompile Include="Src\Ecs\System\TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\CollisionSystem.h" />
+    <ClInclude Include="Src\Ecs\Component\CollisionComponent.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionSphere.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionLine.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionCircle.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionCapsule.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DCircle.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DBox.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DBase.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderLine.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderModel.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderCapsule.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderSphere.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderBase.h" />
     <ClInclude Include="Src\Ecs\System\CameraSystem.h" />
     <ClInclude Include="Src\Ecs\Component\CameraComponent.h" />
     <ClInclude Include="Src\Ecs\System\ISystem.h" />
@@ -219,25 +248,26 @@
     <ClInclude Include="Src\Ecs\ComponentPool.h" />
     <ClInclude Include="Src\Ecs\Entity.h" />
     <ClInclude Include="Src\Ecs\IComponentPool.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionInfo.h" />
     <ClInclude Include="Src\Scene\MainScene\SceneResult.h" />
     <ClInclude Include="Src\Scene\MainScene\SceneGame.h" />
     <ClInclude Include="Src\Scene\MainScene\SceneTitle.h" />
-    <ClInclude Include="Src\Shader\RenderCommand.h" />
-    <ClInclude Include="Src\Shader\ShaderRenderer.h" />
-    <ClInclude Include="Src\System\Resource\ResourceManager.h" />
-    <ClInclude Include="Src\System\Resource\Resource.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\RenderCommand.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\ShaderRenderer.h" />
+    <ClInclude Include="Src\Engine\System\Resource\ResourceManager.h" />
+    <ClInclude Include="Src\Engine\System\Resource\Resource.h" />
     <ClInclude Include="Src\Common\Loading.h" />
     <ClInclude Include="Src\Common\Fader.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />
     <ClInclude Include="Src\Scene\SceneManager.h" />
-    <ClInclude Include="Src\System\Fps\FpsController.h" />
+    <ClInclude Include="Src\Engine\System\Fps\FpsController.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
     <ClInclude Include="Src\Common\Vector2.h" />
     <ClInclude Include="Src\Pch.h" />
-    <ClInclude Include="Src\System\Input\KeyConfInputManager.h" />
-    <ClInclude Include="Src\Utility\UtilityMath.h" />
-    <ClInclude Include="Src\System\Time\TimeManager.h" />
+    <ClInclude Include="Src\Engine\System\Input\KeyConfInputManager.h" />
+    <ClInclude Include="Src\Engine\Utility\UtilityMath.h" />
+    <ClInclude Include="Src\Engine\System\Time\TimeManager.h" />
     <ClInclude Include="Src\Ecs\System\TransformSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

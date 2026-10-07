@@ -1,6 +1,6 @@
-#include "../../Pch.h"
+#include "../../../Pch.h"
 #include "ResourceManager.h"
-#include "../../Application.h"
+#include "../../../Application.h"
 
 // シングルトンのインスタンス初期化
 ResourceManager* ResourceManager::instance_ = nullptr;
