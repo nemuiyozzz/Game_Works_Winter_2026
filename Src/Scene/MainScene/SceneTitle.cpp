@@ -2,7 +2,7 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
 #include "../SceneManager.h"
-#include "../../Engine/System/Input/KeyConfInputManager.h"
+#include "../../System/Input/KeyConfInputManager.h"
 
 SceneTitle::SceneTitle(void)
 {

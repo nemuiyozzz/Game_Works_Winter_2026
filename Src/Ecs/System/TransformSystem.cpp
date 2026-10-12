@@ -22,23 +22,23 @@ void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
 
-	transform.previousPosition = transform.position;
+	transform.previousPosition_ = transform.position_;
 
-	transform.scaleMatrix = MGetScale(transform.scale);
+	transform.scaleMatrix_ = MGetScale(transform.scale_);
 
-	transform.rotationEuler = transform.rotation_.ToEuler();
-	transform.rotationMatrix = transform.rotation_.ToMatrix();
+	transform.rotationEuler_ = transform.rotation_.ToEuler();
+	transform.rotationMatrix_ = transform.rotation_.ToMatrix();
 
-	VECTOR finalPosition = VAdd(transform.position, transform.localPosition);
-	transform.positionMatrix = MGetTranslate(finalPosition);
+	VECTOR finalPosition = VAdd(transform.position_, transform.localPosition_);
+	transform.positionMatrix_ = MGetTranslate(finalPosition);
 
 	MATRIX tempMatrix = MGetIdent();
-	tempMatrix = MMult(tempMatrix, transform.scaleMatrix);
+	tempMatrix = MMult(tempMatrix, transform.scaleMatrix_);
 
-	Quaternion combinedQuaternion = transform.rotation_.Mult(transform.localRotation);
+	Quaternion combinedQuaternion = transform.rotation_.Mult(transform.localRotation_);
 	tempMatrix = MMult(tempMatrix, combinedQuaternion.ToMatrix());
 
-	transform.combinedMatrix = MMult(tempMatrix, transform.positionMatrix);
+	transform.combinedMatrix_ = MMult(tempMatrix, transform.positionMatrix_);
 }
 
 void TransformSystem::TranslatePosition(
@@ -50,7 +50,7 @@ void TransformSystem::TranslatePosition(
 	}
 
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
-	transform.position = VAdd(transform.position, moveVector);
+	transform.position_ = VAdd(transform.position_, moveVector);
 
 	UpdateTransform(registry, entity);
 }
@@ -77,7 +77,7 @@ void TransformSystem::SetUniformScale(EcsRegistry& registry, Entity entity, floa
 	}
 
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
-	transform.scale = VGet(targetScale, targetScale, targetScale);
+	transform.scale_ = VGet(targetScale, targetScale, targetScale);
 
 	UpdateTransform(registry, entity);
 }

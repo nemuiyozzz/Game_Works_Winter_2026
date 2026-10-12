@@ -2,7 +2,7 @@
 #include "SceneManager.h"
 #include "SceneBase.h"
 #include "../Application.h"
-#include "../Engine/System/Input/KeyConfInputManager.h"
+#include "../System/Input/KeyConfInputManager.h"
 #include "../Common/Fader.h"
 #include "../Common/Loading.h"
 #include "../Scene/MainScene/SceneTitle.h"

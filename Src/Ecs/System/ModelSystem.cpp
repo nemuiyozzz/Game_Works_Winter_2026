@@ -26,12 +26,12 @@ void ModelSystem::DrawModel(EcsRegistry& registry, Entity entity)
 	ModelComponent& model = registry.GetComponent<ModelComponent>(entity);
 
 	// ハンドルが有効な場合のみ描画処理を行う
-	if (model.modelHandle != -1)
+	if (model.modelHandle_ != -1)
 	{
 		// Transformで計算済みの行列をモデルに適用する
-		MV1SetMatrix(model.modelHandle, transform.combinedMatrix);
+		MV1SetMatrix(model.modelHandle_, transform.combinedMatrix_);
 
 		// 3Dモデルを描画する
-		MV1DrawModel(model.modelHandle);
+		MV1DrawModel(model.modelHandle_);
 	}
 }

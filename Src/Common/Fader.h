@@ -38,7 +38,7 @@ public:
 
     /// @brief 指定フェードを開始する
     /// @param target_state 開始するフェードの状態
-    void SetFade(FADE_STATE targetState);
+    void SetFade(FADE_STATE target_state);
 
     /// @brief 初期化
     void Init(void);
@@ -56,7 +56,7 @@ private:
     // 状態関連
     FADE_STATE fadeState_; /// 現在の状態
     float alphaValue_;     /// 透明度
-    bool isPreEnd_;        /// 1フレーム判定用
+    bool isPreEnd_;       /// 1フレーム判定用
     bool isEnd_;           /// フェード処理の終了判定
 
     /// フェードに使用する画像ハンドル
