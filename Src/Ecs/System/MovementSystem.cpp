@@ -1,7 +1,7 @@
 #include "MovementSystem.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/VelocityComponent.h"
-#include "../../System/Time/TimeManager.h"
+#include "../../Engine/System/Time/TimeManager.h"
 
 void MovementSystem::Update(EcsRegistry& registry)
 {
@@ -24,26 +24,26 @@ void MovementSystem::UpdatePosition(EcsRegistry& registry, Entity entity)
 	VelocityComponent& velocityData = registry.GetComponent<VelocityComponent>(entity);
 
 	float deltaTime = TimeManager::GetInstance().GetDeltaTime();
-	VECTOR deltaAcceleration = VScale(velocityData.acceleration_, deltaTime);
+	VECTOR deltaAcceleration = VScale(velocityData.acceleration, deltaTime);
 	constexpr float MIN_LIMIT_SPEED = 0.0f;
 
-	velocityData.velocity_ = VAdd(velocityData.velocity_, deltaAcceleration);
+	velocityData.velocity = VAdd(velocityData.velocity, deltaAcceleration);
 
-	if (velocityData.maxSpeed_ >= MIN_LIMIT_SPEED)
+	if (velocityData.maxSpeed >= MIN_LIMIT_SPEED)
 	{
-		float currentSpeed = VSize(velocityData.velocity_);
+		float currentSpeed = VSize(velocityData.velocity);
 		
-		if (currentSpeed > velocityData.maxSpeed_)
+		if (currentSpeed > velocityData.maxSpeed)
 		{
-			VECTOR normalizedVelocity = UtilityMath::VNormalize(velocityData.velocity_);
+			VECTOR normalizedVelocity = UtilityMath::VNormalize(velocityData.velocity);
 			
-			velocityData.velocity_ = VScale(normalizedVelocity, velocityData.maxSpeed_);
+			velocityData.velocity = VScale(normalizedVelocity, velocityData.maxSpeed);
 		}
 	}
 
-	VECTOR moveDistance = VScale(velocityData.velocity_, deltaTime);
+	VECTOR moveDistance = VScale(velocityData.velocity, deltaTime);
 	
-	transform.position_ = VAdd(transform.position_, moveDistance);
+	transform.position = VAdd(transform.position, moveDistance);
 }
 
 void MovementSystem::AddForce(EcsRegistry& registry, Entity entity, const VECTOR& force)
@@ -55,7 +55,7 @@ void MovementSystem::AddForce(EcsRegistry& registry, Entity entity, const VECTOR
 
 	VelocityComponent& velocityData = registry.GetComponent<VelocityComponent>(entity);
 
-	velocityData.acceleration_ = VAdd(velocityData.acceleration_, force);
+	velocityData.acceleration = VAdd(velocityData.acceleration, force);
 }
 
 void MovementSystem::SetVelocity(EcsRegistry& registry, Entity entity, const VECTOR& velocity)
@@ -67,5 +67,5 @@ void MovementSystem::SetVelocity(EcsRegistry& registry, Entity entity, const VEC
 
 	VelocityComponent& velocityData = registry.GetComponent<VelocityComponent>(entity);
 
-	velocityData.velocity_ = velocity;
+	velocityData.velocity = velocity;
 }

@@ -5,97 +5,97 @@
 
 Vector2 Vector2::operator=(const Vector2& vec)
 {
-	x = vec.x;
-	y = vec.y;
-	return Vector2{ vec.x, vec.y };
+	x_ = vec.x_;
+	y_ = vec.y_;
+	return Vector2{ vec.x_, vec.y_ };
 }
 
 
 Vector2 Vector2::operator+(const Vector2& vec)const
 {
-	return Vector2{ (x + vec.x), (y + vec.y) };
+	return Vector2{ (x_ + vec.x_), (y_ + vec.y_) };
 }
 
 void Vector2::operator+=(const Vector2& vec)
 {
-	x += vec.x;
-	y += vec.y;
+	x_ += vec.x_;
+	y_ += vec.y_;
 }
 
 Vector2 Vector2::operator-(const Vector2& vec)const
 {
-	return Vector2{ (x - vec.x), (y - vec.y) };
+	return Vector2{ (x_ - vec.x_), (y_ - vec.y_) };
 }
 
 void Vector2::operator-=(const Vector2& vec)
 {
-	x -= vec.x;
-	y -= vec.y;
+	x_ -= vec.x_;
+	y_ -= vec.y_;
 }
 
 Vector2 Vector2::operator*(const Vector2& vec)const
 {
-	return Vector2{ (x * vec.x), (y * vec.y) };
+	return Vector2{ (x_ * vec.x_), (y_ * vec.y_) };
 }
 
 void Vector2::operator*=(const Vector2& vec)
 {
-	x *= vec.x;
-	y *= vec.y;
+	x_ *= vec.x_;
+	y_ *= vec.y_;
 }
-void Vector2::operator*=(int _value)
+void Vector2::operator*=(int value)
 {
-	if (_value == 0)
+	if (value == 0)
 	{
 		OutputDebugString(L"\nêîílÇ™0Ç…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑ÅB\n");
 	}
-	x *= _value;
-	y *= _value;
+	x_ *= value;
+	y_ *= value;
 }
-void Vector2::operator*=(float _value)
+void Vector2::operator*=(float value)
 {
-	if (_value == 0.0f)
+	if (value == 0.0f)
 	{
 		OutputDebugString(L"\nêîílÇ™0Ç…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑ÅB\n");
 	}
-	float xF = static_cast<float>(x);
-	float yF = static_cast<float>(y);
+	float xF = static_cast<float>(x_);
+	float yF = static_cast<float>(y_);
 
-	xF *= _value;
-	yF *= _value;
+	xF *= value;
+	yF *= value;
 
-	x = static_cast<int>(xF);
-	y = static_cast<int>(yF);
+	x_ = static_cast<int>(xF);
+	y_ = static_cast<int>(yF);
 }
 
-Vector2 Vector2::operator/(const Vector2& _vec)const
+Vector2 Vector2::operator/(const Vector2& vec)const
 {
-	Vector2 ret = _vec;
+	Vector2 ret = vec;
 
 	// É[ÉçèúéZëŒçÙ
-	ret.x = ((_vec.x != 0) ? (x / _vec.x) : 0);
-	ret.y = ((_vec.y != 0) ? (y / _vec.y) : 0);
+	ret.x_ = ((vec.x_ != 0) ? (x_ / vec.x_) : 0);
+	ret.y_ = ((vec.y_ != 0) ? (y_ / vec.y_) : 0);
 
 	return ret;
 }
 
-void Vector2::operator/=(const Vector2& _vec)
+void Vector2::operator/=(const Vector2& vec)
 {
 	// É[ÉçèúéZëŒçÙ
-	x = ((_vec.x != 0) ? (x / _vec.x) : 0);
-	y = ((_vec.y != 0) ? (y / _vec.y) : 0);
+	x_ = ((vec.x_ != 0) ? (x_ / vec.x_) : 0);
+	y_ = ((vec.y_ != 0) ? (y_ / vec.y_) : 0);
 }
 
-void Vector2::operator/=(int _value)
+void Vector2::operator/=(int value)
 {
-	if (_value == 0)
+	if (value == 0)
 	{
 		OutputDebugString(L"\nêîílÇ™0Ç…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑ÅB\n");
 	}
 
 	// É[ÉçèúéZëŒçÙ
-	x = ((_value != 0) ? (x / _value) : 0);
-	y = ((_value != 0) ? (y / _value) : 0);
+	x_ = ((value != 0) ? (x_ / value) : 0);
+	y_ = ((value != 0) ? (y_ / value) : 0);
 }
 
 
@@ -104,75 +104,75 @@ void Vector2::operator/=(int _value)
 
 Vector2F Vector2F::operator=(const Vector2F& vec)
 {
-	x = vec.x;
-	y = vec.y;
-	return Vector2F{ vec.x, vec.y };
+	x_ = vec.x_;
+	y_ = vec.y_;
+	return Vector2F{ vec.x_, vec.y_ };
 }
 
 
 Vector2F Vector2F::operator+(const Vector2F& vec)const
 {
-	return Vector2F{ (x + vec.x), (y + vec.y) };
+	return Vector2F{ (x_ + vec.x_), (y_ + vec.y_) };
 }
 void Vector2F::operator+=(const Vector2F& vec)
 {
-	x += vec.x;
-	y += vec.y;
+	x_ += vec.x_;
+	y_ += vec.y_;
 }
-void Vector2F::operator+=(float _value)
+void Vector2F::operator+=(float value)
 {
-	x += _value;
-	y += _value;
+	x_ += value;
+	y_ += value;
 }
 
 Vector2F Vector2F::operator-(const Vector2F& vec)const
 {
-	return Vector2F{ (x - vec.x), (y - vec.y) };
+	return Vector2F{ (x_ - vec.x_), (y_ - vec.y_) };
 }
 void Vector2F::operator-=(const Vector2F& vec)
 {
-	x -= vec.x;
-	y -= vec.y;
+	x_ -= vec.x_;
+	y_ -= vec.y_;
 }
-void Vector2F::operator-=(float _value)
+void Vector2F::operator-=(float value)
 {
-	x -= _value;
-	y -= _value;
+	x_ -= value;
+	y_ -= value;
 }
 
 Vector2F Vector2F::operator*(const Vector2F& vec)const
 {
-	return Vector2F{ (x * vec.x), (y * vec.y) };
+	return Vector2F{ (x_ * vec.x_), (y_ * vec.y_) };
 }
 void Vector2F::operator*=(const Vector2F& vec)
 {
-	x *= vec.x;
-	y *= vec.y;
+	x_ *= vec.x_;
+	y_ *= vec.y_;
 }
-void Vector2F::operator*=(float _value)
+void Vector2F::operator*=(float value)
 {
-	x *= _value;
-	y *= _value;
+	x_ *= value;
+	y_ *= value;
 }
 
-Vector2F Vector2F::operator/(const Vector2F& _vec)const
+Vector2F Vector2F::operator/(const Vector2F& vec)const
 {
-	Vector2F ret = _vec;
+	Vector2F ret = vec;
 
 	// É[ÉçèúéZëŒçÙ
-	ret.x = ((_vec.x != 0) ? (x / _vec.x) : 0);
-	ret.y = ((_vec.y != 0) ? (y / _vec.y) : 0);
+	ret.x_ = ((vec.x_ != 0) ? (x_ / vec.x_) : 0);
+	ret.y_ = ((vec.y_ != 0) ? (y_ / vec.y_) : 0);
 
 	return ret;
 }
-void Vector2F::operator/=(const Vector2F& _vec)
+void Vector2F::operator/=(const Vector2F& vec)
 {
-	x /= _vec.x;
-	y /= _vec.y;
+	x_ /= vec.x_;
+	y_ /= vec.y_;
 }
-void Vector2F::operator/=(float _value)
+void Vector2F::operator/=(float value)
 {
 	// É[ÉçèúéZëŒçÙ
-	x = ((_value != 0) ? (x / _value) : 0);
-	y = ((_value != 0) ? (y / _value) : 0);
+	x_ = ((value != 0) ? (x_ / value) : 0);
+	y_ = ((value != 0) ? (y_ / value) : 0);
 }

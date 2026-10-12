@@ -26,18 +26,18 @@ void ImageSystem::DrawImage(EcsRegistry& registry, Entity entity)
 	ImageComponent& image = registry.GetComponent<ImageComponent>(entity);
 
 	// ハンドルが有効な場合のみ描画処理を行う
-	if (image.imageHandle_ != -1)
+	if (image.imageHandle != -1)
 	{
-		double drawScale = static_cast<double>(transform.scale_.x);
-		double drawAngle = static_cast<double>(transform.rotationEuler_.z);
+		double drawScale = static_cast<double>(transform.scale.x);
+		double drawAngle = static_cast<double>(transform.rotationEuler.z);
 
 		DrawRotaGraph(
-			static_cast<int>(transform.position_.x),
-			static_cast<int>(transform.position_.y),
+			static_cast<int>(transform.position.x),
+			static_cast<int>(transform.position.y),
 			drawScale,
 			drawAngle,
-			image.imageHandle_,
-			image.isTransparent_ ? TRUE : FALSE
+			image.imageHandle,
+			image.isTransparent ? true : false
 		);
 	}
 }

@@ -44,16 +44,16 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
 	ShaderComponent& shader = registry.GetComponent<ShaderComponent>(entity);
 
 	RenderCommand command{};
-	command.vertexShaderHandleId = shader.vertexShaderHandle_;
-	command.pixelShaderHandleId = shader.pixelShaderHandle_;
-	command.textureHandleId = shader.textureHandle_;
-	command.normalMapHandleId = shader.normalMapHandle_;
-	command.isClamp = shader.isClamp_;
+	command.vertexShaderHandleId = shader.vertexShaderHandle;
+	command.pixelShaderHandleId = shader.pixelShaderHandle;
+	command.textureHandleId = shader.textureHandle;
+	command.normalMapHandleId = shader.normalMapHandle;
+	command.isClamp = shader.isClamp;
 
-	command.vertexParameterData = shader.vertexParameterData_;
-	command.vertexParameterSize = static_cast<int>(shader.vertexParameterData_.size());
-	command.pixelParameterData = shader.pixelParameterData_;
-	command.pixelParameterSize = static_cast<int>(shader.pixelParameterData_.size());
+	command.vertexParameterData = shader.vertexParameterData;
+	command.vertexParameterSize = static_cast<int>(shader.vertexParameterData.size());
+	command.pixelParameterData = shader.pixelParameterData;
+	command.pixelParameterSize = static_cast<int>(shader.pixelParameterData.size());
 
 	// 3Dモデルを持つエンティティの場合
 	if (registry.HasComponent<ModelComponent>(entity))
@@ -61,7 +61,7 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
 		ModelComponent& model = registry.GetComponent<ModelComponent>(entity);
 
 		command.renderType = RENDER_TYPE::DRAW_3D;
-		command.modelHandleId = model.modelHandle_;
+		command.modelHandleId = model.modelHandle;
 		command.positionX = 0.0f;
 		command.positionY = 0.0f;
 		command.scaleSize = 1.0f;
@@ -76,14 +76,14 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
 		// 2Dの場合は画像のハンドルをテクスチャとして扱う（ShaderRendererの仕様に合わせる）
 		if (command.textureHandleId == -1)
 		{
-			command.textureHandleId = image.imageHandle_;
+			command.textureHandleId = image.imageHandle;
 		}
 
 		command.renderType = RENDER_TYPE::DRAW_2D;
 		command.modelHandleId = -1;
-		command.positionX = transform.position_.x;
-		command.positionY = transform.position_.y;
-		command.scaleSize = transform.scale_.x;
+		command.positionX = transform.position.x;
+		command.positionY = transform.position.y;
+		command.scaleSize = transform.scale.x;
 
 		renderCommandQueue_.push_back(command);
 	}

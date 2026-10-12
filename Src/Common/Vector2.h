@@ -5,33 +5,33 @@ class Vector2
 {
 public:
 
-	int x; // X座標
-	int y; // Y座標
+	int x_; // X座標
+	int y_; // Y座標
 
 	// デストラクタ
 	~Vector2(void) = default;
 
 	// 代入処理
-	Vector2 operator=(const Vector2& _vec);
+	Vector2 operator=(const Vector2& vec);
 
 	// 加算処理
-	Vector2 operator+(const Vector2& _vec)const;
-	void operator+=(const Vector2& _vec);
+	Vector2 operator+(const Vector2& vec)const;
+	void operator+=(const Vector2& vec);
 
 	// 減算処理
-	Vector2 operator-(const Vector2& _vec)const;
-	void operator-=(const Vector2& _vec);
+	Vector2 operator-(const Vector2& vec)const;
+	void operator-=(const Vector2& vec);
 
 	// 乗算処理
-	Vector2 operator*(const Vector2& _vec)const;
-	void operator*=(const Vector2& _vec);
-	void operator*=(int _value);
-	void operator*=(float _value);
+	Vector2 operator*(const Vector2& vec)const;
+	void operator*=(const Vector2& vec);
+	void operator*=(int value);
+	void operator*=(float value);
 
 	// 除算処理
-	Vector2 operator/(const Vector2& _vec)const;
-	void operator/=(const Vector2& _vec);
-	void operator/=(int _value);
+	Vector2 operator/(const Vector2& vec)const;
+	void operator/=(const Vector2& vec);
+	void operator/=(int value);
 };
 
 
@@ -40,32 +40,32 @@ class Vector2F
 {
 public:
 
-	float x; // X座標
-	float y; // Y座標
+	float x_; // X座標
+	float y_; // Y座標
 
 	// デストラクタ
 	~Vector2F(void) = default;
 
 	// 代入処理
-	Vector2F operator=(const Vector2F& _vec);
+	Vector2F operator=(const Vector2F& vec);
 
 	// 加算処理
-	Vector2F operator+(const Vector2F& _vec)const;
-	void operator+=(const Vector2F& _vec);
-	void operator+=(float _value);
+	Vector2F operator+(const Vector2F& vec)const;
+	void operator+=(const Vector2F& vec);
+	void operator+=(float value);
 
 	// 減算処理
-	Vector2F operator-(const Vector2F& _vec)const;
-	void operator-=(const Vector2F& _vec);
-	void operator-=(float _value);
+	Vector2F operator-(const Vector2F& vec)const;
+	void operator-=(const Vector2F& vec);
+	void operator-=(float value);
 
 	// 乗算処理
-	Vector2F operator*(const Vector2F& _vec)const;
-	void operator*=(const Vector2F& _vec);
-	void operator*=(float _value);
+	Vector2F operator*(const Vector2F& vec)const;
+	void operator*=(const Vector2F& vec);
+	void operator*=(float value);
 
 	// 除算処理
-	Vector2F operator/(const Vector2F& _vec)const;
-	void operator/=(const Vector2F& _vec);
-	void operator/=(float _value);
+	Vector2F operator/(const Vector2F& vec)const;
+	void operator/=(const Vector2F& vec);
+	void operator/=(float value);
 };

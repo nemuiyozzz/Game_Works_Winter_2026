@@ -2,11 +2,12 @@
 
 #include <memory>
 #include <vector>
+
 #include "ISystem.h"
 #include "../../Ecs/EcsRegistry.h"
 #include "../../Ecs/Entity.h"
-#include "../../Shader/RenderCommand.h"
-#include "../../Shader/ShaderRenderer.h"
+#include "../../Engine/Graphics/Shader/RenderCommand.h"
+#include "../../Engine/Graphics/Shader/ShaderRenderer.h"
 
 /// @brief シェーダを用いた描画命令を収集し、バッチ処理を実行するシステム
 class ShaderSystem : public ISystem

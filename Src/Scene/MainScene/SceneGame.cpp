@@ -1,6 +1,6 @@
 #include "../../Pch.h"
 #include "SceneGame.h"
-#include "../../System/Resource/ResourceManager.h"
+#include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Ecs/Component/TransformComponent.h"
 #include "../../Ecs/Component/VelocityComponent.h"
 #include "../../Ecs/Component/PlayerInputComponent.h"
@@ -39,21 +39,26 @@ void SceneGame::Initialize(void)
 	modelSystem_ = std::make_shared<ModelSystem>();
 
 	playerEntity_ = ecsRegistry_.CreateEntity();
+	
+	TransformComponent playerTransform{};
 
-	ecsRegistry_.AddComponent<TransformComponent>(playerEntity_, {});
+	playerTransform.scale = VGet(50.0f, 50.0f, 50.0f);
+
+	ecsRegistry_.AddComponent<TransformComponent>(playerEntity_, playerTransform);
 	ecsRegistry_.AddComponent<VelocityComponent>(playerEntity_, {});
 	ecsRegistry_.AddComponent<PlayerInputComponent>(playerEntity_, { 100.0f, 150.0f });
 
 	int playerModelHandle = ResourceManager::GetInstance().GetHandleId(ResourceManager::RESOURCE_ID::MODEL_SAMPLE);
 	ModelComponent model{};
-	model.modelHandle_ = playerModelHandle;
+	model.modelHandle = playerModelHandle;
 	ecsRegistry_.AddComponent<ModelComponent>(playerEntity_, model);
 
 	cameraEntity_ = ecsRegistry_.CreateEntity();
 	ecsRegistry_.AddComponent<TransformComponent>(cameraEntity_, {});
 
 	CameraComponent cameraData{};
-	cameraData.targetEntity_ = playerEntity_;
+	cameraData.targetEntity = playerEntity_;
+	cameraData.mode = CAMERA_MODE::TRACKING;
 	ecsRegistry_.AddComponent<CameraComponent>(cameraEntity_, cameraData);
 }
 
@@ -68,6 +73,19 @@ void SceneGame::Update(void)
 void SceneGame::Draw(void)
 {
 	modelSystem_->Update(ecsRegistry_);
+
+	int textDrawY = 20;
+	const int TEXT_COLOR = 0xffffff;
+
+	const TransformComponent& transform = ecsRegistry_.GetComponent<TransformComponent>(playerEntity_);
+
+	DrawFormatString(20, textDrawY, TEXT_COLOR, L"PLAYER POS : [%.2f, %.2f, %.2f]",
+		transform.position.x, transform.position.y, transform.position.z);
+
+	const TransformComponent& cametransform = ecsRegistry_.GetComponent<TransformComponent>(cameraEntity_);
+
+	DrawFormatString(20, textDrawY + 100, TEXT_COLOR, L"CAMERA POS : [%.2f, %.2f, %.2f]",
+		cametransform.position.x, cametransform.position.y, cametransform.position.z);
 }
 
 void SceneGame::Release(void)
