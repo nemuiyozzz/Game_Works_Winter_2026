@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 /// @brief 2Dコライダーの共通親クラス
 class Collider2DBase
 {
@@ -19,8 +21,8 @@ public:
 	};
 
 	/// @brief コンストラクタ
-	/// @param _shapeType 2D形状の種類
-	/// @param _collisionTag 衝突の2D識別タグ
+	/// @param shapeType 2D形状の種類
+	/// @param collisionTag 衝突の2D識別タグ
 	Collider2DBase(SHAPE_2D shapeType, TAG_2D collisionTag);
 
 	/// @brief デストラクタ
@@ -35,12 +37,24 @@ public:
 	TAG_2D GetCollisionTag(void) const;
 
 	/// @brief デバッグ描画
-	/// @param _color 描画色
+	/// @param color 描画色
 	virtual void DrawDebug(int color) const = 0;
+
+	/// @brief 衝突対象にタグを追加する
+	/// @param targetTag 追加するタグ
+	void AddTargetTag(TAG_2D targetTag);
+
+	/// @brief 指定したタグが衝突対象に含まれているか確認する
+	/// @param targetTag 確認するタグ
+	/// @return 含まれていれば true
+	bool IsTargetTag(TAG_2D targetTag) const;
 
 protected:
 
 	// コライダー設定関連
 	SHAPE_2D shapeType_;      // 2D形状の種別
 	TAG_2D collisionTag_;     // 衝突の2D識別タグ
+
+	// 衝突対象のタグリスト
+	std::vector<TAG_2D> targetTags_;
 };

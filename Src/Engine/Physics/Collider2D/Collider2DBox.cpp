@@ -46,7 +46,7 @@ Vector2F Collider2DBox::GetLeftTop(void) const
 	float halfWidth = width_ / 2.0f;
 	float halfHeight = height_ / 2.0f;
 
-	return Vector2F(center.x - halfWidth, center.y - halfHeight);
+	return Vector2F(center.x_ - halfWidth, center.y_ - halfHeight);
 }
 
 Vector2F Collider2DBox::GetRightBottom(void) const
@@ -55,7 +55,7 @@ Vector2F Collider2DBox::GetRightBottom(void) const
 	float halfWidth = width_ / 2.0f;
 	float halfHeight = height_ / 2.0f;
 
-	return Vector2F(center.x + halfWidth, center.y + halfHeight);
+	return Vector2F(center.x_ + halfWidth, center.y_ + halfHeight);
 }
 
 void Collider2DBox::DrawDebug(int color) const
@@ -64,8 +64,8 @@ void Collider2DBox::DrawDebug(int color) const
 	Vector2F rightBottom = GetRightBottom();
 
 	DrawBox(
-		static_cast<int>(leftTop.x), static_cast<int>(leftTop.y),
-		static_cast<int>(rightBottom.x), static_cast<int>(rightBottom.y),
+		static_cast<int>(leftTop.x_), static_cast<int>(leftTop.y_),
+		static_cast<int>(rightBottom.x_), static_cast<int>(rightBottom.y_),
 		color, false
 	);
 }

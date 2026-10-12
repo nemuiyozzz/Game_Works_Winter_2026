@@ -167,12 +167,16 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\ColliderDebugDrawSystem.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox3D.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderBox.cpp" />
+    <ClCompile Include="Src\Ecs\System\Collision2DSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\CollisionSystem.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionSphere.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionLine.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionCircle.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionCapsule.cpp" />
-    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox.cpp" />
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox2D.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DCircle.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DBox.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DBase.cpp" />
@@ -215,13 +219,18 @@
     <ClCompile Include="Src\Ecs\System\TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\ColliderDebugDrawSystem.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox3D.h" />
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderBox.h" />
+    <ClInclude Include="Src\Ecs\System\Collision2DSystem.h" />
+    <ClInclude Include="Src\Ecs\Component\Collision2DComponent.h" />
     <ClInclude Include="Src\Ecs\System\CollisionSystem.h" />
     <ClInclude Include="Src\Ecs\Component\CollisionComponent.h" />
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionSphere.h" />
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionLine.h" />
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionCircle.h" />
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionCapsule.h" />
-    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox.h" />
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox2D.h" />
     <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DCircle.h" />
     <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DBox.h" />
     <ClInclude Include="Src\Engine\Physics\Collider2D\Collider2DBase.h" />

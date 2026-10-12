@@ -25,7 +25,7 @@ public:
     int GetModelHandle(void) const { return modelHandle_; }
 
     /// @brief モデルハンドルの設定
-    void SetModelHandle(int _modelHandle);
+    void SetModelHandle(int _modelHandle__);
 
     /// @brief 指定文字列を含むフレームを当たり判定から除外
     /// @param exclusionName 除外対象フレーム名に含まれる文字列

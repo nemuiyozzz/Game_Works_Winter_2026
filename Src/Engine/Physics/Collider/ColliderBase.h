@@ -18,6 +18,7 @@ public:
 		SPHERE,      // 球
 		CAPSULE,     // カプセル
 		MODEL,       // モデル
+		BOX,         // 3Dボックス
 	};
 
 	// 衝突種別

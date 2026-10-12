@@ -57,7 +57,7 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"UP"] =
 	{
 		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_W},
-		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_UP},
+		//{INPUT_TYPE::KEY_BOARD, KEY_INPUT_UP},
 		{INPUT_TYPE::JOYPAD, PAD_INPUT_UP},
 		{INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_UP)}
 	};
@@ -65,7 +65,7 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"DOWN"] =
 	{
 		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_S},
-		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_DOWN},
+		//{INPUT_TYPE::KEY_BOARD, KEY_INPUT_DOWN},
 		{INPUT_TYPE::JOYPAD, PAD_INPUT_DOWN},
 		{INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_DOWN)}
 	};
@@ -73,14 +73,14 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"LEFT"] =
 	{
 	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_A},
-	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_LEFT},
+	  //{INPUT_TYPE::KEY_BOARD, KEY_INPUT_LEFT},
 	  {INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_LEFT)}
 	};
 
 	inputTable_[L"RIGHT"] =
 	{
 	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_D},
-	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_RIGHT},
+	  //{INPUT_TYPE::KEY_BOARD, KEY_INPUT_RIGHT},
 	  {INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_RIGHT)}
 	};
 
@@ -126,6 +126,11 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"DEBUG_CANCEL"] =
 	{
 	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_BACK}
+	};
+
+	inputTable_[L"DEBUG_COLLIDER"] =
+	{
+	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_F3}
 	};
 
 	inputTable_[L"PAUSE"] =
@@ -194,7 +199,7 @@ void KeyConfInputManager::Update(void)
 	int mouseState = GetMouseInput();
 	int padState = GetJoypadInputState(usePadNo_);
 
-	GetMousePoint(&mousePosition_.x, &mousePosition_.y);
+	GetMousePoint(&mousePosition_.x_, &mousePosition_.y_);
 
 	mouseWheelVol_ = GetMouseWheelRotVol();
 

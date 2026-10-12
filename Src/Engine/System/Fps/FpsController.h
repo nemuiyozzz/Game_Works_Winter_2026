@@ -22,7 +22,7 @@ public:
 
     /// @brief 現在のFPSを取得する
     /// @return 現在のFPS値
-    float GetFps(void) const { return current_fps; }
+    float GetFps(void) const { return currentFps_; }
 
 private:
     // FPS設定関連
@@ -35,10 +35,10 @@ private:
     const int POSITION_Y = 20;                               // 平均FPSの描画Y位置
 
     // 時間管理関連
-    const int target_fps;          // 指定された固定フレームレート
-    const double ideal_frame_time; // 1フレームの理想時間(秒)
-    float current_fps;             // 計測された現在のFPS
+    const int targetFps_;          // 指定された固定フレームレート
+    const double idealFrameTime_; // 1フレームの理想時間(秒)
+    float currentFps_;             // 計測された現在のFPS
 
-    std::vector<double> frame_time_list;                          // 平均FPS計測用の時間リスト(秒単位)
-    std::chrono::high_resolution_clock::time_point previous_time; // 前フレームの計測時間
+    std::vector<double> frameTimeList_;                          // 平均FPS計測用の時間リスト(秒単位)
+    std::chrono::high_resolution_clock::time_point previousTime_; // 前フレームの計測時間
 };

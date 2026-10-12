@@ -9,8 +9,8 @@
 struct CollisionComponent
 {
 	// コライダーリスト
-	std::vector<std::shared_ptr<ColliderBase>> colliders_;
+	std::vector<std::shared_ptr<ColliderBase>> colliders;
 
 	// 衝突したエンティティリスト
-	std::vector<Entity> hitEntities_;
+	std::vector<Entity> hitEntities;
 };

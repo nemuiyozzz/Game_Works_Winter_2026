@@ -4,5 +4,5 @@
 struct ModelComponent
 {
 	// モデルのハンドルID
-	int modelHandle_ = -1; 
+	int modelHandle = -1; 
 };

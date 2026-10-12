@@ -32,7 +32,7 @@ VECTOR ColliderBase::TransformLocalToWorld(const VECTOR& localPosition) const
 
 	VECTOR localRotationPosition = followTarget_->rotation_.PosAxis(localPosition);
 
-	return VAdd(followTarget_->position_, localRotationPosition);
+	return VAdd(followTarget_->position, localRotationPosition);
 }
 
 const TransformComponent* ColliderBase::GetFollowTarget(void) const

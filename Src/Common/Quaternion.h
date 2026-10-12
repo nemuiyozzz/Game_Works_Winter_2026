@@ -8,19 +8,19 @@ class Quaternion
 public:
 
 	// 正規化時の極小値（ゼロ割防止）
-	static constexpr float kEpsilonNorMalSqrt = 1e-15F;
+	static constexpr float KEQSILON_NORMALSQRT = 1e-15F;
 
 	// クォータニオンのスカラー成分（回転量の余弦）
-	double w;
+	double w_;
 
 	// クォータニオンのX成分（ベクトル部）
-	double x;
+	double x_;
 
 	// クォータニオンのY成分（ベクトル部）
-	double y;
+	double y_;
 
 	// クォータニオンのZ成分（ベクトル部）
-	double z;
+	double z_;
 
 	// @brief デフォルトコンストラクタ（全成分0）
 	Quaternion(void);

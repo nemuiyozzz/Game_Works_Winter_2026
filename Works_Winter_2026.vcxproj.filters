@@ -120,7 +120,7 @@
     <ClCompile Include="Src\Engine\Physics\Collider2D\Collider2DCircle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox.cpp">
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionCapsule.cpp">
@@ -136,6 +136,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Ecs\System\CollisionSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Ecs\System\Collision2DSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Physics\Collider\ColliderBox.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Ecs\System\ColliderDebugDrawSystem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,7 +293,7 @@
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionInfo.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox.h">
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionCapsule.h">
@@ -300,6 +312,21 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Ecs\System\CollisionSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\Component\Collision2DComponent.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\System\Collision2DSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Physics\Collider\ColliderBox.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\System\ColliderDebugDrawSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

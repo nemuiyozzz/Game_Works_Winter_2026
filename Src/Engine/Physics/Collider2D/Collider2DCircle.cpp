@@ -31,5 +31,5 @@ float Collider2DCircle::GetRadius(void) const
 void Collider2DCircle::DrawDebug(int color) const
 {
 	Vector2F currentPos = GetWorldCenterPos();
-	DrawCircle(static_cast<int>(currentPos.x), static_cast<int>(currentPos.y), static_cast<int>(radius_), color, false);
+	DrawCircle(static_cast<int>(currentPos.x_), static_cast<int>(currentPos.y_), static_cast<int>(radius_), color, false);
 }

@@ -30,9 +30,9 @@ bool Fader::IsEnd(void) const
     return isEnd_;
 }
 
-void Fader::SetFade(FADE_STATE target_state)
+void Fader::SetFade(FADE_STATE targetState)
 {
-    fadeState_ = target_state;
+    fadeState_ = targetState;
     if (fadeState_ != FADE_STATE::NONE)
     {
         isPreEnd_ = false;

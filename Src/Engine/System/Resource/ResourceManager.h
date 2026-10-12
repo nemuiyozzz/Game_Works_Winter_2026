@@ -60,8 +60,8 @@ private:
     static ResourceManager* instance_;
 
     // リソース管理関連
-    std::map<RESOURCE_ID, Resource> registeredResourcesMap_; /// 登録対象
-    std::map<RESOURCE_ID, Resource*> loadedResourcesMap_;    /// 読み込み済み対象
+    std::map<RESOURCE_ID, Resource> registeredResourcesMap_; // 登録対象
+    std::map<RESOURCE_ID, Resource*> loadedResourcesMap_;    // 読み込み済み対象
 
     // スレッドセーフ用ミューテックス
     std::mutex resourceMutex_;

@@ -216,8 +216,8 @@ Vector2 UtilityMath::Lerp(const Vector2& start, const Vector2& end, float t)
 	}
 
 	
-	return Vector2(start.x + Round(t * static_cast<float>((end.x - start.x)))
-				 , start.y + Round(t * static_cast<float>((end.y - start.y))));
+	return Vector2(start.x_ + Round(t * static_cast<float>((end.x_ - start.x_)))
+				 , start.y_ + Round(t * static_cast<float>((end.y_ - start.y_))));
 }
 
 // 3Dベクトルを線形補間する
@@ -315,7 +315,7 @@ VECTOR UtilityMath::RotXZPos(const VECTOR& centerPos, const VECTOR& radiusPos, f
 // 2Dベクトルの長さを求める
 double UtilityMath::Magnitude(const Vector2& v)
 {
-	return sqrt((v.x * v.x) + (v.y * v.y));
+	return sqrt((v.x_ * v.x_) + (v.y_ * v.y_));
 }
 
 // 3Dベクトルの長さを求める
@@ -333,7 +333,7 @@ float UtilityMath::MagnitudeF(const VECTOR& v)
 // 2Dベクトルの長さの2乗を求める
 int UtilityMath::SqrMagnitude(const Vector2& v)
 {
-	return v.x * v.x + v.y * v.y;
+	return v.x_ * v.x_ + v.y_ * v.y_;
 }
 
 // 3Dベクトルの長さの2乗をfloatで求める
@@ -358,7 +358,7 @@ double UtilityMath::SqrMagnitude(const VECTOR& v1, const VECTOR& v2)
 // 2つの2Dベクトル間の距離を求める
 double UtilityMath::Distance(const Vector2& v1, const Vector2& v2)
 {
-	return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+	return sqrt(pow(v2.x_ - v1.x_, 2) + pow(v2.y_ - v1.y_, 2));
 }
 
 // 2つの3Dベクトル間の距離を求める
@@ -392,7 +392,7 @@ bool UtilityMath::EqualsVZero(const VECTOR& vec)
 bool UtilityMath::EqualsVZero(const Vector2& vec)
 {
 	const Vector2& ZERO = VECTOR2_ZERO;
-	if (vec.x == ZERO.x && vec.y == ZERO.y)
+	if (vec.x_ == ZERO.x_ && vec.y_ == ZERO.y_)
 	{
 		return true;
 	}
@@ -402,7 +402,7 @@ bool UtilityMath::EqualsVZero(const Vector2& vec)
 bool UtilityMath::EqualsVZero(const Vector2F& vec)
 {
 	const Vector2F& ZERO = VECTOR2F_ZERO;
-	if (vec.x == ZERO.x && vec.y == ZERO.y)
+	if (vec.x_ == ZERO.x_ && vec.y_ == ZERO.y_)
 	{
 		return true;
 	}
@@ -413,8 +413,8 @@ bool UtilityMath::EqualsVZero(const Vector2F& vec)
 VECTOR UtilityMath::Normalize(const Vector2& v)
 {
 	VECTOR ret = VGet(
-		static_cast<float>(v.x),
-		static_cast<float>(v.y),
+		static_cast<float>(v.x_),
+		static_cast<float>(v.y_),
 		0.0f
 	);
 
@@ -440,18 +440,18 @@ Vector2 UtilityMath::VNormalize(const Vector2& vec)
 	// ゼロ除算対策で元のゼロベクトルを返す
 	if (UtilityMath::EqualsVZero(vec)) { return vec; }
 
-	float mag = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
+	float mag = sqrtf((vec.x_ * vec.x_) + (vec.y_ * vec.y_));
 
-	return Vector2(static_cast<int>(vec.x / mag), static_cast<int>(vec.y / mag));
+	return Vector2(static_cast<int>(vec.x_ / mag), static_cast<int>(vec.y_ / mag));
 }
 Vector2F UtilityMath::VNormalize(const Vector2F& _vec)
 {
 	// ゼロ除算対策で元のゼロベクトルを返す
 	if (UtilityMath::EqualsVZero(_vec)) { return _vec; }
 
-	float mag = sqrtf((_vec.x * _vec.x) + (_vec.y * _vec.y));
+	float mag = sqrtf((_vec.x_ * _vec.x_) + (_vec.y_ * _vec.y_));
 
-	return Vector2F(_vec.x / mag, _vec.y / mag);
+	return Vector2F(_vec.x_ / mag, _vec.y_ / mag);
 }
 
 // 2つの3Dベクトルのなす角（度）を求める

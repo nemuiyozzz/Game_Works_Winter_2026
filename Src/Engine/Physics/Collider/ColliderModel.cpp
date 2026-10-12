@@ -8,9 +8,9 @@ ColliderModel::ColliderModel(TAG collisionTag, const TransformComponent* followT
 {
 }
 
-void ColliderModel::SetModelHandle(int _modelHandle)
+void ColliderModel::SetModelHandle(int _modelHandle_)
 {
-    modelHandle_ = _modelHandle;
+    modelHandle_ = _modelHandle_;
 }
 
 void ColliderModel::AddExcludeFrameIds(const std::wstring& exclusionName)

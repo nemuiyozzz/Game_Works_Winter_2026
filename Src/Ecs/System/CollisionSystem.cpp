@@ -6,7 +6,7 @@
 #include "../../Engine/Physics/Collision/CollisionLine.h"
 #include "../../Engine/Physics/Collision/CollisionSphere.h"
 #include "../../Engine/Physics/Collider/ColliderBase.h"
-#include "../../Engine/Utility/UtilityMath.h"
+#include "../../Engine/Physics/Collision/CollisionBox3D.h"
 
 namespace
 {
@@ -35,9 +35,9 @@ void CollisionSystem::UpdateCollidersTarget(EcsRegistry& registry,
 		TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
 		CollisionComponent& collision = registry.GetComponent<CollisionComponent>(entity);
 
-		collision.hitEntities_.clear();
+		collision.hitEntities.clear();
 
-		for (auto& collider : collision.colliders_)
+		for (auto& collider : collision.colliders)
 		{
 			collider->SetFollowTarget(&transform);
 		}
@@ -57,14 +57,14 @@ void CollisionSystem::CheckAllCollisions(EcsRegistry& registry,
 			Entity entityB = entities[j];
 			CollisionComponent& collisionB = registry.GetComponent<CollisionComponent>(entityB);
 
-			for (auto& colliderA : collisionA.colliders_)
+			for (auto& colliderA : collisionA.colliders)
 			{
 				if (!colliderA->IsActive())
 				{
 					continue;
 				}
 
-				for (auto& colliderB : collisionB.colliders_)
+				for (auto& colliderB : collisionB.colliders)
 				{
 					if (!colliderB->IsActive())
 					{
@@ -123,14 +123,56 @@ void CollisionSystem::ProcessCollisionPair(EcsRegistry& registry, Entity entityA
 		isHit = CollisionCapsule::CheckCapsuleVsSphere(
 			colliderB.get(), colliderA.get(), info);
 	}
+	else if (SHAPE_A == ColliderBase::SHAPE::LINE &&
+		SHAPE_B == ColliderBase::SHAPE::MODEL)
+	{
+		isHit = CollisionLine::CheckLineVsModel(
+			colliderA.get(), colliderB.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::MODEL &&
+		SHAPE_B == ColliderBase::SHAPE::LINE)
+	{
+		isHit = CollisionLine::CheckLineVsModel(
+			colliderB.get(), colliderA.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::BOX &&
+		SHAPE_B == ColliderBase::SHAPE::BOX)
+	{
+		isHit = CollisionBox3D::CheckBoxVsBox(
+			colliderA.get(), colliderB.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::BOX &&
+		SHAPE_B == ColliderBase::SHAPE::SPHERE)
+	{
+		isHit = CollisionBox3D::CheckBoxVsSphere(
+			colliderA.get(), colliderB.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::SPHERE &&
+		SHAPE_B == ColliderBase::SHAPE::BOX)
+	{
+		isHit = CollisionBox3D::CheckBoxVsSphere(
+			colliderB.get(), colliderA.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::BOX &&
+		SHAPE_B == ColliderBase::SHAPE::CAPSULE)
+	{
+		isHit = CollisionBox3D::CheckBoxVsCapsule(
+			colliderA.get(), colliderB.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::CAPSULE &&
+		SHAPE_B == ColliderBase::SHAPE::BOX)
+	{
+		isHit = CollisionBox3D::CheckBoxVsCapsule(
+			colliderB.get(), colliderA.get(), info);
+	}
 
 	if (isHit)
 	{
 		CollisionComponent& collisionA = registry.GetComponent<CollisionComponent>(entityA);
 		CollisionComponent& collisionB = registry.GetComponent<CollisionComponent>(entityB);
 
-		collisionA.hitEntities_.push_back(entityB);
-		collisionB.hitEntities_.push_back(entityA);
+		collisionA.hitEntities.push_back(entityB);
+		collisionB.hitEntities.push_back(entityA);
 
 		if (!colliderA->IsTrigger() && !colliderB->IsTrigger())
 		{
@@ -159,36 +201,36 @@ void CollisionSystem::ResolvePenetration(EcsRegistry& registry, Entity entityA,
 	{
 		if (info.hitNormal.y > GROUND_NORMAL_Y)
 		{
-			transformA.position_ = VAdd(transformA.position_, pushVector);
-			registry.GetComponent<VelocityComponent>(entityA).velocity_.y = 0.0f;
+			transformA.position = VAdd(transformA.position, pushVector);
+			registry.GetComponent<VelocityComponent>(entityA).velocity.y = 0.0f;
 		}
 		else
 		{
 			pushVector.y = 0.0f;
-			transformA.position_ = VAdd(transformA.position_, pushVector);
+			transformA.position = VAdd(transformA.position, pushVector);
 		}
 	}
 	else if (!IS_STATIC_A && IS_STATIC_B)
 	{
 		if (info.hitNormal.y > GROUND_NORMAL_Y)
 		{
-			transformB.position_ = VAdd(transformB.position_,
+			transformB.position = VAdd(transformB.position,
 				VScale(pushVector, -PUSH_BACK_STATIC_RATIO));
-			registry.GetComponent<VelocityComponent>(entityB).velocity_.y = 0.0f;
+			registry.GetComponent<VelocityComponent>(entityB).velocity.y = 0.0f;
 		}
 		else
 		{
 			pushVector.y = 0.0f;
-			transformB.position_ = VAdd(transformB.position_,
+			transformB.position = VAdd(transformB.position,
 				VScale(pushVector, -PUSH_BACK_STATIC_RATIO));
 		}
 	}
 	else
 	{
 		pushVector.y = 0.0f;
-		transformA.position_ = VAdd(transformA.position_,
+		transformA.position = VAdd(transformA.position,
 			VScale(pushVector, PUSH_BACK_DYNAMIC_RATIO));
-		transformB.position_ = VAdd(transformB.position_,
+		transformB.position = VAdd(transformB.position,
 			VScale(pushVector, -PUSH_BACK_DYNAMIC_RATIO));
 	}
 }

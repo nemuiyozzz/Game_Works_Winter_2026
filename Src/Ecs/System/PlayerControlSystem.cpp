@@ -60,7 +60,7 @@ void PlayerControlSystem::UpdatePlayerControl(EcsRegistry& registry, Entity enti
 		{
 			CameraComponent& camera = registry.GetComponent<CameraComponent>(cameras[0]);
 			
-			cameraAngleH = camera.angleH_;
+			cameraAngleH = camera.angleH;
 		}
 
 		float cosH = cosf(cameraAngleH);
@@ -72,34 +72,34 @@ void PlayerControlSystem::UpdatePlayerControl(EcsRegistry& registry, Entity enti
 		rotatedDir.z = -moveDirection.x * sinH + moveDirection.z * cosH;
 		rotatedDir = UtilityMath::VNormalize(rotatedDir);
 
-		VECTOR moveVelocity = VScale(moveDirection, inputInfo.moveSpeed_);
+		VECTOR moveVelocity = VScale(moveDirection, inputInfo.moveSpeed);
 
-		velocityData.velocity_.x = moveVelocity.x;
-		velocityData.velocity_.z = moveVelocity.z;
+		velocityData.velocity.x = moveVelocity.x;
+		velocityData.velocity.z = moveVelocity.z;
 
 		constexpr float ROTATION_SMOOTHNESS = 0.2f;
 		float targetAngle = atan2f(rotatedDir.x, rotatedDir.z);
 
 		targetAngle += DX_PI_F;
 
-		float currentAngle = transform.rotationEuler_.y;
+		float currentAngle = transform.rotationEuler.y;
 		float diffAngle = targetAngle - currentAngle;
 		float shortestAngle = atan2f(sinf(diffAngle), cosf(diffAngle));
 		float newAngle = currentAngle + (shortestAngle * ROTATION_SMOOTHNESS);
 
-		transform.rotationEuler_ = VGet(MIN_DIRECTION, newAngle, MIN_DIRECTION);
+		transform.rotationEuler = VGet(MIN_DIRECTION, newAngle, MIN_DIRECTION);
 		transform.rotation_ = Quaternion::Euler(MIN_DIRECTION, newAngle, MIN_DIRECTION);
 	}
 	else
 	{
 		constexpr float INITIALIZE_SPEED = 0.0f;
 
-		velocityData.velocity_.x = INITIALIZE_SPEED;
-		velocityData.velocity_.z = INITIALIZE_SPEED;
+		velocityData.velocity.x = INITIALIZE_SPEED;
+		velocityData.velocity.z = INITIALIZE_SPEED;
 	}
 
 	if (KeyConfInputManager::GetInstance().isTrigerDown(L"JUMP"))
 	{
-		velocityData.velocity_.y = inputInfo.jumpPower_;
+		velocityData.velocity.y = inputInfo.jumpPower;
 	}
 }

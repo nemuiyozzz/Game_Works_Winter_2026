@@ -1,5 +1,5 @@
 #include "ColliderCapsule.h"
-#include "../../Ecs/Component/TransformComponent.h"
+#include "../../../Ecs/Component/TransformComponent.h"
 
 ColliderCapsule::ColliderCapsule(TAG collisionTag, const TransformComponent* followTarget,
     const VECTOR& localStartPos, const VECTOR& localEndPos, float radius)

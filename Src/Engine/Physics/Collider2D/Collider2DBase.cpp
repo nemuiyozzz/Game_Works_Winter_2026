@@ -16,3 +16,29 @@ Collider2DBase::TAG_2D Collider2DBase::GetCollisionTag(void) const
 {
 	return collisionTag_;
 }
+
+void Collider2DBase::AddTargetTag(TAG_2D targetTag)
+{
+	for (auto tag : targetTags_)
+	{
+		if (tag == targetTag)
+		{
+			return;
+		}
+	}
+
+	targetTags_.push_back(targetTag);
+}
+
+bool Collider2DBase::IsTargetTag(TAG_2D targetTag) const
+{
+	for (auto tag : targetTags_)
+	{
+		if (tag == targetTag)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

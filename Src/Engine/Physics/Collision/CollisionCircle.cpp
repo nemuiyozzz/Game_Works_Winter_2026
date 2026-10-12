@@ -22,8 +22,8 @@ bool CollisionCircle::CheckCircleVsCircle(const Collider2DBase* circleA, const C
 	const Vector2F POS_A = CIRCLE_A->GetWorldCenterPos();
 	const Vector2F POS_B = CIRCLE_B->GetWorldCenterPos();
 
-	const float DIST_X = POS_B.x - POS_A.x;
-	const float DIST_Y = POS_B.y - POS_A.y;
+	const float DIST_X = POS_B.x_ - POS_A.x_;
+	const float DIST_Y = POS_B.y_ - POS_A.y_;
 	const float DIST_SQUARE = (DIST_X * DIST_X) + (DIST_Y * DIST_Y);
 
 	const float RADIUS_SUM = CIRCLE_A->GetRadius() + CIRCLE_B->GetRadius();
@@ -66,11 +66,11 @@ bool CollisionCircle::CheckCircleVsBox(const Collider2DBase* circle, const Colli
 	const Vector2F BOX_RIGHT_BOTTOM = BOX->GetRightBottom();
 
 	// 矩形内で円の中心に最も近い点を算出
-	const float CLOSEST_X = std::max(BOX_LEFT_TOP.x, std::min(CIRCLE_POS.x, BOX_RIGHT_BOTTOM.x));
-	const float CLOSEST_Y = std::max(BOX_LEFT_TOP.y, std::min(CIRCLE_POS.y, BOX_RIGHT_BOTTOM.y));
+	const float CLOSEST_X = std::max(BOX_LEFT_TOP.x_, std::min(CIRCLE_POS.x_, BOX_RIGHT_BOTTOM.x_));
+	const float CLOSEST_Y = std::max(BOX_LEFT_TOP.y_, std::min(CIRCLE_POS.y_, BOX_RIGHT_BOTTOM.y_));
 
-	const float DIST_X = CIRCLE_POS.x - CLOSEST_X;
-	const float DIST_Y = CIRCLE_POS.y - CLOSEST_Y;
+	const float DIST_X = CIRCLE_POS.x_ - CLOSEST_X;
+	const float DIST_Y = CIRCLE_POS.y_ - CLOSEST_Y;
 	const float DIST_SQUARE = (DIST_X * DIST_X) + (DIST_Y * DIST_Y);
 
 	const float RADIUS_SQUARE = CIRCLE->GetRadius() * CIRCLE->GetRadius();
