@@ -167,6 +167,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\AnimationSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\ColliderDebugDrawSystem.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collision\CollisionBox3D.cpp" />
     <ClCompile Include="Src\Engine\Physics\Collider\ColliderBox.cpp" />
@@ -219,6 +220,8 @@
     <ClCompile Include="Src\Ecs\System\TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\Component\AnimationComponent.h" />
+    <ClInclude Include="Src\Ecs\System\AnimationSystem.h" />
     <ClInclude Include="Src\Ecs\System\ColliderDebugDrawSystem.h" />
     <ClInclude Include="Src\Engine\Physics\Collision\CollisionBox3D.h" />
     <ClInclude Include="Src\Engine\Physics\Collider\ColliderBox.h" />
