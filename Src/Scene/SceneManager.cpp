@@ -200,9 +200,9 @@ void SceneManager::Update(void)
         constexpr float LOAD_COMPLETE_THRESHOLD = 100.0f;
 
         const bool isLoadFinished =
-            (loading_->GetProgress() >= LOAD_COMPLETE_THRESHOLD && !loading_->IsLoading());
+            (loading_->GetProgress() >= LOAD_COMPLETE_THRESHOLD && !loading_->GetLoading());
         const bool isFadeOutFinished =
-            (fader_->GetState() == Fader::FADE_STATE::FADE_OUT && fader_->IsEnd());
+            (fader_->GetState() == Fader::FADE_STATE::FADE_OUT && fader_->GetEnd());
 
         if (isLoadFinished && isFadeOutFinished && nextScene_ != nullptr)
         {
@@ -227,7 +227,7 @@ void SceneManager::Update(void)
             fader_->SetFade(Fader::FADE_STATE::FADE_IN);
         }
 
-        if (nextScene_ == nullptr && fader_->GetState() == Fader::FADE_STATE::FADE_IN && fader_->IsEnd())
+        if (nextScene_ == nullptr && fader_->GetState() == Fader::FADE_STATE::FADE_IN && fader_->GetEnd())
         {
             fader_->SetFade(Fader::FADE_STATE::NONE);
             isSceneChanging_ = false;
@@ -283,7 +283,7 @@ void SceneManager::Draw(void)
     fader_->Draw();
 
     // フェードアウトが終わってからロード画面を上に重ねる
-    if (isSceneChanging_ && fader_->GetState() == Fader::FADE_STATE::FADE_OUT && fader_->IsEnd())
+    if (isSceneChanging_ && fader_->GetState() == Fader::FADE_STATE::FADE_OUT && fader_->GetEnd())
     {
         loading_->Draw();
     }
@@ -291,7 +291,7 @@ void SceneManager::Draw(void)
 
 void SceneManager::Release(void)
 {
-    if (loading_->IsLoading())
+    if (loading_->GetLoading())
     {
         loading_->EndAsyncLoad();
     }

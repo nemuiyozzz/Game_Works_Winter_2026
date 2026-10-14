@@ -31,7 +31,7 @@ public:
 
 	/// @brief ロード中か確認する
 	/// @return bool ロード中ならtrue
-	bool IsLoading(void) const;
+	bool GetLoading(void) const { return isLoading_; }
 
 	/// @brief 進捗率を取得する
 	/// @return int 進捗率

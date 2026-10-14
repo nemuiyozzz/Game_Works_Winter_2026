@@ -25,11 +25,6 @@ Fader::FADE_STATE Fader::GetState(void) const
     return fadeState_;
 }
 
-bool Fader::IsEnd(void) const
-{
-    return isEnd_;
-}
-
 void Fader::SetFade(FADE_STATE targetState)
 {
     fadeState_ = targetState;
@@ -40,7 +35,7 @@ void Fader::SetFade(FADE_STATE targetState)
     }
 }
 
-void Fader::Init(void)
+void Fader::Initialize(void)
 {
 }
 

@@ -1,9 +1,9 @@
 #include "Pch.h"
 #include "Application.h"
-#include "System/Input/KeyConfInputManager.h"
-#include "System/Fps/FpsController.h"
-#include "System/Resource/ResourceManager.h"
-#include "System/Time/TimeManager.h"
+#include "Engine/System/Input/KeyConfInputManager.h"
+#include "Engine/System/Fps/FpsController.h"
+#include "Engine/System/Resource/ResourceManager.h"
+#include "Engine/System/Time/TimeManager.h"
 #include "Scene/SceneManager.h"
 
 Application* Application::instance_ = nullptr;
@@ -15,6 +15,7 @@ const std::wstring Application::PATH_ANIM = L"Data/Model/";
 const std::wstring Application::PATH_EFFECT = L"Data/Effect/";
 const std::wstring Application::PATH_SOUND = L"Data/Sound/";
 const std::wstring Application::PATH_CSV = L"Data/Csv/";
+const std::wstring Application::PATH_BINARY = L"Data/Binary/";
 const std::wstring Application::PATH_SHADER = L"Data/Shader/";
 const std::wstring Application::PATH_KEY_CONFIG = L"Data/Config/keyConfig.dat";
 const std::wstring Application::PATH_SENSITIVITY = L"Data/Config/sensitivity.dat";

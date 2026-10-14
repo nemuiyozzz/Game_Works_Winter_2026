@@ -34,14 +34,14 @@ public:
 
     /// @brief フェード処理が終了しているか
     /// @return 終了している場合はtrue
-    bool IsEnd(void) const;
+    bool GetEnd(void) const { return isEnd_; }
 
     /// @brief 指定フェードを開始する
     /// @param target_state 開始するフェードの状態
     void SetFade(FADE_STATE targetState);
 
     /// @brief 初期化
-    void Init(void);
+    void Initialize(void);
 
     /// @brief 更新
     void Update(void);

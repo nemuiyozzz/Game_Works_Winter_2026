@@ -20,13 +20,14 @@ public:
 	static constexpr int FRAME_RATE = 60;
 
 	// データパス関連
-	static const std::wstring PATH_DATA;			// データフォルダパス
+	static const std::wstring PATH_DATA;		// データフォルダパス
 	static const std::wstring PATH_IMAGE;		// 画像フォルダパス
 	static const std::wstring PATH_MODEL;		// モデルフォルダパス
-	static const std::wstring PATH_ANIM;			// アニメーションフォルダパス
+	static const std::wstring PATH_ANIM;		// アニメーションフォルダパス
 	static const std::wstring PATH_EFFECT;		// エフェクトフォルダパス
 	static const std::wstring PATH_SOUND;		// サウンドフォルダパス
 	static const std::wstring PATH_CSV;			// CSVフォルダパス
+	static const std::wstring PATH_BINARY;		// バイナリフォルダパス
 	static const std::wstring PATH_SHADER;		// シェーダフォルダパス
 	static const std::wstring PATH_KEY_CONFIG;	// キーコンフィグフォルダパス
 	static const std::wstring PATH_SENSITIVITY;	// 感度フォルダパス

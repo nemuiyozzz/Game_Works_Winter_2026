@@ -84,11 +84,6 @@ void Loading::EndAsyncLoad(void)
 	progress_ = MAXIMUM_PROGRESS;
 }
 
-bool Loading::IsLoading(void) const
-{
-	return isLoading_;
-}
-
 int Loading::GetProgress(void) const
 {
 	return static_cast<int>(progress_);

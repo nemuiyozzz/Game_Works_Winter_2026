@@ -217,6 +217,12 @@
     <ClCompile Include="Src\Engine\Utility\UtilityMath.cpp" />
     <ClCompile Include="Src\Engine\System\Time\TimeManager.cpp" />
     <ClCompile Include="Src\Ecs\System\TransformSystem.cpp" />
+    <ClCompile Include="Src\Scene\Stage\StageBase.cpp" />
+    <ClCompile Include="Src\Scene\Stage\StageManager.cpp" />
+    <ClCompile Include="Src\Scene\Stage\StageLobby.cpp" />
+    <ClCompile Include="Src\Scene\Stage\StageBattle.cpp" />
+    <ClCompile Include="Src\Scene\Stage\StageTraining.cpp" />
+    <ClCompile Include="Src\Engine\System\ExternalLoader\StageDataLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Ecs\System\ColliderDebugDrawSystem.h" />
@@ -278,6 +284,12 @@
     <ClInclude Include="Src\Engine\Utility\UtilityMath.h" />
     <ClInclude Include="Src\Engine\System\Time\TimeManager.h" />
     <ClInclude Include="Src\Ecs\System\TransformSystem.h" />
+    <ClInclude Include="Src\Scene\Stage\StageBase.h" />
+    <ClInclude Include="Src\Scene\Stage\StageManager.h" />
+    <ClInclude Include="Src\Scene\Stage\StageLobby.h" />
+    <ClInclude Include="Src\Scene\Stage\StageBattle.h" />
+    <ClInclude Include="Src\Scene\Stage\StageTraining.h" />
+    <ClInclude Include="Src\Engine\System\ExternalLoader\StageDataLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

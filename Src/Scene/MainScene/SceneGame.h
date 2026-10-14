@@ -2,10 +2,12 @@
 
 #include <vector>
 #include <memory>
+
 #include "../SceneBase.h"
 #include "../../Ecs/Entity.h"
 #include "../../Ecs/System/ISystem.h"
 #include "../../Ecs/System/ModelSystem.h"
+#include "../Stage/StageManager.h"
 
 /// @brief ゲーム本編シーンクラス
 class SceneGame : public SceneBase
@@ -50,4 +52,7 @@ private:
 	// エンティテID関連
 	Entity playerEntity_;	// プレイヤー
 	Entity cameraEntity_;	// カメラ
+
+	// ステージマネージャー
+	std::unique_ptr<StageManager> stageManager_;
 };

@@ -10,6 +10,9 @@
 #include "../../Ecs/System/MovementSystem.h"
 #include "../../Ecs/System/TransformSystem.h"
 #include "../../Ecs/System/CameraSystem.h"
+#include "../Stage/StageLobby.h"
+#include "../Stage/StageBattle.h"
+#include "../Stage/StageTraining.h"
 
 SceneGame::SceneGame(void)
 	: playerEntity_(NULL_ENTITY)
@@ -60,10 +63,38 @@ void SceneGame::Initialize(void)
 	cameraData.targetEntity = playerEntity_;
 	cameraData.mode = CAMERA_MODE::TRACKING;
 	ecsRegistry_.AddComponent<CameraComponent>(cameraEntity_, cameraData);
+
+	stageManager_ = std::make_unique<StageManager>(ecsRegistry_, playerEntity_);
+	stageManager_->Initialize();
+	stageManager_->SetupFirstStage(std::make_shared<StageLobby>(ecsRegistry_));
 }
 
 void SceneGame::Update(void)
 {
+	stageManager_->Update();
+
+	if (stageManager_->GetStageChanging())
+	{
+		return;
+	}
+
+#ifdef _DEBUG
+
+	if (CheckHitKey(KEY_INPUT_F5) != 0)
+	{
+		stageManager_->ChangeStage(std::make_shared<StageLobby>(ecsRegistry_));
+	}
+	else if (CheckHitKey(KEY_INPUT_F6) != 0)
+	{
+		stageManager_->ChangeStage(std::make_shared<StageBattle>(ecsRegistry_));
+	}
+	else if (CheckHitKey(KEY_INPUT_F7) != 0)
+	{
+		stageManager_->ChangeStage(std::make_shared<StageTraining>(ecsRegistry_));
+	}
+
+#endif // _DEBUG
+
 	for (auto& system : updateSystems_)
 	{
 		system->Update(ecsRegistry_);
@@ -74,21 +105,17 @@ void SceneGame::Draw(void)
 {
 	modelSystem_->Update(ecsRegistry_);
 
-	int textDrawY = 20;
-	const int TEXT_COLOR = 0xffffff;
+	stageManager_->DrawStage();
 
-	const TransformComponent& transform = ecsRegistry_.GetComponent<TransformComponent>(playerEntity_);
-
-	DrawFormatString(20, textDrawY, TEXT_COLOR, L"PLAYER POS : [%.2f, %.2f, %.2f]",
-		transform.position.x, transform.position.y, transform.position.z);
-
-	const TransformComponent& cametransform = ecsRegistry_.GetComponent<TransformComponent>(cameraEntity_);
-
-	DrawFormatString(20, textDrawY + 100, TEXT_COLOR, L"CAMERA POS : [%.2f, %.2f, %.2f]",
-		cametransform.position.x, cametransform.position.y, cametransform.position.z);
+	stageManager_->DrawOverlay();
 }
 
 void SceneGame::Release(void)
 {
+	if (stageManager_ != nullptr)
+	{
+		stageManager_->Release();
+	}
+
 	updateSystems_.clear();
 }
