@@ -1,7 +1,6 @@
 #include "../../../Pch.h"
 #include "StageDataLoader.h"
-#include <fstream>
-#include <sstream>
+#include "../../Utility/UtilityMath.h"
 
 namespace
 {

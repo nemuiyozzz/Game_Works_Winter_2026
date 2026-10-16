@@ -30,9 +30,4 @@ public:
 
 	/// @brief 解放処理
 	void Release(void) override;
-
-protected:
-
-	/// @brief ImGui用の更新処理
-	void UpdateGui(void) override;
 };

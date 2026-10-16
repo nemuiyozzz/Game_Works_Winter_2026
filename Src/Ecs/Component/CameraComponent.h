@@ -26,6 +26,7 @@ struct CameraComponent
 	float angleH = 0.0f;                           // 水平角度
 	float angleV = 15.0f * (DX_PI_F / 180.0f);     // 垂直角度
 	float rotationSpeed = 0.05f;                   // カメラの回転速度
+	bool isCursorLocked = true;                    // マウスを画面中央に固定するか
 
 	// フリーカメラ関連
 	float freeMoveSpeed = 2.0f;                    // フリーカメラの通常移動速度

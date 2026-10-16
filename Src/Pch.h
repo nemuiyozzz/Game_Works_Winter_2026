@@ -16,6 +16,7 @@
 #include<math.h>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>

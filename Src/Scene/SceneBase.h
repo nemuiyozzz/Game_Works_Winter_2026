@@ -33,9 +33,6 @@ public:
 
 protected:
 
-	/// @brief ImGui用の更新処理
-	virtual void UpdateGui(void) {}
-
 	// 各シーン専用のECSデータベース
 	EcsRegistry ecsRegistry_; 
 };

@@ -1,0 +1,5 @@
+Parameter,ValueX,ValueY,ValueZ
+SCALE,50,50,50
+MOVE_SPEED,100,0,0
+JUMP_POWER,150,0,0
+MAX_SPEED,-1,0,0

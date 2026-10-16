@@ -27,6 +27,12 @@ void CameraSystem::Update(EcsRegistry& registry)
 		TransformComponent& cameraTransform = registry.GetComponent<TransformComponent>(cameraEntity);
 		CameraComponent& camera = registry.GetComponent<CameraComponent>(cameraEntity);
 
+		if (KeyConfInputManager::GetInstance().isTrigerDown(L"DEBUG_GUI"))
+		{
+			camera.isCursorLocked = false;
+			SetMouseDispFlag(true);
+		}
+
 		if (camera.mode == CAMERA_MODE::TRACKING)
 		{
 			UpdateTrackingCamera(registry, cameraTransform, camera);
@@ -41,6 +47,14 @@ void CameraSystem::Update(EcsRegistry& registry)
 void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry, TransformComponent& cameraTransform,
 	CameraComponent& camera)
 {
+	Vector2F mouseMovement = { 0.0f, 0.0f };
+
+	if (camera.isCursorLocked)
+	{
+		mouseMovement = KeyConfInputManager::GetInstance().GetMouseVelocityAndFixCenter();
+	}
+
+	Vector2F rightStickInput = KeyConfInputManager::GetInstance().GetRIghtStick();
 	VECTOR targetPosition = VGet(0.0f, 0.0f, 0.0f);
 
 	if (camera.targetEntity != NULL_ENTITY &&
@@ -49,10 +63,6 @@ void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry, TransformComponen
 		TransformComponent& targetTransformComponent = registry.GetComponent<TransformComponent>(camera.targetEntity);
 		targetPosition = targetTransformComponent.position;
 	}
-
-	// マウスと右スティックの入力を取得
-	Vector2F mouseMovement = KeyConfInputManager::GetInstance().GetMouseVelocityAndFixCenter();
-	Vector2F rightStickInput = KeyConfInputManager::GetInstance().GetRIghtStick();
 
 	// 入力量を統合
 	float horizontalAngleAmount = (mouseMovement.x_ * MOUSE_SENSITIVITY_SCALE) + rightStickInput.x_;
@@ -95,8 +105,11 @@ void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry, TransformComponen
 
 void CameraSystem::UpdateFreeCamera(TransformComponent& cameraTransform, CameraComponent& camera)
 {
-	// 視点操作（マウスと右スティック）
-	Vector2F mouseMovement = KeyConfInputManager::GetInstance().GetMouseVelocityAndFixCenter();
+	Vector2F mouseMovement = { 0.0f, 0.0f };
+	if (camera.isCursorLocked)
+	{
+		mouseMovement = KeyConfInputManager::GetInstance().GetMouseVelocityAndFixCenter();
+	}
 	Vector2F rightStickInput = KeyConfInputManager::GetInstance().GetRIghtStick();
 
 	float horizontalAngleAmount = (mouseMovement.x_ * MOUSE_SENSITIVITY_SCALE) + rightStickInput.x_;
