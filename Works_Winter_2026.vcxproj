@@ -167,6 +167,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\ActorFactory.cpp" />
+    <ClCompile Include="Src\Ecs\EcsWorld.cpp" />
     <ClCompile Include="Src\Ecs\System\DebugGuiSystem.cpp" />
     <ClCompile Include="Libs\ImGui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Libs\ImGui\backends\imgui_impl_win32.cpp" />
@@ -236,6 +238,8 @@
     <ClCompile Include="Src\Engine\System\ExternalLoader\StageDataLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\ActorFactory.h" />
+    <ClInclude Include="Src\Ecs\EcsWorld.h" />
     <ClInclude Include="Src\Ecs\System\DebugGuiSystem.h" />
     <ClInclude Include="Libs\ImGui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Libs\ImGui\backends\imgui_impl_win32.h" />

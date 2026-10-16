@@ -1,14 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
 #include "../SceneBase.h"
-#include "../../Ecs/EcsRegistry.h"
-#include "../../Ecs/Entity.h"
-#include "../../Ecs/System/ISystem.h"
-#include "../../Ecs/System/ModelSystem.h"
 #include "../Stage/StageManager.h"
+#include "../../Ecs/EcsWorld.h"
+#include "../../Ecs/Entity.h"
 
 /// @brief ゲーム本編のシーンクラス
 class SceneGame : public SceneBase
@@ -21,7 +18,7 @@ public:
 	/// @brief デストラクタ
 	~SceneGame(void) override;
 
-	/// @brief リソースのロード処理
+	/// @brief リソースの読み込み処理
 	void Load(void) override;
 
 	/// @brief 初期化処理
@@ -38,15 +35,11 @@ public:
 
 private:
 
-	// ECS・システム関連
-	EcsRegistry ecsRegistry_;                             // ECSデータベース
-	std::vector<std::shared_ptr<ISystem>> updateSystems_; // 更新用システム一覧
-	std::shared_ptr<ModelSystem> modelSystem_;            // 3Dモデル描画システム
+	// ECS・ステージ管理関連
+	EcsWorld ecsWorld_;							 // ECS統括ファサード
+	std::unique_ptr<StageManager> stageManager_; // ステージ管理
 
-	// エンティティ関連
+	// 主要エンティティID関連
 	Entity playerEntity_; // プレイヤーエンティティID
 	Entity cameraEntity_; // カメラエンティティID
-
-	// ステージ管理オブジェクト
-	std::unique_ptr<StageManager> stageManager_;
 };
