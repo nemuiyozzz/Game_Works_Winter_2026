@@ -18,7 +18,7 @@ public:
 	/// @brief デストラクタ
 	~DebugGuiSystem(void) override = default;
 
-	/// @brief 更新処理（ImGuiのウィンドウ構築と保存判定）
+	/// @brief 更新処理
 	/// @param registry ECSレジストリ
 	void Update(EcsRegistry& registry) override;
 
@@ -46,6 +46,16 @@ private:
 	/// @param registry ECSレジストリ
 	/// @param entity 対象エンティティ
 	void DrawPlayerMovementGui(EcsRegistry& registry, Entity entity);
+
+	/// @brief CollisionComponentのGUI項目を描画する
+	/// @param registry ECSレジストリ
+	/// @param entity 対象エンティティ
+	void DrawCollisionGui(EcsRegistry& registry, Entity entity);
+
+	/// @brief Collision2DComponentのGUI項目を描画する
+	/// @param registry ECSレジストリ
+	/// @param entity 対象エンティティ
+	void DrawCollision2DGui(EcsRegistry& registry, Entity entity);
 
 	/// @brief CameraComponentのGUI項目を描画する
 	/// @param registry ECSレジストリ

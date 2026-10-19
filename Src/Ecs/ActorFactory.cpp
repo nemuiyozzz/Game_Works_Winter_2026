@@ -1,13 +1,16 @@
+#include "../Pch.h"
 #include "ActorFactory.h"
 #include "EcsRegistry.h"
 #include "../Application.h"
 #include "../Engine/System/Resource/ResourceManager.h"
 #include "../Engine/System/ExternalLoader/ActorDataLoader.h"
+#include "../Engine/Physics/Collider/ColliderCapsule.h"
 #include "Component/TransformComponent.h"
 #include "Component/VelocityComponent.h"
 #include "Component/PlayerInputComponent.h"
 #include "Component/ModelComponent.h"
 #include "Component/CameraComponent.h"
+#include "Component/CollisionComponent.h"
 #include "Component/DebugGuiComponent.h"
 
 namespace
@@ -18,11 +21,35 @@ namespace
 	constexpr const wchar_t* CAMERA_CSV_NAME = L"CameraParam.csv"; // カメラCSV名
 	constexpr const wchar_t* CAMERA_BIN_NAME = L"CameraParam.bin"; // カメラバイナリ名
 
-	// リソースキー名
-	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE";
+	// リソース・レシピキー名関連
+	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデルキー
+	constexpr const wchar_t* RECIPE_PLAYER = L"Player";          // プレイヤーレシピ名
 }
 
-Entity ActorFactory::CreatePlayer(EcsRegistry& registry)
+std::unordered_map<std::wstring, ActorFactory::RecipeFunc> ActorFactory::recipes_;
+
+void ActorFactory::RegisterDefaultRecipes(void)
+{
+	RegisterRecipe(RECIPE_PLAYER, BuildPlayer);
+}
+
+void ActorFactory::RegisterRecipe(const std::wstring& actorName, RecipeFunc recipe)
+{
+	recipes_[actorName] = recipe;
+}
+
+Entity ActorFactory::CreateActor(EcsRegistry& registry, const std::wstring& actorName)
+{
+	auto iterator = recipes_.find(actorName);
+	if (iterator == recipes_.end())
+	{
+		return NULL_ENTITY;
+	}
+
+	return iterator->second(registry);
+}
+
+Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 {
 	PlayerBinaryData playerParam{};
 	std::wstring csvPath = std::wstring(Application::PATH_CSV) + PLAYER_CSV_NAME;
@@ -48,6 +75,23 @@ Entity ActorFactory::CreatePlayer(EcsRegistry& registry)
 	ModelComponent model{};
 	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
 	registry.AddComponent<ModelComponent>(playerEntity, model);
+
+	TransformComponent& registeredTransform =
+		registry.GetComponent<TransformComponent>(playerEntity);
+
+	auto playerCapsule = std::make_shared<ColliderCapsule>(
+		ColliderBase::TAG::PLAYER,
+		&registeredTransform,
+		playerParam.capsuleStartPos,
+		playerParam.capsuleEndPos,
+		playerParam.capsuleRadius);
+
+	playerCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
+	playerCapsule->AddTargetTag(ColliderBase::TAG::WALL);
+
+	CollisionComponent collisionComponent{};
+	collisionComponent.colliders.push_back(playerCapsule);
+	registry.AddComponent<CollisionComponent>(playerEntity, collisionComponent);
 
 #ifdef _DEBUG
 	DebugGuiComponent playerGui{};

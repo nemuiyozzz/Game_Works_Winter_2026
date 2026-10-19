@@ -10,6 +10,7 @@ namespace
 	constexpr int COLUMN_VALUE_Y = 2;         // 値2（Y成分）
 	constexpr int COLUMN_VALUE_Z = 3;         // 値3（Z成分）
 	constexpr int REQUIRED_COLUMN_COUNT = 2;  // 最低限必要な列数
+	constexpr int VECTOR_COLUMN_COUNT = 4;    // 3次元ベクトルに必要な列数
 }
 
 bool ActorDataLoader::LoadPlayerData(const std::wstring& csvFilePath,
@@ -70,10 +71,22 @@ bool ActorDataLoader::SavePlayerData(const std::wstring& csvFilePath,
 	if (csvFile.is_open())
 	{
 		csvFile << "Parameter,ValueX,ValueY,ValueZ\n";
-		csvFile << "SCALE," << inData.scale.x << "," << inData.scale.y << "," << inData.scale.z << "\n";
+		csvFile << "SCALE,"
+			<< inData.scale.x << ","
+			<< inData.scale.y << ","
+			<< inData.scale.z << "\n";
 		csvFile << "MOVE_SPEED," << inData.moveSpeed << ",0.0,0.0\n";
 		csvFile << "JUMP_POWER," << inData.jumpPower << ",0.0,0.0\n";
 		csvFile << "MAX_SPEED," << inData.maxSpeed << ",0.0,0.0\n";
+		csvFile << "CAPSULE_START,"
+			<< inData.capsuleStartPos.x << ","
+			<< inData.capsuleStartPos.y << ","
+			<< inData.capsuleStartPos.z << "\n";
+		csvFile << "CAPSULE_END,"
+			<< inData.capsuleEndPos.x << ","
+			<< inData.capsuleEndPos.y << ","
+			<< inData.capsuleEndPos.z << "\n";
+		csvFile << "CAPSULE_RADIUS," << inData.capsuleRadius << ",0.0,0.0\n";
 		csvFile.close();
 	}
 
@@ -138,10 +151,15 @@ bool ActorDataLoader::SaveCameraData(const std::wstring& csvFilePath,
 	if (csvFile.is_open())
 	{
 		csvFile << "Parameter,ValueX,ValueY,ValueZ\n";
-		csvFile << "TARGET_OFFSET," << inData.targetOffset.x << "," << inData.targetOffset.y << "," << inData.targetOffset.z << "\n";
+		csvFile << "TARGET_OFFSET,"
+			<< inData.targetOffset.x << ","
+			<< inData.targetOffset.y << ","
+			<< inData.targetOffset.z << "\n";
 		csvFile << "DISTANCE," << inData.distance << ",0.0,0.0\n";
-		csvFile << "ANGLE_H_DEG," << (UtilityMath::Rad2DegF(inData.angleHorizontal)) << ",0.0,0.0\n";
-		csvFile << "ANGLE_V_DEG," << (UtilityMath::Rad2DegF(inData.angleVertical)) << ",0.0,0.0\n";
+		csvFile << "ANGLE_H_DEG,"
+			<< (UtilityMath::Rad2DegF(inData.angleHorizontal)) << ",0.0,0.0\n";
+		csvFile << "ANGLE_V_DEG,"
+			<< (UtilityMath::Rad2DegF(inData.angleVertical)) << ",0.0,0.0\n";
 		csvFile << "ROTATION_SPEED," << inData.rotationSpeed << ",0.0,0.0\n";
 		csvFile << "FREE_MOVE_SPEED," << inData.freeMoveSpeed << ",0.0,0.0\n";
 		csvFile << "FOV_DEG," << (UtilityMath::Rad2DegF(inData.fov)) << ",0.0,0.0\n";
@@ -190,7 +208,7 @@ bool ActorDataLoader::ConvertPlayerCsvToBinary(const std::wstring& csvFilePath,
 
 		const std::string& paramName = cells[COLUMN_PARAMETER_NAME];
 
-		if (paramName == "SCALE" && cells.size() >= 4)
+		if (paramName == "SCALE" && cells.size() >= VECTOR_COLUMN_COUNT)
 		{
 			playerData.scale.x = std::stof(cells[COLUMN_VALUE_X]);
 			playerData.scale.y = std::stof(cells[COLUMN_VALUE_Y]);
@@ -207,6 +225,22 @@ bool ActorDataLoader::ConvertPlayerCsvToBinary(const std::wstring& csvFilePath,
 		else if (paramName == "MAX_SPEED")
 		{
 			playerData.maxSpeed = std::stof(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "CAPSULE_START" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			playerData.capsuleStartPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			playerData.capsuleStartPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			playerData.capsuleStartPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "CAPSULE_END" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			playerData.capsuleEndPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			playerData.capsuleEndPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			playerData.capsuleEndPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "CAPSULE_RADIUS")
+		{
+			playerData.capsuleRadius = std::stof(cells[COLUMN_VALUE_X]);
 		}
 	}
 
@@ -267,7 +301,7 @@ bool ActorDataLoader::ConvertCameraCsvToBinary(const std::wstring& csvFilePath,
 
 		const std::string& paramName = cells[COLUMN_PARAMETER_NAME];
 
-		if (paramName == "TARGET_OFFSET" && cells.size() >= 4)
+		if (paramName == "TARGET_OFFSET" && cells.size() >= VECTOR_COLUMN_COUNT)
 		{
 			cameraData.targetOffset.x = std::stof(cells[COLUMN_VALUE_X]);
 			cameraData.targetOffset.y = std::stof(cells[COLUMN_VALUE_Y]);
@@ -279,11 +313,13 @@ bool ActorDataLoader::ConvertCameraCsvToBinary(const std::wstring& csvFilePath,
 		}
 		else if (paramName == "ANGLE_H_DEG")
 		{
-			cameraData.angleHorizontal = UtilityMath::Deg2RadF(std::stof(cells[COLUMN_VALUE_X]));
+			cameraData.angleHorizontal =
+				UtilityMath::Deg2RadF(std::stof(cells[COLUMN_VALUE_X]));
 		}
 		else if (paramName == "ANGLE_V_DEG")
 		{
-			cameraData.angleVertical = UtilityMath::Deg2RadF(std::stof(cells[COLUMN_VALUE_X]));
+			cameraData.angleVertical =
+				UtilityMath::Deg2RadF(std::stof(cells[COLUMN_VALUE_X]));
 		}
 		else if (paramName == "ROTATION_SPEED")
 		{

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-
 #include "../SceneBase.h"
 #include "../Stage/StageManager.h"
 #include "../../Ecs/EcsWorld.h"
@@ -36,7 +35,7 @@ public:
 private:
 
 	// ECS・ステージ管理関連
-	EcsWorld ecsWorld_;							 // ECS統括ファサード
+	EcsWorld ecsWorld_;                          // ECS統括ファサード
 	std::unique_ptr<StageManager> stageManager_; // ステージ管理
 
 	// 主要エンティティID関連

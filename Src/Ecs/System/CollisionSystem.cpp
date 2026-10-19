@@ -210,7 +210,7 @@ void CollisionSystem::ResolvePenetration(EcsRegistry& registry, Entity entityA,
 			transformA.position = VAdd(transformA.position, pushVector);
 		}
 	}
-	else if (!IS_STATIC_A && IS_STATIC_B)
+	else if (IS_STATIC_A && !IS_STATIC_B)
 	{
 		if (info.hitNormal.y > GROUND_NORMAL_Y)
 		{

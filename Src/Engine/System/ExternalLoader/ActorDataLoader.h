@@ -10,11 +10,16 @@ struct PlayerBinaryData
 {
 	char signature[4] = { 'P', 'L', 'R', '1' }; // ファイル識別子
 
-	// パラメータ関連
+	// 移動・トランスフォーム関連
 	VECTOR scale = { 50.0f, 50.0f, 50.0f };     // モデルのスケール
 	float moveSpeed = 100.0f;                   // 移動速度
 	float jumpPower = 150.0f;                   // ジャンプ力
 	float maxSpeed = -1.0f;                     // 最大速度制限
+
+	// カプセルコライダー関連
+	VECTOR capsuleStartPos = { 0.0f, 30.0f, 0.0f }; // カプセル下端のローカル座標
+	VECTOR capsuleEndPos = { 0.0f, 120.0f, 0.0f };  // カプセル上端のローカル座標
+	float capsuleRadius = 30.0f;                    // カプセルの半径
 };
 
 /// @brief カメラの初期パラメータを保持するバイナリ構造体
