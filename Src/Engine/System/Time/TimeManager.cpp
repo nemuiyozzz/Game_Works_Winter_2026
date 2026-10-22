@@ -38,7 +38,6 @@ void TimeManager::Initialize(void)
 	gameTime_ = 0.0f;
 	gameSpeed_ = 1.0f;
 	timers_.clear();
-	isPaused_ = false;
 	deltaTime_ = 0.0f;
 
 	// 初期化時の時間を記録
@@ -53,12 +52,6 @@ void TimeManager::Update(void)
 	std::chrono::duration<float> elapsedTime = currentTime - previousTime_;
 
 	previousTime_ = currentTime;
-
-	if (isPaused_)
-	{
-		deltaTime_ = 0.0f;
-		return;
-	}
 
 	deltaTime_ = elapsedTime.count();
 

@@ -2,6 +2,7 @@
 #include "ColliderDebugDrawSystem.h"
 #include "../Component/CollisionComponent.h"
 #include "../Component/Collision2DComponent.h"
+#include "../Component/TransformComponent.h"
 #include "../../Engine/System/Input/KeyConfInputManager.h"
 
 void ColliderDebugDrawSystem::Update(void)
@@ -25,15 +26,21 @@ void ColliderDebugDrawSystem::Draw(EcsRegistry& registry) const
 	SetUseZBuffer3D(false);
 	SetWriteZBuffer3D(false);
 
-	// 3Dコライダーの描画
-	auto entities3D = registry.GetEntitiesWith<CollisionComponent>();
+	auto entities3D = registry.GetEntitiesWith<TransformComponent, CollisionComponent>();
 	for (Entity entity : entities3D)
 	{
-		const CollisionComponent& collision = registry.GetComponent<CollisionComponent>(entity);
+		const TransformComponent& transform =
+			registry.GetComponent<TransformComponent>(entity);
+		CollisionComponent& collision =
+			registry.GetComponent<CollisionComponent>(entity);
 
-		for (const auto& collider : collision.colliders)
+		for (auto& collider : collision.colliders)
 		{
-			collider->Draw();
+			if (collider != nullptr)
+			{
+				collider->SetFollowTarget(&transform);
+				collider->Draw();
+			}
 		}
 	}
 

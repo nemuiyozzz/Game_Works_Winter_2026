@@ -8,6 +8,7 @@ enum class DEBUG_SAVE_TYPE
 	NONE,   // 保存ボタンなし（確認・調整のみ）
 	PLAYER, // プレイヤーデータとして保存
 	CAMERA, // カメラデータとして保存
+	STAGE,  // ステージデータとして保存
 };
 
 /// @brief ImGuiデバッグウィンドウの表示対象であることを示すコンポーネント
@@ -18,4 +19,5 @@ struct DebugGuiComponent
 	DEBUG_SAVE_TYPE saveType = DEBUG_SAVE_TYPE::NONE; // 保存データの種類
 	std::wstring csvFilePath = L"";                   // 保存先CSVファイルパス
 	std::wstring binaryFilePath = L"";                // 保存先バイナリファイルパス
+	std::wstring stageResourceKey = L"";                 // ステージモデルのリソース名
 };

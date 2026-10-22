@@ -452,5 +452,8 @@
     <ClInclude Include="Src\Ecs\ActorFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Ecs\Component\HierarchyComponent.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,10 +1,16 @@
 #include "../../Pch.h"
 #include "StageBase.h"
 #include "../../Ecs/Component/TransformComponent.h"
+#include "../../Ecs/Component/ModelComponent.h"
+#include "../../Ecs/Component/DebugGuiComponent.h"
+#include "../../Ecs/Component/HierarchyComponent.h"
+#include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Common/Quaternion.h"
 
 StageBase::StageBase(EcsRegistry& registry)
 	: ecsRegistry_(registry)
+	, csvFilePath_(L"")
+	, binaryFilePath_(L"")
 {
 }
 
@@ -14,18 +20,82 @@ StageBase::~StageBase(void)
 
 void StageBase::Initialize(void)
 {
-	for (const StageObjectBinaryData& objectData : stageData_.objects)
+	std::vector<Entity> indexToEntityMap(stageData_.objects.size(), NULL_ENTITY);
+
+	for (size_t index = 0; index < stageData_.objects.size(); ++index)
 	{
+		const StageObjectBinaryData& objectData = stageData_.objects[index];
 		Entity objectEntity = CreateStageEntity();
 
+		indexToEntityMap[index] = objectEntity;
+
 		TransformComponent transform{};
-		transform.position = objectData.position;
+		transform.localPosition = objectData.position;
 		transform.rotationEuler = objectData.rotation;
 		transform.rotation_ = Quaternion::Euler(
 			objectData.rotation.x, objectData.rotation.y, objectData.rotation.z);
 		transform.scale = objectData.scale;
-
 		ecsRegistry_.AddComponent<TransformComponent>(objectEntity, transform);
+
+		// 3Dモデルの複製と付与
+		std::wstring resourceKey(objectData.resourceKey);
+		if (!resourceKey.empty() && resourceKey != L"NONE" && resourceKey != L"0")
+		{
+			Resource loadedRes = ResourceManager::GetInstance().Load(resourceKey);
+			int modelHandle = -1;
+			if (loadedRes.GetHandleId() != -1)
+			{
+				modelHandle = MV1DuplicateModel(loadedRes.GetHandleId());
+			}
+			if (modelHandle == -1)
+			{
+				modelHandle = loadedRes.GetHandleId();
+			}
+			if (modelHandle != -1)
+			{
+				ModelComponent modelComponent{};
+				modelComponent.modelHandle = modelHandle;
+				ecsRegistry_.AddComponent<ModelComponent>(objectEntity, modelComponent);
+			}
+		}
+
+#ifdef _DEBUG
+		std::string narrowKeyName = "";
+		for (wchar_t wideChar : resourceKey)
+		{
+			narrowKeyName.push_back(static_cast<char>(wideChar));
+		}
+		DebugGuiComponent stageGui{};
+		stageGui.windowTitle = "StageObj[" + std::to_string(index) + "] " + narrowKeyName;
+		stageGui.saveType = DEBUG_SAVE_TYPE::STAGE;
+		stageGui.csvFilePath = csvFilePath_;
+		stageGui.binaryFilePath = binaryFilePath_;
+		stageGui.stageResourceKey = resourceKey;
+		ecsRegistry_.AddComponent<DebugGuiComponent>(objectEntity, stageGui);
+#endif // _DEBUG
+	}
+
+	for (size_t index = 0; index < stageData_.objects.size(); ++index)
+	{
+		const StageObjectBinaryData& objectData = stageData_.objects[index];
+		Entity childEntity = indexToEntityMap[index];
+
+		if (objectData.parentIndex >= 0 && objectData.parentIndex < static_cast<int>(indexToEntityMap.size()))
+		{
+			Entity parentEntity = indexToEntityMap[objectData.parentIndex];
+
+			if (!ecsRegistry_.HasComponent<HierarchyComponent>(childEntity))
+			{
+				ecsRegistry_.AddComponent<HierarchyComponent>(childEntity, HierarchyComponent{});
+			}
+			ecsRegistry_.GetComponent<HierarchyComponent>(childEntity).parent = parentEntity;
+
+			if (!ecsRegistry_.HasComponent<HierarchyComponent>(parentEntity))
+			{
+				ecsRegistry_.AddComponent<HierarchyComponent>(parentEntity, HierarchyComponent{});
+			}
+			ecsRegistry_.GetComponent<HierarchyComponent>(parentEntity).children.push_back(childEntity);
+		}
 	}
 }
 
@@ -50,6 +120,9 @@ Entity StageBase::CreateStageEntity(void)
 void StageBase::LoadStageDataFile(const std::wstring& csvFilePath,
 	const std::wstring& binaryFilePath)
 {
+	csvFilePath_ = csvFilePath;
+	binaryFilePath_ = binaryFilePath;
+
 #ifdef _DEBUG
 	// デバッグ時はCSVが編集されていれば即座にバイナリへ変換・上書きする
 	StageDataLoader::ConvertCsvToBinary(csvFilePath, binaryFilePath);
@@ -57,4 +130,14 @@ void StageBase::LoadStageDataFile(const std::wstring& csvFilePath,
 
 	// バイナリファイルから高速読み込みを行う
 	StageDataLoader::LoadFromBinary(binaryFilePath, stageData_);
+
+	// ステージで使用する全モデルリソースの非同期ロードをここでキックする
+	for (const StageObjectBinaryData& objectData : stageData_.objects)
+	{
+		std::wstring resourceKey(objectData.resourceKey);
+		if (!resourceKey.empty() && resourceKey != L"NONE" && resourceKey != L"0")
+		{
+			ResourceManager::GetInstance().Load(resourceKey);
+		}
+	}
 }

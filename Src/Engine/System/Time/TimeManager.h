@@ -62,14 +62,6 @@ public:
 	/// @param timerId タイマー識別用文字列
 	void ResetTimer(const std::string& timerId);
 
-	/// @brief ポーズ状態を設定する
-	/// @param isPaused ポーズ中ならtrue
-	void SetPaused(bool isPaused) { isPaused_ = isPaused; }
-
-	/// @brief 現在ポーズ中か取得する
-	/// @return ポーズ中ならtrue
-	bool IsPaused(void) const { return isPaused_; }
-
 	/// @brief 前フレームからの経過時間を取得する
 	/// @return デルタタイム
 	float GetDeltaTime(void) const;
@@ -96,9 +88,6 @@ private:
 	float gameTime_;                                     // ゲーム開始時からの累積時間
 	float gameSpeed_;                                    // 時間の進行速度（1.0が等倍）
 	float deltaTime_;                                    // 前フレームからの経過時間
-
-	// ポーズフラグ
-	bool isPaused_;
 
 	// 実行中のタイマーリスト
 	std::unordered_map<std::string, Timer> timers_;

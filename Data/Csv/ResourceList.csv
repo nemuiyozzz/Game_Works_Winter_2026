@@ -1,5 +1,5 @@
 Key,Type,FilePath,DivX,DivY,SizeX,SizeY
-MAGE_SAMPLE,IMAGE,sample.png,0,0,0,0
+IMAGE_SAMPLE,IMAGE,sample.png,0,0,0,0
 IMAGES_SAMPLE,IMAGES,samples.png,2,2,64,64
 MODEL_SAMPLE,MODEL,Player/Player.mv1,0,0,0,0
 ANIMATION_SAMPLE,ANIMATION,sample_anim.mv1,0,0,0,0
@@ -16,3 +16,4 @@ MODEL_SHED,MODEL,Stage/Shed.mv1,0,0,0,0
 MODEL_HOUSE_BIG,MODEL,Stage/HouseBig.mv1,0,0,0,0
 MODEL_HOUSE_BIGVER2,MODEL,Stage/HouseBigver2.mv1,0,0,0,0
 MODEL_HOUSE_LONG,MODEL,Stage/HouseLong.mv1,0,0,0,0
+MODEL_GATE,MODEL,Stage/Gate.mv1,0,0,0,0

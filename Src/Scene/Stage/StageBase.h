@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <Dxlib.h>
 
 #include "../../Engine/System/ExternalLoader/StageDataLoader.h"
@@ -46,8 +47,10 @@ protected:
 	EcsRegistry& ecsRegistry_;          // シーン側のECSレジストリ参照
 	std::vector<Entity> stageEntities_; // 生成したエンティティ一覧
 
-	// バイナリから読み込んだステージ情報
-	LoadedStageData stageData_;         
+	// ステージファイル・データ関連
+	LoadedStageData stageData_;         // バイナリから読み込んだステージ情報
+	std::wstring csvFilePath_;          // 読み込んだCSVファイルパス
+	std::wstring binaryFilePath_;       // 読み込んだバイナリファイルパス
 
 	/// @brief エンティティを生成し、管理リストに登録する
 	/// @return 生成したエンティティID
@@ -59,4 +62,3 @@ protected:
 	void LoadStageDataFile(const std::wstring& csvFilePath,
 		const std::wstring& binaryFilePath);
 };
-

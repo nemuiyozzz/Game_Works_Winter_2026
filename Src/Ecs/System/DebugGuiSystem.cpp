@@ -7,6 +7,7 @@
 #include "../Component/CameraComponent.h"
 #include "../Component/CollisionComponent.h"
 #include "../Component/Collision2DComponent.h"
+#include "../Component/HierarchyComponent.h"
 #include "../../Engine/Physics/Collider/ColliderSphere.h"
 #include "../../Engine/Physics/Collider/ColliderCapsule.h"
 #include "../../Engine/Physics/Collider/ColliderBox.h"
@@ -16,9 +17,11 @@
 #include "../../Engine/Physics/Collider2D/Collider2DBox.h"
 #include "../../Engine/Physics/Collider2D/Collider2DCircle.h"
 #include "../../Engine/System/ExternalLoader/ActorDataLoader.h"
+#include "../../Engine/System/ExternalLoader/StageDataLoader.h"
 #include "../../Common/Quaternion.h"
 #include "../../../Libs/ImGui/imgui.h"
 #include "../../Engine/Utility/UtilityMath.h"
+#include "../Component/ModelComponent.h"
 
 namespace
 {
@@ -135,10 +138,11 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		const float SLIDER_MIN_ROTATION = 0.0f;   // 回転スライダーの最小値
-		const float SLIDER_MAX_ROTATION = 360.0f; // 回転スライダーの最大値
+		constexpr float DRAG_SPEED_ROTATION = 0.1f;   // 回転ドラッグ時の変化量
+		constexpr float MIN_ROTATION_DEG = -360.0f;   // 回転の最小角度
+		constexpr float MAX_ROTATION_DEG = 360.0f;    // 回転の最大角度
 
-		ImGui::DragFloat3("Position", &transform.position.x, DRAG_SPEED_POSITION);
+		ImGui::DragFloat3("Local Position", &transform.localPosition.x, DRAG_SPEED_POSITION);
 		ImGui::DragFloat3("Scale", &transform.scale.x, 0.05f);
 
 		float rotationDegree[3] =
@@ -148,8 +152,8 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 			UtilityMath::Rad2DegF(transform.rotationEuler.z)
 		};
 
-		if (ImGui::SliderFloat3("Rotation(deg)", rotationDegree,
-			SLIDER_MIN_ROTATION, SLIDER_MAX_ROTATION))
+		if (ImGui::DragFloat3("Rotation(deg)", rotationDegree,
+			DRAG_SPEED_ROTATION, MIN_ROTATION_DEG, MAX_ROTATION_DEG, "%.2f"))
 		{
 			transform.rotationEuler.x = UtilityMath::Deg2RadF(rotationDegree[0]);
 			transform.rotationEuler.y = UtilityMath::Deg2RadF(rotationDegree[1]);
@@ -158,6 +162,131 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 				transform.rotationEuler.x,
 				transform.rotationEuler.y,
 				transform.rotationEuler.z);
+		}
+
+		ImGui::Separator();
+
+		if (!registry.HasComponent<HierarchyComponent>(entity))
+		{
+			if (ImGui::Button("Add Hierarchy (Make Parent/Child)"))
+			{
+				registry.AddComponent<HierarchyComponent>(entity, HierarchyComponent{});
+			}
+		}
+		else
+		{
+			HierarchyComponent& hierarchy = registry.GetComponent<HierarchyComponent>(entity);
+
+			int parentId = (hierarchy.parent == NULL_ENTITY) ? -1
+				: static_cast<int>(hierarchy.parent);
+			
+			if (ImGui::InputInt("Parent Entity ID", &parentId))
+			{
+				if (hierarchy.parent != NULL_ENTITY &&
+					registry.HasComponent<HierarchyComponent>(hierarchy.parent))
+				{
+					auto& oldParentHier = registry.GetComponent<HierarchyComponent>(hierarchy.parent);
+					oldParentHier.children.erase(
+						std::remove(oldParentHier.children.begin(), oldParentHier.children.end(), entity),
+						oldParentHier.children.end());
+				}
+
+				if (parentId < 0)
+				{
+					hierarchy.parent = NULL_ENTITY;
+
+					// 親を解除したときは、ローカル座標をそのままワールド座標に戻す
+					if (registry.HasComponent<TransformComponent>(entity))
+					{
+						auto& t = registry.GetComponent<TransformComponent>(entity);
+						t.localPosition = t.position;
+					}
+				}
+				else
+				{
+					Entity newParent = static_cast<Entity>(parentId);
+					hierarchy.parent = newParent;
+
+					if (!registry.HasComponent<HierarchyComponent>(newParent))
+					{
+						registry.AddComponent<HierarchyComponent>(newParent, HierarchyComponent{});
+					}
+					
+					registry.GetComponent<HierarchyComponent>(newParent).children.push_back(entity);
+
+					if (registry.HasComponent<TransformComponent>(entity) &&
+						registry.HasComponent<TransformComponent>(newParent))
+					{
+						auto& childTransform = registry.GetComponent<TransformComponent>(entity);
+						auto& parentTransform = registry.GetComponent<TransformComponent>(newParent);
+
+						VECTOR offset = VSub(childTransform.position, parentTransform.position);
+
+						Quaternion invParentRot = parentTransform.rotation_.Inverse();
+						childTransform.localPosition = invParentRot.PosAxis(offset);
+					}
+				}
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("Duplicate Hierarchy (Copy All)"))
+			{
+				// 再帰的にエンティティとコンポーネントを複製するラムダ関数
+				auto duplicateEntity = [&](auto& self, Entity srcEntity) -> Entity
+					{
+						Entity dstEntity = registry.CreateEntity();
+
+						// Transformのコピー
+						if (registry.HasComponent<TransformComponent>(srcEntity))
+						{
+							registry.AddComponent<TransformComponent>(
+								dstEntity, registry.GetComponent<TransformComponent>(srcEntity));
+						}
+						// モデルのコピー（同じハンドルを使い回す）
+						if (registry.HasComponent<ModelComponent>(srcEntity))
+						{
+							registry.AddComponent<ModelComponent>(
+								dstEntity, registry.GetComponent<ModelComponent>(srcEntity));
+						}
+						// ImGui表示と保存用データのコピー
+						if (registry.HasComponent<DebugGuiComponent>(srcEntity))
+						{
+							registry.AddComponent<DebugGuiComponent>(
+								dstEntity, registry.GetComponent<DebugGuiComponent>(srcEntity));
+						}
+						// 階層（子）のコピー
+						if (registry.HasComponent<HierarchyComponent>(srcEntity))
+						{
+							HierarchyComponent srcHier = registry.GetComponent<HierarchyComponent>(srcEntity);
+							HierarchyComponent dstHier{};
+
+							for (Entity child : srcHier.children)
+							{
+								// 子供も再帰的に複製する
+								Entity duplicatedChild = self(self, child);
+								dstHier.children.push_back(duplicatedChild);
+
+								// 複製された子供の親を、複製された新しい親（自分）に向ける
+								if (registry.HasComponent<HierarchyComponent>(duplicatedChild))
+								{
+									registry.GetComponent<HierarchyComponent>(duplicatedChild).parent = dstEntity;
+								}
+							}
+							registry.AddComponent<HierarchyComponent>(dstEntity, dstHier);
+						}
+						return dstEntity;
+					};
+
+				// 自分自身をルートとして複製処理を実行
+				Entity duplicatedRoot = duplicateEntity(duplicateEntity, entity);
+
+				// コピーした村が重ならないように、少しX方向にずらして配置する
+				if (registry.HasComponent<TransformComponent>(duplicatedRoot))
+				{
+					registry.GetComponent<TransformComponent>(duplicatedRoot).localPosition.x += 300.0f;
+				}
+			}
 		}
 	}
 }
@@ -525,6 +654,58 @@ void DebugGuiSystem::DrawSaveButtonGui(
 				ActorDataLoader::SaveCameraData(
 					debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
 			}
+		}
+	}
+	else if (debugGui.saveType == DEBUG_SAVE_TYPE::STAGE)
+	{
+		if (ImGui::Button("Save Stage Layout (All Stage Objects)"))
+		{
+			LoadedStageData saveStageData{};
+			auto allGuiEntities = registry.GetEntitiesWith<DebugGuiComponent>();
+
+			std::vector<Entity> stageEntitiesToSave;
+
+			for (Entity targetEntity : allGuiEntities)
+			{
+				const auto& targetGui = registry.GetComponent<DebugGuiComponent>(targetEntity);
+				if (targetGui.saveType == DEBUG_SAVE_TYPE::STAGE &&
+					targetGui.csvFilePath == debugGui.csvFilePath &&
+					registry.HasComponent<TransformComponent>(targetEntity))
+				{
+					stageEntitiesToSave.push_back(targetEntity);
+				}
+			}
+
+			for (Entity targetEntity : stageEntitiesToSave)
+			{
+				const auto& targetGui = registry.GetComponent<DebugGuiComponent>(targetEntity);
+				const auto& transform = registry.GetComponent<TransformComponent>(targetEntity);
+
+				StageObjectBinaryData objectData{};
+				wcsncpy_s(objectData.resourceKey, targetGui.stageResourceKey.c_str(), MAX_RESOURCE_KEY_LENGTH - 1);
+
+				objectData.position = transform.localPosition;
+				objectData.rotation = transform.rotationEuler;
+				objectData.scale = transform.scale;
+				objectData.parentIndex = -1;
+
+				if (registry.HasComponent<HierarchyComponent>(targetEntity))
+				{
+					Entity parentEntity = registry.GetComponent<HierarchyComponent>(targetEntity).parent;
+					if (parentEntity != NULL_ENTITY)
+					{
+						auto it = std::find(stageEntitiesToSave.begin(), stageEntitiesToSave.end(), parentEntity);
+						if (it != stageEntitiesToSave.end())
+						{
+							objectData.parentIndex = static_cast<int>(std::distance(stageEntitiesToSave.begin(), it));
+						}
+					}
+				}
+
+				saveStageData.objects.push_back(objectData);
+			}
+
+			StageDataLoader::SaveStageData(debugGui.csvFilePath, debugGui.binaryFilePath, saveStageData);
 		}
 	}
 }

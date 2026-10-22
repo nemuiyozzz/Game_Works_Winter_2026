@@ -4,23 +4,27 @@
 #include <vector>
 #include <DxLib.h>
 
+// リソースキー文字列の最大文字数
+constexpr size_t MAX_RESOURCE_KEY_LENGTH = 64;
+
 #pragma pack(push, 1)
 
 /// @brief バイナリファイルの先頭に記録するヘッダー情報
 struct StageBinaryHeader
 {
-	char signature[4] = { 'S', 'T', 'G', '1' };			// ファイル識別子
-	VECTOR playerSpawnPosition = { 0.0f, 0.0f, 0.0f };	// プレイヤー初期位置
-	unsigned int objectCount = 0;						// 配置オブジェクトの総数
+	char signature[4] = { 'S', 'T', 'G', '1' };        // ファイル識別子
+	VECTOR playerSpawnPosition = { 0.0f, 0.0f, 0.0f }; // プレイヤー初期位置
+	unsigned int objectCount = 0;                      // 配置オブジェクトの総数
 };
 
 /// @brief ステージ上に配置する1オブジェクト分のバイナリデータ
 struct StageObjectBinaryData
 {
-	int resourceId = -1;				    // リソースID
-	VECTOR position = { 0.0f, 0.0f, 0.0f }; // 座標
-	VECTOR rotation = { 0.0f, 0.0f, 0.0f }; // 回転
-	VECTOR scale = { 1.0f, 1.0f, 1.0f };    // スケール
+	wchar_t resourceKey[MAX_RESOURCE_KEY_LENGTH] = L""; // リソース識別
+	VECTOR position = { 0.0f, 0.0f, 0.0f };             // 座標
+	VECTOR rotation = { 0.0f, 0.0f, 0.0f };             // 回転
+	VECTOR scale = { 1.0f, 1.0f, 1.0f };                // スケール
+	int parentIndex = -1;								// 親オブジェクトのインデックス
 };
 
 #pragma pack(pop)
@@ -32,7 +36,7 @@ struct LoadedStageData
 	std::vector<StageObjectBinaryData> objects;        // 配置オブジェクト配列
 };
 
-/// @brief CSVからバイナリへの変換およびバイナリからのステージデータ読み込みを行うクラス
+/// @brief CSVからバイナリへの変換およびバイナリからのステージデータ読み書きを行うクラス
 class StageDataLoader
 {
 public:
@@ -50,5 +54,12 @@ public:
 	/// @return 読み込みに成功したらtrue
 	static bool LoadFromBinary(const std::wstring& binaryFilePath,
 		LoadedStageData& outStageData);
-};
 
+	/// @brief 編集したステージデータをCSVとバイナリの両方に上書き保存する
+	/// @param csvFilePath 保存先CSVファイルのパス
+	/// @param binaryFilePath 保存先バイナリファイルのパス
+	/// @param inStageData 保存するステージデータ
+	/// @return 保存に成功したらtrue
+	static bool SaveStageData(const std::wstring& csvFilePath,
+		const std::wstring& binaryFilePath, const LoadedStageData& inStageData);
+};

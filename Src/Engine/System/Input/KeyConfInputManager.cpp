@@ -57,30 +57,24 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"UP"] =
 	{
 		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_W},
-		//{INPUT_TYPE::KEY_BOARD, KEY_INPUT_UP},
-		{INPUT_TYPE::JOYPAD, PAD_INPUT_UP},
 		{INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_UP)}
 	};
 
 	inputTable_[L"DOWN"] =
 	{
 		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_S},
-		//{INPUT_TYPE::KEY_BOARD, KEY_INPUT_DOWN},
-		{INPUT_TYPE::JOYPAD, PAD_INPUT_DOWN},
 		{INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_DOWN)}
 	};
 
 	inputTable_[L"LEFT"] =
 	{
 	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_A},
-	  //{INPUT_TYPE::KEY_BOARD, KEY_INPUT_LEFT},
 	  {INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_LEFT)}
 	};
 
 	inputTable_[L"RIGHT"] =
 	{
 	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_D},
-	  //{INPUT_TYPE::KEY_BOARD, KEY_INPUT_RIGHT},
 	  {INPUT_TYPE::XINPUT_ANALOG, static_cast<unsigned int>(XINPUT_ANALOG_ID::LEFT_STICK_RIGHT)}
 	};
 
@@ -173,6 +167,26 @@ void KeyConfInputManager::InitInputTable(void)
 	inputTable_[L"CAMERA_RIGHT"] =
 	{
 		{INPUT_TYPE::KEY_BOARD, KEY_INPUT_RIGHT}
+	};
+
+	inputTable_[L"CAMERA_LOOK"] =
+	{
+		{ INPUT_TYPE::MOUSE, MOUSE_INPUT_RIGHT }
+	};
+
+	inputTable_[L"CAMERA_PAN"] =
+	{
+		{ INPUT_TYPE::MOUSE, MOUSE_INPUT_MIDDLE }
+	};
+
+	inputTable_[L"CAMERA_ASCEND"] =
+	{
+		{ INPUT_TYPE::KEY_BOARD, KEY_INPUT_E }
+	};
+
+	inputTable_[L"CAMERA_DESCEND"] =
+	{
+		{ INPUT_TYPE::KEY_BOARD, KEY_INPUT_Q }
 	};
 
 	inputTable_[L"APPLY_DEBUG"] =

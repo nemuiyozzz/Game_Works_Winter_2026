@@ -21,7 +21,6 @@ void Loading::Initialize(void)
 
 void Loading::StartAsyncLoad(std::function<void()> loadFunction)
 {
-	SetUseASyncLoadFlag(true);
 	if (isLoading_)
 	{
 		return;
@@ -30,11 +29,12 @@ void Loading::StartAsyncLoad(std::function<void()> loadFunction)
 	Initialize();
 	isLoading_ = true;
 
+	SetUseASyncLoadFlag(true);
+
 	if (loadFunction)
 	{
 		loadFunction();
 	}
-	SetUseASyncLoadFlag(false);
 }
 
 void Loading::Update(void)
@@ -55,6 +55,7 @@ void Loading::Update(void)
 
 	if (progress_ >= MAXIMUM_PROGRESS)
 	{
+		// 進行度が100%になり、かつDXライブラリの非同期ロードが完全に0件になったら終了
 		if (LOAD_COUNT == 0)
 		{
 			EndAsyncLoad();
@@ -71,10 +72,8 @@ void Loading::Draw(void)
 	const unsigned int BLACK_COLOR = GetColor(0, 0, 0);
 	const unsigned int WHITE_COLOR = GetColor(255, 255, 255);
 
-	// 背景を黒で塗りつぶす
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, BLACK_COLOR, true);
 
-	// 画面中央付近に「ロード中...」と描画
 	DrawString(Application::SCREEN_HALF_X - 40, Application::SCREEN_HALF_Y, L"ロード中...", WHITE_COLOR);
 }
 
@@ -82,6 +81,8 @@ void Loading::EndAsyncLoad(void)
 {
 	isLoading_ = false;
 	progress_ = MAXIMUM_PROGRESS;
+
+	SetUseASyncLoadFlag(false);
 }
 
 int Loading::GetProgress(void) const
