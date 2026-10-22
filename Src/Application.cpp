@@ -4,6 +4,7 @@
 #include "Engine/System/Fps/FpsController.h"
 #include "Engine/System/Resource/ResourceManager.h"
 #include "Engine/System/Time/TimeManager.h"
+#include "Engine/System/ImGui/ImGuiWrapper.h"
 #include "Scene/SceneManager.h"
 
 Application* Application::instance_ = nullptr;
@@ -39,6 +40,7 @@ void Application::DestroyInstance(void)
 	ResourceManager::GetInstance().DestroyInstance();
 	KeyConfInputManager::GetInstance().DestroyInstance();
 	TimeManager::GetInstance().DestroyInstance();
+	ImGuiWrapper::GetInstance().DestroyInstance();
 
 	SetUseASyncLoadFlag(false);
 
@@ -103,6 +105,8 @@ void Application::Initialize(void)
 	SetUseDirectInputFlag(true);
 
 	KeyConfInputManager::CreateInstance();
+	ImGuiWrapper::CreateInstance();
+	ImGuiWrapper::GetInstance().Initialize();
 	ResourceManager::CreateInstance();
 	ResourceManager::GetInstance().Initialize();
 	SceneManager::CreateInstance();
@@ -124,6 +128,7 @@ void Application::Run(void)
 
 		TimeManager::GetInstance().Update();
 		KeyConfInputManager::GetInstance().Update();
+		ImGuiWrapper::GetInstance().Update();
 		SceneManager::GetInstance().Update();
 
 		SceneManager::GetInstance().Draw();
@@ -132,6 +137,9 @@ void Application::Run(void)
 		DrawEffekseer3D();
 
 		fpsController_->Draw();
+
+		RenderVertex();
+		ImGuiWrapper::GetInstance().Draw();
 
 		ScreenFlip();
 

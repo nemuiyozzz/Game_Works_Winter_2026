@@ -123,9 +123,9 @@ void KeyConfInputManager::InitInputTable(void)
 	  {INPUT_TYPE::JOYPAD, PAD_INPUT_B}
 	};
 
-	inputTable_[L"DEBUG_CANCEL"] =
+	inputTable_[L"DEBUG_GUI"] =
 	{
-	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_BACK}
+	  {INPUT_TYPE::KEY_BOARD, KEY_INPUT_F1}
 	};
 
 	inputTable_[L"DEBUG_COLLIDER"] =

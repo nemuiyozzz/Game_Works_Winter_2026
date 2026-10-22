@@ -49,7 +49,3 @@ void SceneTitle::Draw(void)
 void SceneTitle::Release(void)
 {
 }
-
-void SceneTitle::UpdateGui(void)
-{
-}

@@ -1,21 +1,20 @@
 #include "../../Pch.h"
 #include "SceneGame.h"
 #include "../../Engine/System/Resource/ResourceManager.h"
-#include "../../Ecs/Component/TransformComponent.h"
-#include "../../Ecs/Component/VelocityComponent.h"
-#include "../../Ecs/Component/PlayerInputComponent.h"
-#include "../../Ecs/Component/ModelComponent.h"
-#include "../../Ecs/Component/CameraComponent.h"
-#include "../../Ecs/System/PlayerControlSystem.h"
-#include "../../Ecs/System/MovementSystem.h"
-#include "../../Ecs/System/TransformSystem.h"
-#include "../../Ecs/System/CameraSystem.h"
 #include "../Stage/StageLobby.h"
 #include "../Stage/StageBattle.h"
 #include "../Stage/StageTraining.h"
 
+namespace
+{
+	// リソース・レシピキー名関連
+	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデルキー
+	constexpr const wchar_t* RECIPE_PLAYER = L"Player";          // プレイヤーレシピ名
+}
+
 SceneGame::SceneGame(void)
 	: playerEntity_(NULL_ENTITY)
+	, cameraEntity_(NULL_ENTITY)
 {
 }
 
@@ -27,46 +26,21 @@ void SceneGame::Load(void)
 {
 	SceneBase::Load();
 
-	ResourceManager::GetInstance().Load(ResourceManager::RESOURCE_ID::MODEL_SAMPLE);
+	ResourceManager::GetInstance().Load(KEY_MODEL_PLAYER);
 }
 
 void SceneGame::Initialize(void)
 {
 	SceneBase::Initialize();
+	ecsWorld_.Initialize();
 
-	updateSystems_.push_back(std::make_shared<PlayerControlSystem>());
-	updateSystems_.push_back(std::make_shared<MovementSystem>());
-	updateSystems_.push_back(std::make_shared<TransformSystem>());
-	updateSystems_.push_back(std::make_shared<CameraSystem>());
+	playerEntity_ = ecsWorld_.SpawnActor(RECIPE_PLAYER);
+	cameraEntity_ = ecsWorld_.SpawnCamera(playerEntity_);
 
-	modelSystem_ = std::make_shared<ModelSystem>();
-
-	playerEntity_ = ecsRegistry_.CreateEntity();
-	
-	TransformComponent playerTransform{};
-
-	playerTransform.scale = VGet(50.0f, 50.0f, 50.0f);
-
-	ecsRegistry_.AddComponent<TransformComponent>(playerEntity_, playerTransform);
-	ecsRegistry_.AddComponent<VelocityComponent>(playerEntity_, {});
-	ecsRegistry_.AddComponent<PlayerInputComponent>(playerEntity_, { 100.0f, 150.0f });
-
-	int playerModelHandle = ResourceManager::GetInstance().GetHandleId(ResourceManager::RESOURCE_ID::MODEL_SAMPLE);
-	ModelComponent model{};
-	model.modelHandle = playerModelHandle;
-	ecsRegistry_.AddComponent<ModelComponent>(playerEntity_, model);
-
-	cameraEntity_ = ecsRegistry_.CreateEntity();
-	ecsRegistry_.AddComponent<TransformComponent>(cameraEntity_, {});
-
-	CameraComponent cameraData{};
-	cameraData.targetEntity = playerEntity_;
-	cameraData.mode = CAMERA_MODE::TRACKING;
-	ecsRegistry_.AddComponent<CameraComponent>(cameraEntity_, cameraData);
-
-	stageManager_ = std::make_unique<StageManager>(ecsRegistry_, playerEntity_);
+	EcsRegistry& registry = ecsWorld_.GetRegistry();
+	stageManager_ = std::make_unique<StageManager>(registry, playerEntity_);
 	stageManager_->Initialize();
-	stageManager_->SetupFirstStage(std::make_shared<StageLobby>(ecsRegistry_));
+	stageManager_->SetupFirstStage(std::make_shared<StageLobby>(registry));
 }
 
 void SceneGame::Update(void)
@@ -79,33 +53,30 @@ void SceneGame::Update(void)
 	}
 
 #ifdef _DEBUG
+	EcsRegistry& registry = ecsWorld_.GetRegistry();
 
 	if (CheckHitKey(KEY_INPUT_F5) != 0)
 	{
-		stageManager_->ChangeStage(std::make_shared<StageLobby>(ecsRegistry_));
+		stageManager_->ChangeStage(std::make_shared<StageLobby>(registry));
 	}
 	else if (CheckHitKey(KEY_INPUT_F6) != 0)
 	{
-		stageManager_->ChangeStage(std::make_shared<StageBattle>(ecsRegistry_));
+		stageManager_->ChangeStage(std::make_shared<StageBattle>(registry));
 	}
 	else if (CheckHitKey(KEY_INPUT_F7) != 0)
 	{
-		stageManager_->ChangeStage(std::make_shared<StageTraining>(ecsRegistry_));
+		stageManager_->ChangeStage(std::make_shared<StageTraining>(registry));
 	}
-
 #endif // _DEBUG
 
-	for (auto& system : updateSystems_)
-	{
-		system->Update(ecsRegistry_);
-	}
+	ecsWorld_.Update();
 }
 
 void SceneGame::Draw(void)
 {
-	modelSystem_->Update(ecsRegistry_);
-
 	stageManager_->DrawStage();
+
+	ecsWorld_.Draw();
 
 	stageManager_->DrawOverlay();
 }
@@ -117,5 +88,5 @@ void SceneGame::Release(void)
 		stageManager_->Release();
 	}
 
-	updateSystems_.clear();
+	ecsWorld_.Release();
 }

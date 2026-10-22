@@ -15,6 +15,11 @@ Vector2F Collider2DBox::GetCenterPos(void) const
 	return GetWorldCenterPos();
 }
 
+void Collider2DBox::SetCenterPos(const Vector2F& centerPos)
+{
+	centerPos_ = centerPos;
+}
+
 void Collider2DBox::SetWidth(float width)
 {
 	width_ = width;

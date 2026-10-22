@@ -21,6 +21,10 @@ public:
 	/// @return 中央座標
 	Vector2F GetCenterPos(void) const;
 
+	/// @brief 中心座標の変更
+	/// @param centerPos 新しい中央座標
+	void SetCenterPos(const Vector2F& centerPos);
+
 	/// @brief 横幅の変更
 	/// @param _width 新しい横幅
 	void SetWidth(float width);

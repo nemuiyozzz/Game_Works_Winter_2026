@@ -1,15 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <memory>
-
 #include "../SceneBase.h"
-#include "../../Ecs/Entity.h"
-#include "../../Ecs/System/ISystem.h"
-#include "../../Ecs/System/ModelSystem.h"
 #include "../Stage/StageManager.h"
+#include "../../Ecs/EcsWorld.h"
+#include "../../Ecs/Entity.h"
 
-/// @brief ゲーム本編シーンクラス
+/// @brief ゲーム本編のシーンクラス
 class SceneGame : public SceneBase
 {
 public:
@@ -20,11 +17,8 @@ public:
 	/// @brief デストラクタ
 	~SceneGame(void) override;
 
-	/// @brief 非同期ロード処理
+	/// @brief リソースの読み込み処理
 	void Load(void) override;
-
-	/// @brief ロード完了時の処理
-	void EndLoad(void) override {}
 
 	/// @brief 初期化処理
 	void Initialize(void) override;
@@ -38,21 +32,13 @@ public:
 	/// @brief 解放処理
 	void Release(void) override;
 
-protected:
-
-	/// @brief ImGui用の更新処理
-	void UpdateGui(void) override {}
-
 private:
 
-	// ECSシステムパイプライン
-	std::vector<std::shared_ptr<ISystem>> updateSystems_;
-	std::shared_ptr<ModelSystem> modelSystem_;
+	// ECS・ステージ管理関連
+	EcsWorld ecsWorld_;                          // ECS統括ファサード
+	std::unique_ptr<StageManager> stageManager_; // ステージ管理
 
-	// エンティテID関連
-	Entity playerEntity_;	// プレイヤー
-	Entity cameraEntity_;	// カメラ
-
-	// ステージマネージャー
-	std::unique_ptr<StageManager> stageManager_;
+	// 主要エンティティID関連
+	Entity playerEntity_; // プレイヤーエンティティID
+	Entity cameraEntity_; // カメラエンティティID
 };

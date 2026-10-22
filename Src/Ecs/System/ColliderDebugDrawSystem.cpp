@@ -8,7 +8,7 @@ void ColliderDebugDrawSystem::Update(void)
 {
 
 	// キーが押された瞬間だけフラグを反転させる
-	if (KeyConfInputManager::GetInstance().isPressed(L"DEBUG_COLLIDER"))
+	if (KeyConfInputManager::GetInstance().isTrigerDown(L"DEBUG_COLLIDER"))
 	{
 		isDebugDrawActive_ = !isDebugDrawActive_;
 	}
