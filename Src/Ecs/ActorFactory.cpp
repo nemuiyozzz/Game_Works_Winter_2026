@@ -22,7 +22,7 @@ namespace
 	constexpr const wchar_t* CAMERA_BIN_NAME = L"CameraParam.bin"; // カメラバイナリ名
 
 	// リソース・レシピキー名関連
-	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデルキー
+	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデル
 	constexpr const wchar_t* RECIPE_PLAYER = L"Player";          // プレイヤーレシピ名
 }
 
