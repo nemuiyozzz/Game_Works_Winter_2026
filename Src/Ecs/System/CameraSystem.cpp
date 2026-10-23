@@ -74,7 +74,7 @@ void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry,
 
 	// 入力量を統合
 	float horizontalAngleAmount =
-		(mouseMovement.x_ * MOUSE_SENSITIVITY_SCALE) + rightStickInput.x_;
+		-(mouseMovement.x_ * MOUSE_SENSITIVITY_SCALE) + rightStickInput.x_;
 	float verticalAngleAmount =
 		(mouseMovement.y_ * MOUSE_SENSITIVITY_SCALE) + (-rightStickInput.y_);
 
@@ -101,7 +101,7 @@ void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry,
 	VECTOR offsetPosition{};
 	offsetPosition.x = camera.distance * cosineVertical * sineHorizontal;
 	offsetPosition.y = camera.distance * sineVertical;
-	offsetPosition.z = camera.distance * cosineVertical * -cosineHorizontal;
+	offsetPosition.z = camera.distance * cosineVertical * cosineHorizontal;
 
 	// カメラ座標と注視点の計算
 	VECTOR lookAtPosition = VAdd(targetPosition, camera.targetOffset);
