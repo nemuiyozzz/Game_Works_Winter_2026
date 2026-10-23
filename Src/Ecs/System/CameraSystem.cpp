@@ -101,7 +101,7 @@ void CameraSystem::UpdateTrackingCamera(EcsRegistry& registry,
 	VECTOR offsetPosition{};
 	offsetPosition.x = camera.distance * cosineVertical * sineHorizontal;
 	offsetPosition.y = camera.distance * sineVertical;
-	offsetPosition.z = camera.distance * cosineVertical * cosineHorizontal;
+	offsetPosition.z = camera.distance * cosineVertical * -cosineHorizontal;
 
 	// カメラ座標と注視点の計算
 	VECTOR lookAtPosition = VAdd(targetPosition, camera.targetOffset);
