@@ -105,6 +105,18 @@ void CollisionSystem::ProcessCollisionPair(EcsRegistry& registry, Entity entityA
 		isHit = CollisionCapsule::CheckCapsuleVsModel(
 			colliderB.get(), colliderA.get(), info);
 	}
+	else if (SHAPE_A == ColliderBase::SHAPE::CAPSULE &&
+		SHAPE_B == ColliderBase::SHAPE::CAPSULE)
+	{
+		isHit = CollisionCapsule::CheckCapsuleVsCapsule(
+			colliderA.get(), colliderB.get(), info);
+	}
+	else if (SHAPE_A == ColliderBase::SHAPE::CAPSULE &&
+		SHAPE_B == ColliderBase::SHAPE::CAPSULE)
+	{
+		isHit = CollisionCapsule::CheckCapsuleVsCapsule(
+			colliderB.get(), colliderA.get(), info);
+	}
 	else if (SHAPE_A == ColliderBase::SHAPE::SPHERE &&
 		SHAPE_B == ColliderBase::SHAPE::SPHERE)
 	{

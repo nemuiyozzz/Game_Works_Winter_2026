@@ -13,6 +13,7 @@
 #include "Component/CollisionComponent.h"
 #include "Component/DebugGuiComponent.h"
 #include "../Engine/Physics/Collider/ColliderLine.h"
+#include "Component/EnemyComponent.h"
 
 namespace
 {
@@ -129,6 +130,8 @@ Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 	VelocityComponent velocity{};
 	registry.AddComponent<VelocityComponent>(enemyEntity, velocity);
 
+	registry.AddComponent<EnemyComponent>(enemyEntity, EnemyComponent{});
+
 	ModelComponent model{};
 	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
 	registry.AddComponent<ModelComponent>(enemyEntity, model);
@@ -137,9 +140,9 @@ Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 	auto enemyCapsule = std::make_shared<ColliderCapsule>(
 		ColliderBase::TAG::ENEMY,
 		nullptr,
+		VGet(0.0f, 10.0f, 0.0f),
 		VGet(0.0f, 30.0f, 0.0f),
-		VGet(0.0f, 120.0f, 0.0f),
-		30.0f
+		5.0f
 	);
 	enemyCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
 	enemyCapsule->AddTargetTag(ColliderBase::TAG::WALL);

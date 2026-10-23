@@ -239,6 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Ecs\ActorFactory.h" />
+    <ClInclude Include="Src\Ecs\Component\EnemyComponent.h" />
     <ClInclude Include="Src\Ecs\Component\HierarchyComponent.h" />
     <ClInclude Include="Src\Ecs\EcsWorld.h" />
     <ClInclude Include="Src\Ecs\System\DebugGuiSystem.h" />

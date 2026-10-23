@@ -1,9 +1,14 @@
 #include "../../Pch.h"
 #include "SceneGame.h"
 #include "../../Engine/System/Resource/ResourceManager.h"
+#include "../../Ecs/Component/EnemyComponent.h"
+#include "../../Ecs/Component/CollisionComponent.h"
+#include "../../Ecs/Component/PlayerInputComponent.h"
 #include "../Stage/StageLobby.h"
 #include "../Stage/StageBattle.h"
 #include "../Stage/StageTraining.h"
+#include "SceneResult.h"
+#include "../SceneManager.h"
 
 namespace
 {
@@ -15,6 +20,7 @@ namespace
 SceneGame::SceneGame(void)
 	: playerEntity_(NULL_ENTITY)
 	, cameraEntity_(NULL_ENTITY)
+	, defeatedEnemyCount_(0)
 {
 }
 
@@ -50,6 +56,30 @@ void SceneGame::Update(void)
 	if (stageManager_->GetStageChanging())
 	{
 		return;
+	}
+
+	// エネミーとプレイヤーの接触判定
+	auto enemies = ecsWorld_.GetRegistry().GetEntitiesWith<EnemyComponent, CollisionComponent>();
+
+	for (Entity enemy : enemies)
+	{
+		const CollisionComponent& collision = ecsWorld_.GetRegistry().GetComponent<CollisionComponent>(enemy);
+
+		for (Entity hitEntity : collision.hitEntities)
+		{
+			if (ecsWorld_.GetRegistry().HasComponent<PlayerInputComponent>(hitEntity))
+			{
+				ecsWorld_.GetRegistry().DestroyEntity(enemy);
+				defeatedEnemyCount_++;
+				break;
+			}
+		}
+	}
+
+	// 5体倒したらリザルトシーンへ遷移
+	if (defeatedEnemyCount_ >= 5)
+	{
+		SceneManager::GetInstance().ChangeScene(std::make_shared<SceneResult>());
 	}
 
 #ifdef _DEBUG

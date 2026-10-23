@@ -41,4 +41,6 @@ private:
 	// 主要エンティティID関連
 	Entity playerEntity_; // プレイヤーエンティティID
 	Entity cameraEntity_; // カメラエンティティID
+
+	int defeatedEnemyCount_;
 };
