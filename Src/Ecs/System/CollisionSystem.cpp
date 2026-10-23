@@ -174,7 +174,7 @@ void CollisionSystem::ProcessCollisionPair(EcsRegistry& registry, Entity entityA
 		collisionA.hitEntities.push_back(entityB);
 		collisionB.hitEntities.push_back(entityA);
 
-		if (!colliderA->IsTrigger() && !colliderB->IsTrigger())
+		if (colliderA->IsTrigger() && colliderB->IsTrigger())
 		{
 			ResolvePenetration(registry, entityA, entityB, info);
 		}
@@ -202,35 +202,38 @@ void CollisionSystem::ResolvePenetration(EcsRegistry& registry, Entity entityA,
 		if (info.hitNormal.y > GROUND_NORMAL_Y)
 		{
 			transformA.position = VAdd(transformA.position, pushVector);
+			transformA.localPosition = transformA.position;
 			registry.GetComponent<VelocityComponent>(entityA).velocity.y = 0.0f;
 		}
 		else
 		{
 			pushVector.y = 0.0f;
 			transformA.position = VAdd(transformA.position, pushVector);
+			transformA.localPosition = transformA.position;
 		}
 	}
 	else if (IS_STATIC_A && !IS_STATIC_B)
 	{
 		if (info.hitNormal.y > GROUND_NORMAL_Y)
 		{
-			transformB.position = VAdd(transformB.position,
-				VScale(pushVector, -PUSH_BACK_STATIC_RATIO));
+			transformB.position = VAdd(transformB.position, pushVector);
+			transformB.localPosition = transformB.position;
 			registry.GetComponent<VelocityComponent>(entityB).velocity.y = 0.0f;
 		}
 		else
 		{
 			pushVector.y = 0.0f;
-			transformB.position = VAdd(transformB.position,
-				VScale(pushVector, -PUSH_BACK_STATIC_RATIO));
+			transformB.position = VAdd(transformB.position, pushVector);
+			transformB.localPosition = transformB.position;
 		}
 	}
 	else
 	{
-		pushVector.y = 0.0f;
-		transformA.position = VAdd(transformA.position,
-			VScale(pushVector, PUSH_BACK_DYNAMIC_RATIO));
-		transformB.position = VAdd(transformB.position,
-			VScale(pushVector, -PUSH_BACK_DYNAMIC_RATIO));
+		VECTOR halfPush = VScale(pushVector, PUSH_BACK_DYNAMIC_RATIO);
+		transformA.position = VAdd(transformA.position, halfPush);
+		transformA.localPosition = transformA.position;
+
+		transformB.position = VSub(transformB.position, halfPush);
+		transformB.localPosition = transformB.position;
 	}
 }

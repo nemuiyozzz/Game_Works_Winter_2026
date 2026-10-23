@@ -164,6 +164,7 @@ void StageManager::ResetPlayerTransform(void)
 
 		VECTOR spawnPosition = currentStage_->GetPlayerSpawnPosition();
 		playerTransform.position = spawnPosition;
+		playerTransform.localPosition = spawnPosition;
 		playerTransform.previousPosition = spawnPosition;
 	}
 

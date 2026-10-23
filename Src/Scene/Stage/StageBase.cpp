@@ -4,6 +4,9 @@
 #include "../../Ecs/Component/ModelComponent.h"
 #include "../../Ecs/Component/DebugGuiComponent.h"
 #include "../../Ecs/Component/HierarchyComponent.h"
+#include "../../Ecs/Component/CollisionComponent.h"
+#include "../../Engine/Physics/Collider/ColliderModel.h"
+#include "../../Engine/Physics/Collider/ColliderBox.h"
 #include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Common/Quaternion.h"
 
@@ -30,6 +33,7 @@ void StageBase::Initialize(void)
 		indexToEntityMap[index] = objectEntity;
 
 		TransformComponent transform{};
+		transform.position = objectData.position;
 		transform.localPosition = objectData.position;
 		transform.rotationEuler = objectData.rotation;
 		transform.rotation_ = Quaternion::Euler(
@@ -56,6 +60,38 @@ void StageBase::Initialize(void)
 				ModelComponent modelComponent{};
 				modelComponent.modelHandle = modelHandle;
 				ecsRegistry_.AddComponent<ModelComponent>(objectEntity, modelComponent);
+
+				CollisionComponent collisionComp{};
+
+				auto stageTag = ColliderBase::TAG::STAGE;
+
+				if (resourceKey.find(L"GROUND") != std::wstring::npos)
+				{
+					MV1SetPosition(modelHandle, objectData.position);
+					MV1SetRotationXYZ(modelHandle, objectData.rotation);
+					MV1SetScale(modelHandle, objectData.scale);
+
+					auto modelCollider = std::make_shared<ColliderModel>(stageTag, nullptr);
+
+					modelCollider->SetModelHandle(modelHandle);
+					modelCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+
+					collisionComp.colliders.push_back(modelCollider);
+				}
+				else
+				{
+					auto boxCollider = std::make_shared<ColliderBox>(
+						stageTag,
+						nullptr,
+						VGet(0.0f, 50.0f, 0.0f),
+						VGet(100.0f, 100.0f, 100.0f)
+					);
+
+					boxCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+					collisionComp.colliders.push_back(boxCollider);
+				}
+
+				ecsRegistry_.AddComponent<CollisionComponent>(objectEntity, collisionComp);
 			}
 		}
 

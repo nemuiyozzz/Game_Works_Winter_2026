@@ -24,6 +24,12 @@ void MovementSystem::UpdatePosition(EcsRegistry& registry, Entity entity)
 	VelocityComponent& velocityData = registry.GetComponent<VelocityComponent>(entity);
 
 	float deltaTime = TimeManager::GetInstance().GetDeltaTime();
+
+	// 重力
+	constexpr float GRAVITY_FORCE = -9.81f;
+
+	velocityData.acceleration.y = GRAVITY_FORCE;
+
 	VECTOR deltaAcceleration = VScale(velocityData.acceleration, deltaTime);
 	constexpr float MIN_LIMIT_SPEED = 0.0f;
 

@@ -17,7 +17,7 @@ namespace
 	constexpr int COLUMN_SCALE_Y = 9;         // Yスケール
 	constexpr int COLUMN_SCALE_Z = 10;        // Zスケール
 	constexpr int COLUMN_PARENT_INDEX = 11;   // 親のインデックス
-	constexpr int REQUIRED_COLUMN_COUNT = 12; // 必要な列の総数
+	constexpr int REQUIRED_COLUMN_COUNT = 11; // 必要な列の総数
 }
 
 bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,

@@ -63,8 +63,8 @@ void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 	}
 	else
 	{
-		transform.position = transform.localPosition;
 		transform.positionMatrix = MGetTranslate(transform.position);
+		transform.localPosition = transform.position;
 	}
 
 	MATRIX tempMatrix = MGetIdent();

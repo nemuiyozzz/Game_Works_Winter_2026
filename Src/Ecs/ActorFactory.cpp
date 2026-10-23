@@ -12,6 +12,7 @@
 #include "Component/CameraComponent.h"
 #include "Component/CollisionComponent.h"
 #include "Component/DebugGuiComponent.h"
+#include "../Engine/Physics/Collider/ColliderLine.h"
 
 namespace
 {
@@ -76,21 +77,30 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
 	registry.AddComponent<ModelComponent>(playerEntity, model);
 
-	TransformComponent& registeredTransform =
-		registry.GetComponent<TransformComponent>(playerEntity);
-
 	auto playerCapsule = std::make_shared<ColliderCapsule>(
 		ColliderBase::TAG::PLAYER,
-		&registeredTransform,
+		nullptr,
 		playerParam.capsuleStartPos,
 		playerParam.capsuleEndPos,
-		playerParam.capsuleRadius);
+		playerParam.capsuleRadius
+	);
+
+	playerCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
+	playerCapsule->AddTargetTag(ColliderBase::TAG::WALL);
+
+	auto playerRay = std::make_shared<ColliderLine>(
+		ColliderBase::TAG::PLAYER,
+		nullptr,
+		VGet(0.0f, 50.0f, 0.0f), 
+		VGet(0.0f, -5.0f, 0.0f) 
+	);
 
 	playerCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
 	playerCapsule->AddTargetTag(ColliderBase::TAG::WALL);
 
 	CollisionComponent collisionComponent{};
 	collisionComponent.colliders.push_back(playerCapsule);
+	collisionComponent.colliders.push_back(playerRay);
 	registry.AddComponent<CollisionComponent>(playerEntity, collisionComponent);
 
 #ifdef _DEBUG

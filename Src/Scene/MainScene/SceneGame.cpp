@@ -40,7 +40,7 @@ void SceneGame::Initialize(void)
 	EcsRegistry& registry = ecsWorld_.GetRegistry();
 	stageManager_ = std::make_unique<StageManager>(registry, playerEntity_);
 	stageManager_->Initialize();
-	stageManager_->SetupFirstStage(std::make_shared<StageLobby>(registry));
+	stageManager_->SetupFirstStage(std::make_shared<StageBattle>(registry));
 }
 
 void SceneGame::Update(void)

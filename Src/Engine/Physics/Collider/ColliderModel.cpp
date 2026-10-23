@@ -11,6 +11,20 @@ ColliderModel::ColliderModel(TAG collisionTag, const TransformComponent* followT
 void ColliderModel::SetModelHandle(int _modelHandle_)
 {
     modelHandle_ = _modelHandle_;
+
+    if (modelHandle_ != -1)
+    {
+        // 空間分割関連
+        constexpr int ALL_FRAME_INDEX = -1; 
+        constexpr int SPATIAL_DIV_NUM = 8;  
+
+        MV1SetupCollInfo(
+            modelHandle_,
+            ALL_FRAME_INDEX,
+            SPATIAL_DIV_NUM,
+            SPATIAL_DIV_NUM,
+            SPATIAL_DIV_NUM);
+    }
 }
 
 void ColliderModel::AddExcludeFrameIds(const std::wstring& exclusionName)

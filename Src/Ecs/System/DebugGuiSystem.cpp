@@ -142,7 +142,24 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 		constexpr float MIN_ROTATION_DEG = -360.0f;   // 回転の最小角度
 		constexpr float MAX_ROTATION_DEG = 360.0f;    // 回転の最大角度
 
-		ImGui::DragFloat3("Local Position", &transform.localPosition.x, DRAG_SPEED_POSITION);
+		bool hasParent = false;
+		if (registry.HasComponent<HierarchyComponent>(entity))
+		{
+			if (registry.GetComponent<HierarchyComponent>(entity).parent != NULL_ENTITY)
+			{
+				hasParent = true;
+			}
+		}
+
+		if (hasParent)
+		{
+			ImGui::DragFloat3("Local Position", &transform.localPosition.x, DRAG_SPEED_POSITION);
+		}
+		else
+		{
+			ImGui::DragFloat3("Position", &transform.position.x, DRAG_SPEED_POSITION);
+		}
+
 		ImGui::DragFloat3("Scale", &transform.scale.x, 0.05f);
 
 		float rotationDegree[3] =
@@ -661,6 +678,7 @@ void DebugGuiSystem::DrawSaveButtonGui(
 		if (ImGui::Button("Save Stage Layout (All Stage Objects)"))
 		{
 			LoadedStageData saveStageData{};
+
 			auto allGuiEntities = registry.GetEntitiesWith<DebugGuiComponent>();
 
 			std::vector<Entity> stageEntitiesToSave;
