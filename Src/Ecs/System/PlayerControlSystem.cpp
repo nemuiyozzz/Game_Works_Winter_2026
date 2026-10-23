@@ -67,12 +67,12 @@ void PlayerControlSystem::UpdatePlayerControl(EcsRegistry& registry, Entity enti
 		float sinH = sinf(cameraAngleH);
 		VECTOR rotatedDir;
 
-		rotatedDir.x = moveDirection.x * cosH + moveDirection.z * sinH;
+		rotatedDir.x = moveDirection.x * cosH - moveDirection.z * sinH;
 		rotatedDir.y = MIN_DIRECTION;
-		rotatedDir.z = -moveDirection.x * sinH + moveDirection.z * cosH;
+		rotatedDir.z = moveDirection.x * sinH + moveDirection.z * cosH;
 		rotatedDir = UtilityMath::VNormalize(rotatedDir);
 
-		VECTOR moveVelocity = VScale(moveDirection, inputInfo.moveSpeed);
+		VECTOR moveVelocity = VScale(rotatedDir, inputInfo.moveSpeed);
 
 		velocityData.velocity.x = moveVelocity.x;
 		velocityData.velocity.z = moveVelocity.z;
