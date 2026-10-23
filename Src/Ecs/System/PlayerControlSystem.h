@@ -9,6 +9,14 @@ class PlayerControlSystem : public ISystem
 {
 public:
 
+	enum class PLAYER_ANIM
+	{
+		IDLE,
+		MOVE,
+		JUMP,
+		ATTACK
+	};
+
 	/// @brief コンストラクタ 
 	PlayerControlSystem(void) = default;
 

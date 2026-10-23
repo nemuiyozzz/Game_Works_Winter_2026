@@ -3,6 +3,7 @@
 #include "../SceneManager.h"
 #include "../../Engine/System/Input/KeyConfInputManager.h"
 #include "SceneTitle.h"
+#include "../../Application.h"
 
 SceneResult::SceneResult(void)
 {
@@ -37,6 +38,8 @@ void SceneResult::Update(void)
 
 void SceneResult::Draw(void)
 {
+	const unsigned int WHITE_COLOR = GetColor(255, 255, 255);
+	DrawString(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, L"スペースまたはAボンタンでタイトルへ", WHITE_COLOR, false);
 #ifdef _DEBUG
 	const unsigned int WHITE_COLOR = GetColor(255, 255, 255);
 

@@ -49,5 +49,7 @@ private:
 	/// @return 生成されたプレイヤーのエンティティID
 	static Entity BuildPlayer(EcsRegistry& registry);
 
+	static Entity BuildSword(EcsRegistry& registry);
+
 	static Entity BuildEnemy(EcsRegistry& registry);
 };

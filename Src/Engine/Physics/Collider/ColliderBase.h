@@ -26,6 +26,7 @@ public:
 	{
 		STAGE,			// ステージ
 		PLAYER,			// プレイヤー
+		PLAYER_SWORD,	// プレイヤーの剣
 		ENEMY,			// エネミー
 		WALL,           // 壁
 	};

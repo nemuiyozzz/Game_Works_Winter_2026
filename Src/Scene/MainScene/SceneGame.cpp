@@ -9,12 +9,15 @@
 #include "../Stage/StageTraining.h"
 #include "SceneResult.h"
 #include "../SceneManager.h"
+#include "../../Ecs/Component/HierarchyComponent.h"
 
 namespace
-{
+{	
 	// リソース・レシピキー名関連
-	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデルキー
+	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_PLAYER"; // プレイヤーモデル
 	constexpr const wchar_t* RECIPE_PLAYER = L"Player";          // プレイヤーレシピ名
+	constexpr const wchar_t* KEY_MODEL_ENEMY = L"MODEL_SAMPLE"; // エネミーモデル
+	constexpr const wchar_t* KEY_MODEL_SWORD = L"MODEL_SWORD"; // 剣モデル
 }
 
 SceneGame::SceneGame(void)
@@ -33,6 +36,12 @@ void SceneGame::Load(void)
 	SceneBase::Load();
 
 	ResourceManager::GetInstance().Load(KEY_MODEL_PLAYER);
+	ResourceManager::GetInstance().Load(KEY_MODEL_ENEMY);
+	ResourceManager::GetInstance().Load(KEY_MODEL_SWORD);
+
+	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_RUN");
+	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_JUMP");
+	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_ATTACK");
 }
 
 void SceneGame::Initialize(void)
@@ -42,6 +51,11 @@ void SceneGame::Initialize(void)
 
 	playerEntity_ = ecsWorld_.SpawnActor(RECIPE_PLAYER);
 	cameraEntity_ = ecsWorld_.SpawnCamera(playerEntity_);
+	Entity swordEntity = ecsWorld_.SpawnActor(L"Sword");
+	if (swordEntity != NULL_ENTITY && ecsWorld_.GetRegistry().HasComponent<HierarchyComponent>(swordEntity))
+	{
+		ecsWorld_.GetRegistry().GetComponent<HierarchyComponent>(swordEntity).parent = playerEntity_;
+	}
 
 	EcsRegistry& registry = ecsWorld_.GetRegistry();
 	stageManager_ = std::make_unique<StageManager>(registry, playerEntity_);
@@ -58,7 +72,6 @@ void SceneGame::Update(void)
 		return;
 	}
 
-	// エネミーとプレイヤーの接触判定
 	auto enemies = ecsWorld_.GetRegistry().GetEntitiesWith<EnemyComponent, CollisionComponent>();
 
 	for (Entity enemy : enemies)
@@ -67,11 +80,28 @@ void SceneGame::Update(void)
 
 		for (Entity hitEntity : collision.hitEntities)
 		{
-			if (ecsWorld_.GetRegistry().HasComponent<PlayerInputComponent>(hitEntity))
+			// 当たった相手がCollisionComponentを持っているか確認
+			if (ecsWorld_.GetRegistry().HasComponent<CollisionComponent>(hitEntity))
 			{
-				ecsWorld_.GetRegistry().DestroyEntity(enemy);
-				defeatedEnemyCount_++;
-				break;
+				const CollisionComponent& hitCollision = ecsWorld_.GetRegistry().GetComponent<CollisionComponent>(hitEntity);
+				bool isHitSword = false;
+
+				// 相手のコライダーの中にSWORDタグを持つものがあるかチェック
+				for (const auto& collider : hitCollision.colliders)
+				{
+					if (collider->GetCollisionTag() == ColliderBase::TAG::PLAYER_SWORD)
+					{
+						isHitSword = true;
+						break;
+					}
+				}
+
+				if (isHitSword)
+				{
+					ecsWorld_.GetRegistry().DestroyEntity(enemy);
+					defeatedEnemyCount_++;
+					break;
+				}
 			}
 		}
 	}

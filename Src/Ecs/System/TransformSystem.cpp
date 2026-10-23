@@ -2,10 +2,10 @@
 #include "TransformSystem.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/HierarchyComponent.h"
+#include "../Component/ModelComponent.h"
 
 void TransformSystem::Update(EcsRegistry& registry)
 {
-	// Transformコンポーネントを持つすべてのエンティティを取得
 	auto entities = registry.GetEntitiesWith<TransformComponent>();
 
 	for (Entity entity : entities)
@@ -17,20 +17,43 @@ void TransformSystem::Update(EcsRegistry& registry)
 
 	for (Entity entity : hierarchyEntities)
 	{
-		const HierarchyComponent& hierarchy = registry.GetComponent<HierarchyComponent>(entity);
+		HierarchyComponent& hierarchy = registry.GetComponent<HierarchyComponent>(entity);
 
 		if (hierarchy.parent != NULL_ENTITY &&
 			registry.HasComponent<TransformComponent>(hierarchy.parent))
 		{
 			TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
 
-			const TransformComponent& parentTransform = 
-				registry.GetComponent<TransformComponent>(hierarchy.parent);
+			if (!hierarchy.attachBoneName.empty() &&
+				registry.HasComponent<ModelComponent>(hierarchy.parent))
+			{
+				ModelComponent& parentModel = registry.GetComponent<ModelComponent>(hierarchy.parent);
 
-			transform.combinedMatrix = MMult(transform.combinedMatrix,
-				parentTransform.combinedMatrix);
+				if (hierarchy.attachFrameIndex == -1)
+				{
+					hierarchy.attachFrameIndex = MV1SearchFrame(
+						parentModel.modelHandle, hierarchy.attachBoneName.c_str());
+				}
 
-			transform.position = VTransform(VGet(0.0f, 0.0f, 0.0f), transform.combinedMatrix);
+				if (hierarchy.attachFrameIndex != -1)
+				{
+					MATRIX boneMatrix = MV1GetFrameLocalWorldMatrix(
+						parentModel.modelHandle, hierarchy.attachFrameIndex);
+
+					transform.combinedMatrix = MMult(transform.combinedMatrix, boneMatrix);
+					transform.position = VTransform(VGet(0.0f, 0.0f, 0.0f), transform.combinedMatrix);
+				}
+			}
+			else
+			{
+				const TransformComponent& parentTransform =
+					registry.GetComponent<TransformComponent>(hierarchy.parent);
+
+				transform.combinedMatrix = MMult(transform.combinedMatrix,
+					parentTransform.combinedMatrix);
+
+				transform.position = VTransform(VGet(0.0f, 0.0f, 0.0f), transform.combinedMatrix);
+			}
 		}
 	}
 }

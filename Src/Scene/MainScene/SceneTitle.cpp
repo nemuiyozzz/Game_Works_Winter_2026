@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "../SceneManager.h"
 #include "../../Engine/System/Input/KeyConfInputManager.h"
+#include "../../Application.h"
 
 SceneTitle::SceneTitle(void)
 {
@@ -39,6 +40,9 @@ void SceneTitle::Update(void)
 
 void SceneTitle::Draw(void)
 {
+
+	const unsigned int WHITE_COLOR = GetColor(255, 255, 255);
+	DrawString(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, L"スペースまたはAボンタンで開始", WHITE_COLOR, false);
 #ifdef _DEBUG
 	const unsigned int WHITE_COLOR = GetColor(255, 255, 255);
 

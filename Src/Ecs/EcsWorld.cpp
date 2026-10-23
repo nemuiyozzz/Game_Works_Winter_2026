@@ -9,6 +9,7 @@
 #include "System/ModelSystem.h"
 #include "System/ColliderDebugDrawSystem.h"
 #include "System/DebugGuiSystem.h"
+#include "System/AnimationSystem.h"
 
 void EcsWorld::Initialize(void)
 {
@@ -21,6 +22,7 @@ void EcsWorld::Initialize(void)
 	AddUpdateSystem<Collision2DSystem>();
 	AddUpdateSystem<TransformSystem>();
 	AddUpdateSystem<CameraSystem>();
+	AddUpdateSystem<AnimationSystem>();
 
 #ifdef _DEBUG
 	AddUpdateSystem<DebugGuiSystem>();
