@@ -25,6 +25,7 @@ namespace
 	// リソース・レシピキー名関連
 	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_SAMPLE"; // プレイヤーモデル
 	constexpr const wchar_t* RECIPE_PLAYER = L"Player";          // プレイヤーレシピ名
+	constexpr const wchar_t* RECIPE_ENEMY = L"Enemy";
 }
 
 std::unordered_map<std::wstring, ActorFactory::RecipeFunc> ActorFactory::recipes_;
@@ -32,6 +33,7 @@ std::unordered_map<std::wstring, ActorFactory::RecipeFunc> ActorFactory::recipes
 void ActorFactory::RegisterDefaultRecipes(void)
 {
 	RegisterRecipe(RECIPE_PLAYER, BuildPlayer);
+	RegisterRecipe(RECIPE_ENEMY, BuildEnemy);
 }
 
 void ActorFactory::RegisterRecipe(const std::wstring& actorName, RecipeFunc recipe)
@@ -87,6 +89,7 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 
 	playerCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
 	playerCapsule->AddTargetTag(ColliderBase::TAG::WALL);
+	playerCapsule->AddTargetTag(ColliderBase::TAG::ENEMY);
 
 	auto playerRay = std::make_shared<ColliderLine>(
 		ColliderBase::TAG::PLAYER,
@@ -113,6 +116,52 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 #endif // _DEBUG
 
 	return playerEntity;
+}
+
+Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
+{
+	Entity enemyEntity = registry.CreateEntity();
+
+	TransformComponent transform{};
+	transform.scale = VGet(30.0f, 30.0f, 30.0f);
+	registry.AddComponent<TransformComponent>(enemyEntity, transform);
+
+	VelocityComponent velocity{};
+	registry.AddComponent<VelocityComponent>(enemyEntity, velocity);
+
+	ModelComponent model{};
+	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
+	registry.AddComponent<ModelComponent>(enemyEntity, model);
+
+	// カプセルコライダー
+	auto enemyCapsule = std::make_shared<ColliderCapsule>(
+		ColliderBase::TAG::ENEMY,
+		nullptr,
+		VGet(0.0f, 30.0f, 0.0f),
+		VGet(0.0f, 120.0f, 0.0f),
+		30.0f
+	);
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::WALL);
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::PLAYER); 
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::ENEMY); 
+
+	// レイコライダー
+	auto enemyRay = std::make_shared<ColliderLine>(
+		ColliderBase::TAG::ENEMY,
+		nullptr,
+		VGet(0.0f, 50.0f, 0.0f),
+		VGet(0.0f, -5.0f, 0.0f)
+	);
+	enemyRay->AddTargetTag(ColliderBase::TAG::STAGE);
+	enemyRay->AddTargetTag(ColliderBase::TAG::WALL);
+
+	CollisionComponent collisionComponent{};
+	collisionComponent.colliders.push_back(enemyCapsule);
+	collisionComponent.colliders.push_back(enemyRay);
+	registry.AddComponent<CollisionComponent>(enemyEntity, collisionComponent);
+
+	return enemyEntity;
 }
 
 Entity ActorFactory::CreateCamera(EcsRegistry& registry, Entity targetEntity)

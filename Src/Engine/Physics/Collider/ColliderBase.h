@@ -26,6 +26,7 @@ public:
 	{
 		STAGE,			// ステージ
 		PLAYER,			// プレイヤー
+		ENEMY,			// エネミー
 		WALL,           // 壁
 	};
 

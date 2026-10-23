@@ -395,5 +395,7 @@ public:
 	/// @return 線分上の最近接座標
 	static VECTOR GetNearestPointOnSegment(const VECTOR& _startPos,
 		const VECTOR& _endPos, const VECTOR& _targetPos);
+
+	static VECTOR GetRandomPositionInCircle(const VECTOR& center, float radius);
 };
 
