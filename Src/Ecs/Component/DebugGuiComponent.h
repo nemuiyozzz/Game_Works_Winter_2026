@@ -7,6 +7,7 @@ enum class DEBUG_SAVE_TYPE
 {
 	NONE,   // 保存ボタンなし（確認・調整のみ）
 	PLAYER, // プレイヤーデータとして保存
+	ENEMY,	// エネミーデータとして保存
 	CAMERA, // カメラデータとして保存
 	STAGE,  // ステージデータとして保存
 };

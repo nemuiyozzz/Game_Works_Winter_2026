@@ -171,6 +171,99 @@ bool ActorDataLoader::SaveCameraData(const std::wstring& csvFilePath,
 	return true;
 }
 
+bool ActorDataLoader::LoadEnemyData(const std::wstring& csvFilePath, 
+	const std::wstring& binaryFilePath, EnemyBinaryData& outData)
+{
+#ifdef _DEBUG
+	if (std::filesystem::exists(csvFilePath))
+	{
+		ConvertEnemyCsvToBinary(csvFilePath, binaryFilePath);
+	}
+#endif
+
+	std::ifstream binaryFile(binaryFilePath, std::ios::binary);
+
+	if (!binaryFile.is_open())
+	{
+		return false;
+	}
+
+	EnemyBinaryData loadedDara{};
+
+	binaryFile.read(reinterpret_cast<char*>(&loadedDara), sizeof(EnemyBinaryData));
+	binaryFile.close();
+
+	if (loadedDara.signature[0] != 'E' || loadedDara.signature[1] != 'N' ||
+		loadedDara.signature[2] != 'M' || loadedDara.signature[3] != '1')
+	{
+		return false;
+	}
+
+	outData = loadedDara;
+
+	return true;
+}
+
+bool ActorDataLoader::SaveEnemyData(const std::wstring& csvFilePath, 
+	const std::wstring& binaryFilePath, const EnemyBinaryData& inData)
+{
+	std::filesystem::path binPath(binaryFilePath);
+
+	if (binPath.has_parent_path())
+	{
+		std::filesystem::create_directories(binPath.parent_path());
+	}
+
+	std::ofstream binaryFile(binaryFilePath, std::ios::binary);
+
+	if (!binaryFile.is_open())
+	{
+		return false;
+	}
+
+	binaryFile.write(reinterpret_cast<const char*>(&inData), sizeof(EnemyBinaryData));
+	binaryFile.close();
+
+	std::filesystem::path csvPath(csvFilePath);
+
+	if (csvPath.has_parent_path())
+	{
+		std::filesystem::create_directories(csvPath.parent_path());
+	}
+
+	std::ofstream csvFile(csvFilePath);
+
+	if (csvFile.is_open())
+	{
+		csvFile << "Parameter,ValueX,ValueY,ValueZ\n";
+		csvFile << "SCALE,"
+				<< inData.scale.x << ","
+				<< inData.scale.y << ","
+				<< inData.scale.z << "\n";
+		csvFile << "CAPSULE_START,"
+				<< inData.capsuleStartPos.x << ","
+				<< inData.capsuleStartPos.y << ","
+				<< inData.capsuleStartPos.z << "\n";
+		csvFile << "CAPSULE_END,"
+				<< inData.capsuleEndPos.x << ","
+				<< inData.capsuleEndPos.y << ","
+				<< inData.capsuleEndPos.z << "\n";
+		csvFile << "CAPSULE_RADIUS," << inData.capsuleRadius << ",0.0,0.0\n";
+		csvFile << "RAY_START,"
+				<< inData.rayStartPos.x << ","
+				<< inData.rayStartPos.y << ","
+				<< inData.rayStartPos.z << "\n";
+		csvFile << "RAY_END,"
+				<< inData.rayEndPos.x << ","
+				<< inData.rayEndPos.y << ","
+				<< inData.rayEndPos.z << "\n";
+		csvFile.close();
+
+	}
+
+	return true;
+}
+
 bool ActorDataLoader::ConvertPlayerCsvToBinary(const std::wstring& csvFilePath,
 	const std::wstring& binaryFilePath)
 {
@@ -361,4 +454,12 @@ bool ActorDataLoader::ConvertCameraCsvToBinary(const std::wstring& csvFilePath,
 	binaryFile.close();
 
 	return true;
+}
+
+bool ActorDataLoader::ConvertEnemyCsvToBinary(const std::wstring& csvFilePath, 
+	const std::wstring& binaryFilePath)
+{
+	std::ifstream csvFile(csvFilePath);
+
+	return false;
 }

@@ -71,19 +71,89 @@ void DebugGuiSystem::DrawHierarchyGui(
 {
 	ImGui::Begin("Hierarchy");
 
+	auto drawEntityNode = [&](auto& self, Entity currentEntity)-> void
+		{
+			if (!registry.HasComponent<DebugGuiComponent>(currentEntity))
+			{
+				return;
+			}
+
+			const DebugGuiComponent& debugGui =
+				registry.GetComponent<DebugGuiComponent>(currentEntity);
+			bool hasChildren = false;
+
+			if (registry.HasComponent<HierarchyComponent>(currentEntity))
+			{
+				const auto& hierarchy = registry.GetComponent<HierarchyComponent>(currentEntity);
+
+				for (Entity child : hierarchy.children)
+				{
+					if (registry.HasComponent<DebugGuiComponent>(child))
+					{
+						hasChildren = true;
+						break;
+					}
+				}
+			}
+
+			ImGuiTreeNodeFlags nodeFlags =
+				ImGuiTreeNodeFlags_OpenOnArrow |
+				ImGuiTreeNodeFlags_OpenOnDoubleClick |
+				ImGuiTreeNodeFlags_SpanAvailWidth;
+
+			if (selectedEntity_ == currentEntity)
+			{
+				nodeFlags |= ImGuiTreeNodeFlags_Selected;
+			}
+
+			if (!hasChildren)
+			{
+				nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+			}
+
+			ImGui::PushID(static_cast<int>(currentEntity));
+
+			bool isNodeOpen = ImGui::TreeNodeEx(debugGui.windowTitle.c_str(), nodeFlags);
+
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			{
+				selectedEntity_ = currentEntity;
+			}
+
+			if (hasChildren && isNodeOpen)
+			{
+				const auto& hierarchy = registry.GetComponent<HierarchyComponent>(currentEntity);
+
+				for (Entity child : hierarchy.children)
+				{
+					self(self, child);
+				}
+
+				ImGui::TreePop();
+			}
+
+			ImGui::PopID();
+		};
+
 	for (Entity entity : entities)
 	{
-		const DebugGuiComponent& debugGui =
-			registry.GetComponent<DebugGuiComponent>(entity);
+		bool isRootNode = true;
 
-		bool isSelected = (selectedEntity_ == entity);
-
-		ImGui::PushID(static_cast<int>(entity));
-		if (ImGui::Selectable(debugGui.windowTitle.c_str(), isSelected))
+		if (registry.HasComponent<HierarchyComponent>(entity))
 		{
-			selectedEntity_ = entity;
+			Entity parentEntity = registry.GetComponent<HierarchyComponent>(entity).parent;
+
+			if (parentEntity != NULL_ENTITY &&
+				registry.HasComponent<DebugGuiComponent>(parentEntity))
+			{
+				isRootNode = false;
+			}
 		}
-		ImGui::PopID();
+
+		if (isRootNode)
+		{
+			drawEntityNode(drawEntityNode, entity);
+		}
 	}
 
 	ImGui::End();
