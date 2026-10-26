@@ -7,6 +7,7 @@
 #include "../EcsRegistry.h"
 #include "../Entity.h"
 #include "../../Engine/Physics/Collision/CollisionInfo.h"
+#include "../../Engine/Physics/Collider/ColliderBase.h"
 
 class ColliderBase;
 
@@ -24,6 +25,14 @@ public:
 	/// @brief 更新処理
 	/// @param registry ECSデータベース
 	void Update(EcsRegistry& registry) override;
+
+	/// @brief 指定エンティティが特定のタグを持つコライダーと衝突しているか判定する
+	/// @param registry ECSデータベース
+	/// @param targetEntity 判定元のエンティティID
+	/// @param targetTag 衝突を確認したい相手のコライダーのタグ
+	/// @return 衝突していれば true
+	static bool CheckHitByTag(EcsRegistry& registry, Entity targetEntity,
+		ColliderBase::TAG targetTag);
 
 private:
 

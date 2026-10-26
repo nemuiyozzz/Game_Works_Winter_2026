@@ -27,6 +27,39 @@ void CollisionSystem::Update(EcsRegistry& registry)
 	CheckAllCollisions(registry, entities);
 }
 
+bool CollisionSystem::CheckHitByTag(EcsRegistry& registry, 
+	Entity targetEntity, ColliderBase::TAG targetTag)
+{
+	if (!registry.HasComponent<CollisionComponent>(targetEntity))
+	{
+		return false;
+	}
+	
+	const CollisionComponent& collision =
+		registry.GetComponent<CollisionComponent>(targetEntity);
+
+	for (Entity hitEntity : collision.hitEntities)
+	{
+		if (!registry.HasComponent<CollisionComponent>(hitEntity))
+		{
+			continue;
+		}
+		
+		const CollisionComponent& hitCollision =
+			registry.GetComponent<CollisionComponent>(hitEntity);
+
+		for (const auto& collider : hitCollision.colliders)
+		{
+			if (collider != nullptr && collider->GetCollisionTag() == targetTag)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void CollisionSystem::UpdateCollidersTarget(EcsRegistry& registry, 
 	const std::vector<Entity>& entities)
 {

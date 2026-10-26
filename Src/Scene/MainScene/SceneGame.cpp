@@ -3,13 +3,13 @@
 #include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Ecs/Component/EnemyComponent.h"
 #include "../../Ecs/Component/CollisionComponent.h"
-#include "../../Ecs/Component/PlayerInputComponent.h"
 #include "../Stage/StageLobby.h"
 #include "../Stage/StageBattle.h"
 #include "../Stage/StageTraining.h"
 #include "SceneResult.h"
 #include "../SceneManager.h"
 #include "../../Ecs/Component/HierarchyComponent.h"
+#include "../../Ecs/System/CollisionSystem.h"
 
 namespace
 {	
@@ -76,33 +76,11 @@ void SceneGame::Update(void)
 
 	for (Entity enemy : enemies)
 	{
-		const CollisionComponent& collision = ecsWorld_.GetRegistry().GetComponent<CollisionComponent>(enemy);
-
-		for (Entity hitEntity : collision.hitEntities)
+		if (CollisionSystem::CheckHitByTag(ecsWorld_.GetRegistry(), enemy,
+			ColliderBase::TAG::PLAYER_SWORD))
 		{
-			// 当たった相手がCollisionComponentを持っているか確認
-			if (ecsWorld_.GetRegistry().HasComponent<CollisionComponent>(hitEntity))
-			{
-				const CollisionComponent& hitCollision = ecsWorld_.GetRegistry().GetComponent<CollisionComponent>(hitEntity);
-				bool isHitSword = false;
-
-				// 相手のコライダーの中にSWORDタグを持つものがあるかチェック
-				for (const auto& collider : hitCollision.colliders)
-				{
-					if (collider->GetCollisionTag() == ColliderBase::TAG::PLAYER_SWORD)
-					{
-						isHitSword = true;
-						break;
-					}
-				}
-
-				if (isHitSword)
-				{
-					ecsWorld_.GetRegistry().DestroyEntity(enemy);
-					defeatedEnemyCount_++;
-					break;
-				}
-			}
+			ecsWorld_.GetRegistry().DestroyEntity(enemy);
+			defeatedEnemyCount_++;
 		}
 	}
 
