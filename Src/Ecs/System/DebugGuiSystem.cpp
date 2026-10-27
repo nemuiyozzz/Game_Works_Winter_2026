@@ -22,6 +22,7 @@
 #include "../../../Libs/ImGui/imgui.h"
 #include "../../Engine/Utility/UtilityMath.h"
 #include "../Component/ModelComponent.h"
+#include "../Component/StatusComponent.h"
 
 namespace
 {
@@ -197,6 +198,11 @@ void DebugGuiSystem::DrawInspectorGui(EcsRegistry& registry, Entity entity)
 	if (debugGuiData.saveType != DEBUG_SAVE_TYPE::NONE)
 	{
 		DrawSaveButtonGui(registry, entity, debugGuiData);
+	}
+
+	if (registry.HasComponent<StatusComponent>(entity))
+	{
+		DrawStatusGui(registry, entity);
 	}
 
 	ImGui::End();
@@ -690,6 +696,36 @@ void DebugGuiSystem::DrawCameraGui(EcsRegistry& registry, Entity entity)
 	}
 }
 
+void DebugGuiSystem::DrawStatusGui(EcsRegistry& registry, Entity entity)
+{
+	StatusComponent& status = registry.GetComponent<StatusComponent>(entity);
+
+	if (ImGui::CollapsingHeader("Status & Level", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Text("Level : %d (EXP: %d / %d)",
+			status.level, status.currentExperience, status.nextLevelExperience);
+
+		ImGui::InputInt("Current HP", &status.currentHp);
+		ImGui::InputInt("Max HP", &status.maxHp);
+		ImGui::InputInt("Attack Power", &status.attackPower);
+		ImGui::InputInt("Defense Power", &status.defensePower);
+
+		ImGui::Separator();
+
+		if (registry.HasComponent<PlayerInputComponent>(entity))
+		{
+			ImGui::InputInt("Next Level EXP", &status.nextLevelExperience);
+			ImGui::InputInt("Growth HP", &status.growthHp);
+			ImGui::InputInt("Growth Attack", &status.growthAttack);
+			ImGui::InputInt("Growth Defense", &status.growthDefense);
+		}
+		else
+		{
+			ImGui::InputInt("Reward EXP", &status.rewardExperience);
+		}
+	}
+}
+
 void DebugGuiSystem::DrawSaveButtonGui(
 	EcsRegistry& registry, Entity entity, const DebugGuiComponent& debugGui)
 {
@@ -704,22 +740,114 @@ void DebugGuiSystem::DrawSaveButtonGui(
 			{
 				saveData.scale = registry.GetComponent<TransformComponent>(entity).scale;
 			}
+			
 			if (registry.HasComponent<PlayerInputComponent>(entity))
 			{
 				const auto& input = registry.GetComponent<PlayerInputComponent>(entity);
 				saveData.moveSpeed = input.moveSpeed;
 				saveData.jumpPower = input.jumpPower;
 			}
+			
 			if (registry.HasComponent<VelocityComponent>(entity))
 			{
 				saveData.maxSpeed =
 					registry.GetComponent<VelocityComponent>(entity).maxSpeed;
+			}
+			
+			if (registry.HasComponent<CollisionComponent>(entity))
+			{
+				const auto& collision = registry.GetComponent<CollisionComponent>(entity);
+				for (const auto& collider : collision.colliders)
+				{
+					if (collider == nullptr)
+					{
+						continue;
+					}
+
+					if (collider->GetShapeType() == ColliderBase::SHAPE::CAPSULE)
+					{
+						auto* capsule = static_cast<ColliderCapsule*>(collider.get());
+						saveData.capsuleStartPos = capsule->GetLocalStartPos();
+						saveData.capsuleEndPos = capsule->GetLocalEndPos();
+						saveData.capsuleRadius = capsule->GetRadius();
+					}
+					else if (collider->GetShapeType() == ColliderBase::SHAPE::LINE)
+					{
+						auto* line = static_cast<ColliderLine*>(collider.get());
+						saveData.rayStartPos = line->GetLocalStartPos();
+						saveData.rayEndPos = line->GetLocalEndPos();
+					}
+				}
+			}
+
+			if (registry.HasComponent<StatusComponent>(entity))
+			{
+				const auto& status = registry.GetComponent<StatusComponent>(entity);
+				saveData.maxHp = status.maxHp;
+				saveData.attackPower = status.attackPower;
+				saveData.defensePower = status.defensePower;
+				saveData.nextLevelExperience = status.nextLevelExperience;
+				saveData.growthHp = status.growthHp;
+				saveData.growthAttack = status.growthAttack;
+				saveData.growthDefense = status.growthDefense;
 			}
 
 			ActorDataLoader::SavePlayerData(
 				debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
 		}
 	}
+	else if (debugGui.saveType == DEBUG_SAVE_TYPE::ENEMY)
+	{
+		if (ImGui::Button("Save Enemy Data"))
+		{
+			EnemyBinaryData saveData{};
+
+			// スケールの取得
+			if (registry.HasComponent<TransformComponent>(entity))
+			{
+				saveData.scale = registry.GetComponent<TransformComponent>(entity).scale;
+			}
+
+			// コライダーの座標・サイズの取得
+			if (registry.HasComponent<CollisionComponent>(entity))
+			{
+				const auto& collision = registry.GetComponent<CollisionComponent>(entity);
+				for (const auto& collider : collision.colliders)
+				{
+					if (collider == nullptr)
+					{
+						continue;
+					}
+					if (collider->GetShapeType() == ColliderBase::SHAPE::CAPSULE)
+					{
+						auto* capsule = static_cast<ColliderCapsule*>(collider.get());
+						saveData.capsuleStartPos = capsule->GetLocalStartPos();
+						saveData.capsuleEndPos = capsule->GetLocalEndPos();
+						saveData.capsuleRadius = capsule->GetRadius();
+					}
+					else if (collider->GetShapeType() == ColliderBase::SHAPE::LINE)
+					{
+						auto* line = static_cast<ColliderLine*>(collider.get());
+						saveData.rayStartPos = line->GetLocalStartPos();
+						saveData.rayEndPos = line->GetLocalEndPos();
+					}
+				}
+			}
+
+			// ステータスの取得
+			if (registry.HasComponent<StatusComponent>(entity))
+			{
+				const auto& status = registry.GetComponent<StatusComponent>(entity);
+				saveData.maxHp = status.maxHp;
+				saveData.attackPower = status.attackPower;
+				saveData.defensePower = status.defensePower;
+				saveData.rewardExperience = status.rewardExperience;
+			}
+
+			// CSVとバイナリに書き出し
+			ActorDataLoader::SaveEnemyData(
+				debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
+		}
 	else if (debugGui.saveType == DEBUG_SAVE_TYPE::CAMERA)
 	{
 		if (ImGui::Button("Save Camera Data"))
@@ -749,8 +877,14 @@ void DebugGuiSystem::DrawSaveButtonGui(
 		{
 			LoadedStageData saveStageData{};
 
-			auto allGuiEntities = registry.GetEntitiesWith<DebugGuiComponent>();
+			// 既存のスポーン座標が消えないように読み込んで引き継ぐ
+			LoadedStageData existingData{};
+			if (StageDataLoader::LoadFromBinary(debugGui.binaryFilePath, existingData))
+			{
+				saveStageData.playerSpawnPosition = existingData.playerSpawnPosition;
+			}
 
+			auto allGuiEntities = registry.GetEntitiesWith<DebugGuiComponent>();
 			std::vector<Entity> stageEntitiesToSave;
 
 			for (Entity targetEntity : allGuiEntities)
@@ -786,6 +920,23 @@ void DebugGuiSystem::DrawSaveButtonGui(
 						if (it != stageEntitiesToSave.end())
 						{
 							objectData.parentIndex = static_cast<int>(std::distance(stageEntitiesToSave.begin(), it));
+						}
+					}
+				}
+
+				// ボックスコライダーの情報を保存データに反映
+				if (registry.HasComponent<CollisionComponent>(targetEntity))
+				{
+					const auto& collision = registry.GetComponent<CollisionComponent>(targetEntity);
+					for (const auto& collider : collision.colliders)
+					{
+						if (collider != nullptr &&
+							collider->GetShapeType() == ColliderBase::SHAPE::BOX)
+						{
+							auto* box = static_cast<ColliderBox*>(collider.get());
+							objectData.boxCenter = box->GetLocalCenter();
+							objectData.boxSize = box->GetSize();
+							break;
 						}
 					}
 				}

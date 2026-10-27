@@ -18,6 +18,7 @@
 #include "../Engine/Physics/Collider/ColliderLine.h"
 #include "System/AnimationSystem.h"
 #include "System/PlayerControlSystem.h"
+#include "Component/StatusComponent.h"
 
 namespace
 {
@@ -26,6 +27,8 @@ namespace
 	constexpr const wchar_t* PLAYER_BIN_NAME = L"PlayerParam.bin"; // プレイヤーバイナリ名
 	constexpr const wchar_t* CAMERA_CSV_NAME = L"CameraParam.csv"; // カメラCSV名
 	constexpr const wchar_t* CAMERA_BIN_NAME = L"CameraParam.bin"; // カメラバイナリ名
+	constexpr const wchar_t* ENEMY_CSV_NAME = L"EnemyParam.csv"; // エネミーCSV名
+	constexpr const wchar_t* ENEMY_BIN_NAME = L"EnemyParam.bin"; // エネミーバイナリ名
 
 	// リソース・レシピキー名関連
 	constexpr const wchar_t* KEY_MODEL_PLAYER = L"MODEL_PLAYER"; // プレイヤーモデル
@@ -72,21 +75,37 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	Entity playerEntity = registry.CreateEntity();
 
 	TransformComponent playerTransform{};
+	
 	playerTransform.scale = playerParam.scale;
 	registry.AddComponent<TransformComponent>(playerEntity, playerTransform);
 
 	VelocityComponent playerVelocity{};
+	
 	playerVelocity.maxSpeed = playerParam.maxSpeed;
 	registry.AddComponent<VelocityComponent>(playerEntity, playerVelocity);
 
 	PlayerInputComponent playerInput{};
+	
 	playerInput.moveSpeed = playerParam.moveSpeed;
 	playerInput.jumpPower = playerParam.jumpPower;
 	registry.AddComponent<PlayerInputComponent>(playerEntity, playerInput);
 
 	ModelComponent model{};
+	
 	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
 	registry.AddComponent<ModelComponent>(playerEntity, model);
+
+	StatusComponent playerStatus{};
+	
+	playerStatus.maxHp = playerParam.maxHp;
+	playerStatus.currentHp = playerParam.maxHp;
+	playerStatus.attackPower = playerParam.attackPower;
+	playerStatus.defensePower = playerParam.defensePower;
+	playerStatus.nextLevelExperience = playerParam.nextLevelExperience;
+	playerStatus.growthHp = playerParam.growthHp;
+	playerStatus.growthAttack = playerParam.growthAttack;
+	playerStatus.growthDefense = playerParam.growthDefense;
+	registry.AddComponent<StatusComponent>(playerEntity, playerStatus);
 
 	auto playerCapsule = std::make_shared<ColliderCapsule>(
 		ColliderBase::TAG::PLAYER,
@@ -103,12 +122,12 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	auto playerRay = std::make_shared<ColliderLine>(
 		ColliderBase::TAG::PLAYER,
 		nullptr,
-		VGet(0.0f, 50.0f, 0.0f), 
-		VGet(0.0f, -5.0f, 0.0f) 
+		playerParam.rayStartPos,
+		playerParam.rayEndPos
 	);
 
-	playerCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
-	playerCapsule->AddTargetTag(ColliderBase::TAG::WALL);
+	playerRay->AddTargetTag(ColliderBase::TAG::STAGE);
+	playerRay->AddTargetTag(ColliderBase::TAG::WALL);
 
 	CollisionComponent collisionComponent{};
 	collisionComponent.colliders.push_back(playerCapsule);
@@ -194,10 +213,16 @@ Entity ActorFactory::BuildSword(EcsRegistry& registry)
 
 Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 {
+	EnemyBinaryData enemyParam{};
+	std::wstring csvPath = std::wstring(Application::PATH_CSV) + ENEMY_CSV_NAME;
+	std::wstring binPath = std::wstring(Application::PATH_BINARY) + ENEMY_BIN_NAME;
+
+	ActorDataLoader::LoadEnemyData(csvPath, binPath, enemyParam);
+
 	Entity enemyEntity = registry.CreateEntity();
 
 	TransformComponent transform{};
-	transform.scale = VGet(30.0f, 30.0f, 30.0f);
+	transform.scale = enemyParam.scale;
 	registry.AddComponent<TransformComponent>(enemyEntity, transform);
 
 	VelocityComponent velocity{};
@@ -209,34 +234,53 @@ Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 	model.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_ENEMY);
 	registry.AddComponent<ModelComponent>(enemyEntity, model);
 
+	StatusComponent enemyStatus{};
+	enemyStatus.maxHp = enemyParam.maxHp;
+	enemyStatus.currentHp = enemyParam.maxHp;
+	enemyStatus.attackPower = enemyParam.attackPower;
+	enemyStatus.defensePower = enemyParam.defensePower;
+	enemyStatus.rewardExperience = enemyParam.rewardExperience;
+	registry.AddComponent<StatusComponent>(enemyEntity, enemyStatus);
+
 	// カプセルコライダー
 	auto enemyCapsule = std::make_shared<ColliderCapsule>(
 		ColliderBase::TAG::ENEMY,
 		nullptr,
-		VGet(0.0f, 10.0f, 0.0f),
-		VGet(0.0f, 30.0f, 0.0f),
-		5.0f
+		enemyParam.capsuleStartPos,
+		enemyParam.capsuleEndPos,
+		enemyParam.capsuleRadius
 	);
 	enemyCapsule->AddTargetTag(ColliderBase::TAG::STAGE);
 	enemyCapsule->AddTargetTag(ColliderBase::TAG::WALL);
-	enemyCapsule->AddTargetTag(ColliderBase::TAG::PLAYER); 
-	enemyCapsule->AddTargetTag(ColliderBase::TAG::ENEMY); 
-	enemyCapsule->AddTargetTag(ColliderBase::TAG::PLAYER_SWORD); 
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::PLAYER);
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::ENEMY);
+	enemyCapsule->AddTargetTag(ColliderBase::TAG::PLAYER_SWORD);
 
 	// レイコライダー
 	auto enemyRay = std::make_shared<ColliderLine>(
 		ColliderBase::TAG::ENEMY,
 		nullptr,
-		VGet(0.0f, 50.0f, 0.0f),
-		VGet(0.0f, -5.0f, 0.0f)
+		enemyParam.rayStartPos,
+		enemyParam.rayEndPos
 	);
 	enemyRay->AddTargetTag(ColliderBase::TAG::STAGE);
 	enemyRay->AddTargetTag(ColliderBase::TAG::WALL);
 
 	CollisionComponent collisionComponent{};
+
 	collisionComponent.colliders.push_back(enemyCapsule);
 	collisionComponent.colliders.push_back(enemyRay);
 	registry.AddComponent<CollisionComponent>(enemyEntity, collisionComponent);
+
+#ifdef _DEBUG
+	DebugGuiComponent enemyGui{};
+
+	enemyGui.windowTitle = "Enemy_" + std::to_string(static_cast<int>(enemyEntity));
+	enemyGui.saveType = DEBUG_SAVE_TYPE::ENEMY;
+	enemyGui.csvFilePath = csvPath;
+	enemyGui.binaryFilePath = binPath;
+	registry.AddComponent<DebugGuiComponent>(enemyEntity, enemyGui);
+#endif
 
 	return enemyEntity;
 }

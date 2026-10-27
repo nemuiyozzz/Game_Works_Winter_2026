@@ -62,6 +62,11 @@ private:
 	/// @param entity 対象エンティティ
 	void DrawCameraGui(EcsRegistry& registry, Entity entity);
 
+	/// @brief StatusComponentのGUI項目を描画する
+	/// @param registry ECSレジストリ
+	/// @param entity 対象エンティティ
+	void DrawStatusGui(EcsRegistry& registry, Entity entity);
+
 	/// @brief 各種バイナリ・CSVへの保存ボタンを描画する
 	/// @param registry ECSレジストリ
 	/// @param entity 対象エンティティ

@@ -75,6 +75,7 @@ void StageBase::Initialize(void)
 
 					modelCollider->SetModelHandle(modelHandle);
 					modelCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+					modelCollider->AddTargetTag(ColliderBase::TAG::ENEMY); 
 
 					collisionComp.colliders.push_back(modelCollider);
 				}
@@ -83,11 +84,12 @@ void StageBase::Initialize(void)
 					auto boxCollider = std::make_shared<ColliderBox>(
 						stageTag,
 						nullptr,
-						VGet(0.0f, 50.0f, 0.0f),
-						VGet(100.0f, 100.0f, 100.0f)
+						objectData.boxCenter, 
+						objectData.boxSize   
 					);
 
 					boxCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+					boxCollider->AddTargetTag(ColliderBase::TAG::ENEMY); 
 					collisionComp.colliders.push_back(boxCollider);
 				}
 

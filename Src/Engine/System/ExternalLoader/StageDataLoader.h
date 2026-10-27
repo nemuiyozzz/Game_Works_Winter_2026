@@ -24,7 +24,9 @@ struct StageObjectBinaryData
 	VECTOR position = { 0.0f, 0.0f, 0.0f };             // 座標
 	VECTOR rotation = { 0.0f, 0.0f, 0.0f };             // 回転
 	VECTOR scale = { 1.0f, 1.0f, 1.0f };                // スケール
-	int parentIndex = -1;								// 親オブジェクトのインデックス
+	int parentIndex = -1;                               // 親オブジェクトのインデックス
+	VECTOR boxCenter = { 0.0f, 50.0f, 0.0f };           // ボックスコライダーのローカル中心
+	VECTOR boxSize = { 100.0f, 100.0f, 100.0f };        // ボックスコライダーのサイズ
 };
 
 #pragma pack(pop)

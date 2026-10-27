@@ -87,6 +87,21 @@ bool ActorDataLoader::SavePlayerData(const std::wstring& csvFilePath,
 			<< inData.capsuleEndPos.y << ","
 			<< inData.capsuleEndPos.z << "\n";
 		csvFile << "CAPSULE_RADIUS," << inData.capsuleRadius << ",0.0,0.0\n";
+		csvFile << "RAY_START,"
+			<< inData.rayStartPos.x << ","
+			<< inData.rayStartPos.y << ","
+			<< inData.rayStartPos.z << "\n";
+		csvFile << "RAY_END,"
+			<< inData.rayEndPos.x << ","
+			<< inData.rayEndPos.y << ","
+			<< inData.rayEndPos.z << "\n";
+		csvFile << "MAX_HP," << inData.maxHp << ",0.0,0.0\n";
+		csvFile << "ATTACK," << inData.attackPower << ",0.0,0.0\n";
+		csvFile << "DEFENSE," << inData.defensePower << ",0.0,0.0\n";
+		csvFile << "NEXT_EXP," << inData.nextLevelExperience << ",0.0,0.0\n";
+		csvFile << "GROWTH_HP," << inData.growthHp << ",0.0,0.0\n";
+		csvFile << "GROWTH_ATTACK," << inData.growthAttack << ",0.0,0.0\n";
+		csvFile << "GROWTH_DEFENSE," << inData.growthDefense << ",0.0,0.0\n";
 		csvFile.close();
 	}
 
@@ -257,6 +272,10 @@ bool ActorDataLoader::SaveEnemyData(const std::wstring& csvFilePath,
 				<< inData.rayEndPos.x << ","
 				<< inData.rayEndPos.y << ","
 				<< inData.rayEndPos.z << "\n";
+		csvFile << "MAX_HP," << inData.maxHp << ",0.0,0.0\n";
+		csvFile << "ATTACK," << inData.attackPower << ",0.0,0.0\n";
+		csvFile << "DEFENSE," << inData.defensePower << ",0.0,0.0\n";
+		csvFile << "REWARD_EXP," << inData.rewardExperience << ",0.0,0.0\n";
 		csvFile.close();
 
 	}
@@ -334,6 +353,46 @@ bool ActorDataLoader::ConvertPlayerCsvToBinary(const std::wstring& csvFilePath,
 		else if (paramName == "CAPSULE_RADIUS")
 		{
 			playerData.capsuleRadius = std::stof(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "RAY_START" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			playerData.rayStartPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			playerData.rayStartPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			playerData.rayStartPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "RAY_END" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			playerData.rayEndPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			playerData.rayEndPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			playerData.rayEndPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "MAX_HP")
+		{
+			playerData.maxHp = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "ATTACK")
+		{
+			playerData.attackPower = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "DEFENSE")
+		{
+			playerData.defensePower = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "NEXT_EXP")
+		{
+			playerData.nextLevelExperience = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "GROWTH_HP")
+		{
+			playerData.growthHp = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "GROWTH_ATTACK")
+		{
+			playerData.growthAttack = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "GROWTH_DEFENSE")
+		{
+			playerData.growthDefense = std::stoi(cells[COLUMN_VALUE_X]);
 		}
 	}
 
@@ -461,5 +520,107 @@ bool ActorDataLoader::ConvertEnemyCsvToBinary(const std::wstring& csvFilePath,
 {
 	std::ifstream csvFile(csvFilePath);
 
-	return false;
+	if (!csvFile.is_open())
+	{
+		return false;
+	}
+
+	EnemyBinaryData enemyData{};
+	std::string lineString;
+
+	std::getline(csvFile, lineString);
+
+	while (std::getline(csvFile, lineString))
+	{
+		if (lineString.empty())
+		{
+			continue;
+		}
+
+		std::stringstream lineStream(lineString);
+		std::string cellString;
+		std::vector<std::string> cells;
+
+		while (std::getline(lineStream, cellString, ','))
+		{
+			cells.push_back(cellString);
+		}
+
+		if (cells.size() < REQUIRED_COLUMN_COUNT)
+		{
+			continue;
+		}
+
+		const std::string& paramName = cells[COLUMN_PARAMETER_NAME];
+
+		if (paramName == "SCALE" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			enemyData.scale.x = std::stof(cells[COLUMN_VALUE_X]);
+			enemyData.scale.y = std::stof(cells[COLUMN_VALUE_Y]);
+			enemyData.scale.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "CAPSULE_START" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			enemyData.capsuleStartPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			enemyData.capsuleStartPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			enemyData.capsuleStartPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "CAPSULE_END" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			enemyData.capsuleEndPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			enemyData.capsuleEndPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			enemyData.capsuleEndPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "CAPSULE_RADIUS")
+		{
+			enemyData.capsuleRadius = std::stof(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "RAY_START" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			enemyData.rayStartPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			enemyData.rayStartPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			enemyData.rayStartPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "RAY_END" && cells.size() >= VECTOR_COLUMN_COUNT)
+		{
+			enemyData.rayEndPos.x = std::stof(cells[COLUMN_VALUE_X]);
+			enemyData.rayEndPos.y = std::stof(cells[COLUMN_VALUE_Y]);
+			enemyData.rayEndPos.z = std::stof(cells[COLUMN_VALUE_Z]);
+		}
+		else if (paramName == "MAX_HP")
+		{
+			enemyData.maxHp = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "ATTACK")
+		{
+			enemyData.attackPower = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "DEFENSE")
+		{
+			enemyData.defensePower = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+		else if (paramName == "REWARD_EXP")
+		{
+			enemyData.rewardExperience = std::stoi(cells[COLUMN_VALUE_X]);
+		}
+	}
+
+	csvFile.close();
+
+	std::filesystem::path outputPath(binaryFilePath);
+	if (outputPath.has_parent_path())
+	{
+		std::filesystem::create_directories(outputPath.parent_path());
+	}
+
+	std::ofstream binaryFile(binaryFilePath, std::ios::binary);
+	if (!binaryFile.is_open())
+	{
+		return false;
+	}
+
+	binaryFile.write(reinterpret_cast<const char*>(&enemyData), sizeof(EnemyBinaryData));
+	binaryFile.close();
+
+	return true;
 }

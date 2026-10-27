@@ -17,7 +17,13 @@ namespace
 	constexpr int COLUMN_SCALE_Y = 9;         // Yスケール
 	constexpr int COLUMN_SCALE_Z = 10;        // Zスケール
 	constexpr int COLUMN_PARENT_INDEX = 11;   // 親のインデックス
-	constexpr int REQUIRED_COLUMN_COUNT = 11; // 必要な列の総数
+	constexpr int COLUMN_BOX_CENTER_X = 12;   // ボックス中心X
+	constexpr int COLUMN_BOX_CENTER_Y = 13;   // ボックス中心Y
+	constexpr int COLUMN_BOX_CENTER_Z = 14;   // ボックス中心Z
+	constexpr int COLUMN_BOX_SIZE_X = 15;     // ボックスサイズX
+	constexpr int COLUMN_BOX_SIZE_Y = 16;     // ボックスサイズY
+	constexpr int COLUMN_BOX_SIZE_Z = 17;     // ボックスサイズZ
+	constexpr int REQUIRED_COLUMN_COUNT = 11; // 最低限必要な列の総数
 }
 
 bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,
@@ -92,6 +98,20 @@ bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,
 			if (cells.size() > COLUMN_PARENT_INDEX && !cells[COLUMN_PARENT_INDEX].empty())
 			{
 				objectData.parentIndex = std::stoi(cells[COLUMN_PARENT_INDEX]);
+			}
+
+			if (cells.size() > COLUMN_BOX_CENTER_Z && !cells[COLUMN_BOX_CENTER_X].empty())
+			{
+				objectData.boxCenter.x = std::stof(cells[COLUMN_BOX_CENTER_X]);
+				objectData.boxCenter.y = std::stof(cells[COLUMN_BOX_CENTER_Y]);
+				objectData.boxCenter.z = std::stof(cells[COLUMN_BOX_CENTER_Z]);
+			}
+
+			if (cells.size() > COLUMN_BOX_SIZE_Z && !cells[COLUMN_BOX_SIZE_X].empty())
+			{
+				objectData.boxSize.x = std::stof(cells[COLUMN_BOX_SIZE_X]);
+				objectData.boxSize.y = std::stof(cells[COLUMN_BOX_SIZE_Y]);
+				objectData.boxSize.z = std::stof(cells[COLUMN_BOX_SIZE_Z]);
 			}
 
 			objectList.push_back(objectData);
@@ -200,11 +220,11 @@ bool StageDataLoader::SaveStageData(const std::wstring& csvFilePath,
 		return false;
 	}
 
-	csvFile << L"Type,ModelId,PosX,PosY,PosZ,RotX,RotY,RotZ,ScaleX,ScaleY,ScaleZ,ParentIndex\n";
+	csvFile << L"Type,ModelId,PosX,PosY,PosZ,RotX,RotY,RotZ,ScaleX,ScaleY,ScaleZ,ParentIndex,BoxCenterX,BoxCenterY,BoxCenterZ,BoxSizeX,BoxSizeY,BoxSizeZ\n";
 	csvFile << L"SPAWN,NONE,"
 		<< inStageData.playerSpawnPosition.x << L","
 		<< inStageData.playerSpawnPosition.y << L","
-		<< inStageData.playerSpawnPosition.z << L",0,0,0,1,1,1,-1\n";
+		<< inStageData.playerSpawnPosition.z << L",0,0,0,1,1,1,-1,0,0,0,0,0,0\n";
 
 	for (const StageObjectBinaryData& objectData : inStageData.objects)
 	{
@@ -218,7 +238,13 @@ bool StageDataLoader::SaveStageData(const std::wstring& csvFilePath,
 			<< objectData.scale.x << L","
 			<< objectData.scale.y << L","
 			<< objectData.scale.z << L","
-			<< objectData.parentIndex << L"\n";
+			<< objectData.parentIndex << L","
+			<< objectData.boxCenter.x << L","
+			<< objectData.boxCenter.y << L","
+			<< objectData.boxCenter.z << L","
+			<< objectData.boxSize.x << L","
+			<< objectData.boxSize.y << L","
+			<< objectData.boxSize.z << L"\n";
 	}
 
 	csvFile.close();

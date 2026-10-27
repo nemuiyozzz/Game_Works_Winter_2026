@@ -236,11 +236,13 @@
     <ClCompile Include="Src\Scene\Stage\StageBattle.cpp" />
     <ClCompile Include="Src\Scene\Stage\StageTraining.cpp" />
     <ClCompile Include="Src\Engine\System\ExternalLoader\StageDataLoader.cpp" />
+    <ClCompile Include="Src\Ecs\System\StatusSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Ecs\ActorFactory.h" />
     <ClInclude Include="Src\Ecs\Component\EnemyComponent.h" />
     <ClInclude Include="Src\Ecs\Component\HierarchyComponent.h" />
+    <ClInclude Include="Src\Ecs\Component\StatusComponent.h" />
     <ClInclude Include="Src\Ecs\EcsWorld.h" />
     <ClInclude Include="Src\Ecs\System\DebugGuiSystem.h" />
     <ClInclude Include="Libs\ImGui\backends\imgui_impl_dx11.h" />
@@ -321,6 +323,7 @@
     <ClInclude Include="Src\Scene\Stage\StageBattle.h" />
     <ClInclude Include="Src\Scene\Stage\StageTraining.h" />
     <ClInclude Include="Src\Engine\System\ExternalLoader\StageDataLoader.h" />
+    <ClInclude Include="Src\Ecs\System\StatusSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

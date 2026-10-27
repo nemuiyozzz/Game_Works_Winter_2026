@@ -8,8 +8,7 @@
 /// @brief プレイヤーの初期パラメータを保持するバイナリ構造体
 struct PlayerBinaryData
 {
-	// ファイル識別子
-	char signature[4] = { 'P', 'L', 'R', '1' }; 
+	char signature[4] = { 'P', 'L', 'R', '1' }; // ファイル識別子
 
 	// 移動・トランスフォーム関連
 	VECTOR scale = { 50.0f, 50.0f, 50.0f };     // モデルのスケール
@@ -21,6 +20,19 @@ struct PlayerBinaryData
 	VECTOR capsuleStartPos = { 0.0f, 30.0f, 0.0f }; // カプセル下端のローカル座標
 	VECTOR capsuleEndPos = { 0.0f, 120.0f, 0.0f };  // カプセル上端のローカル座標
 	float capsuleRadius = 30.0f;                    // カプセルの半径
+
+	// レイコライダー関連
+	VECTOR rayStartPos = { 0.0f, 50.0f, 0.0f };     // レイ始点のローカル座標
+	VECTOR rayEndPos = { 0.0f, -5.0f, 0.0f };       // レイ終点のローカル座標
+
+	// ステータス・レベル成長関連
+	int maxHp = 100;              // 最大体力
+	int attackPower = 25;         // 攻撃力
+	int defensePower = 5;         // 防御力
+	int nextLevelExperience = 50; // 初期の次レベル必要経験値
+	int growthHp = 20;            // レベルアップ時のHP上昇量
+	int growthAttack = 5;         // レベルアップ時の攻撃力上昇量
+	int growthDefense = 2;        // レベルアップ時の防御力上昇量
 };
 
 /// @brief カメラの初期パラメータを保持するバイナリ構造体
@@ -41,22 +53,28 @@ struct CameraBinaryData
 	float farZ = 20000.0f;                            // ファークリップ
 };
 
+/// @brief エネミーの初期パラメータを保持するバイナリ構造体
 struct EnemyBinaryData
 {
-	// ファイル識別子
-	char signature[4] = { 'E', 'N', 'M', '1' };	
+	char signature[4] = { 'E', 'N', 'M', '1' }; // ファイル識別子
 
-	// モデルのスケール
-	VECTOR scale = { 30.0f, 30.0f, 30.0f };
+	// トランスフォーム関連
+	VECTOR scale = { 30.0f, 30.0f, 30.0f };     // モデルのスケール
 
 	// カプセルコライダー関連
-	VECTOR capsuleStartPos = { 0.0f, 10.0f, 0.0f };	// カプセル下端のローカル座標
-	VECTOR capsuleEndPos = { 0.0f, 30.0f, 0.0f };	// カプセル上端のローカル座標
-	float capsuleRadius = 30.0f;                    // カプセルの半径
-	
+	VECTOR capsuleStartPos = { 0.0f, 10.0f, 0.0f }; // カプセル下端のローカル座標
+	VECTOR capsuleEndPos = { 0.0f, 30.0f, 0.0f };   // カプセル上端のローカル座標
+	float capsuleRadius = 5.0f;                     // カプセルの半径
+
 	// レイコライダー関連
-	VECTOR rayStartPos = { 0.0f, 50.0f, 0.0f };		// レイ始点のローカル座標
-	VECTOR rayEndPos = { 0.0f, -5.0f, 0.0f };		// レイ終点のローカル座標
+	VECTOR rayStartPos = { 0.0f, 50.0f, 0.0f };     // レイ始点のローカル座標
+	VECTOR rayEndPos = { 0.0f, -5.0f, 0.0f };       // レイ終点のローカル座標
+
+	// ステータス関連
+	int maxHp = 50;            // 最大体力
+	int attackPower = 10;      // 攻撃力
+	int defensePower = 2;      // 防御力
+	int rewardExperience = 25; // 撃破時に得られる経験値
 };
 
 #pragma pack(pop)
