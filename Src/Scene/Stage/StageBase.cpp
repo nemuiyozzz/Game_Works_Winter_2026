@@ -5,8 +5,11 @@
 #include "../../Ecs/Component/DebugGuiComponent.h"
 #include "../../Ecs/Component/HierarchyComponent.h"
 #include "../../Ecs/Component/CollisionComponent.h"
-#include "../../Engine/Physics/Collider/ColliderModel.h"
+#include "../../Engine/Physics/Collider/ColliderSphere.h"
+#include "../../Engine/Physics/Collider/ColliderCapsule.h"
 #include "../../Engine/Physics/Collider/ColliderBox.h"
+#include "../../Engine/Physics/Collider/ColliderLine.h"
+#include "../../Engine/Physics/Collider/ColliderModel.h"
 #include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Common/Quaternion.h"
 
@@ -27,7 +30,8 @@ void StageBase::Initialize(void)
 
 	for (size_t index = 0; index < stageData_.objects.size(); ++index)
 	{
-		const StageObjectBinaryData& objectData = stageData_.objects[index];
+		const StageDataLoader::StageObjectBinaryData& objectData =
+			stageData_.objects[index]; // 1オブジェクト分のデータ
 		Entity objectEntity = CreateStageEntity();
 
 		indexToEntityMap[index] = objectEntity;
@@ -45,15 +49,15 @@ void StageBase::Initialize(void)
 		std::wstring resourceKey(objectData.resourceKey);
 		if (!resourceKey.empty() && resourceKey != L"NONE" && resourceKey != L"0")
 		{
-			Resource loadedRes = ResourceManager::GetInstance().Load(resourceKey);
+			Resource loadedResource = ResourceManager::GetInstance().Load(resourceKey);
 			int modelHandle = -1;
-			if (loadedRes.GetHandleId() != -1)
+			if (loadedResource.GetHandleId() != -1)
 			{
-				modelHandle = MV1DuplicateModel(loadedRes.GetHandleId());
+				modelHandle = MV1DuplicateModel(loadedResource.GetHandleId());
 			}
 			if (modelHandle == -1)
 			{
-				modelHandle = loadedRes.GetHandleId();
+				modelHandle = loadedResource.GetHandleId();
 			}
 			if (modelHandle != -1)
 			{
@@ -61,39 +65,61 @@ void StageBase::Initialize(void)
 				modelComponent.modelHandle = modelHandle;
 				ecsRegistry_.AddComponent<ModelComponent>(objectEntity, modelComponent);
 
-				CollisionComponent collisionComp{};
-
+				CollisionComponent collisionComponent{};
 				auto stageTag = ColliderBase::TAG::STAGE;
+				std::shared_ptr<ColliderBase> createdCollider = nullptr;
 
-				if (resourceKey.find(L"GROUND") != std::wstring::npos)
+				switch (static_cast<ColliderBase::SHAPE>(objectData.colliderShape))
+				{
+				case ColliderBase::SHAPE::NONE:
+					break;
+
+				case ColliderBase::SHAPE::LINE:
+					createdCollider = std::make_shared<ColliderLine>(
+						stageTag, nullptr, objectData.colParam1, objectData.colParam2);
+					break;
+
+				case ColliderBase::SHAPE::SPHERE:
+					createdCollider = std::make_shared<ColliderSphere>(
+						stageTag, nullptr, objectData.colParam1, objectData.colRadius);
+					break;
+
+				case ColliderBase::SHAPE::CAPSULE:
+					createdCollider = std::make_shared<ColliderCapsule>(
+						stageTag, nullptr, objectData.colParam1,
+						objectData.colParam2, objectData.colRadius);
+					break;
+
+				case ColliderBase::SHAPE::MODEL:
 				{
 					MV1SetPosition(modelHandle, objectData.position);
 					MV1SetRotationXYZ(modelHandle, objectData.rotation);
 					MV1SetScale(modelHandle, objectData.scale);
 
 					auto modelCollider = std::make_shared<ColliderModel>(stageTag, nullptr);
-
 					modelCollider->SetModelHandle(modelHandle);
-					modelCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
-					modelCollider->AddTargetTag(ColliderBase::TAG::ENEMY); 
-
-					collisionComp.colliders.push_back(modelCollider);
+					createdCollider = modelCollider;
 				}
-				else
+				break;
+
+				case ColliderBase::SHAPE::BOX:
+					createdCollider = std::make_shared<ColliderBox>(
+						stageTag, nullptr, objectData.colParam1, objectData.colParam2);
+					break;
+
+				default:
+					break;
+				}
+
+				if (createdCollider != nullptr)
 				{
-					auto boxCollider = std::make_shared<ColliderBox>(
-						stageTag,
-						nullptr,
-						objectData.boxCenter, 
-						objectData.boxSize   
-					);
-
-					boxCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
-					boxCollider->AddTargetTag(ColliderBase::TAG::ENEMY); 
-					collisionComp.colliders.push_back(boxCollider);
+					createdCollider->SetTrigger(objectData.isTrigger != 0);
+					createdCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+					createdCollider->AddTargetTag(ColliderBase::TAG::ENEMY);
+					collisionComponent.colliders.push_back(createdCollider);
 				}
 
-				ecsRegistry_.AddComponent<CollisionComponent>(objectEntity, collisionComp);
+				ecsRegistry_.AddComponent<CollisionComponent>(objectEntity, collisionComponent);
 			}
 		}
 
@@ -115,10 +141,12 @@ void StageBase::Initialize(void)
 
 	for (size_t index = 0; index < stageData_.objects.size(); ++index)
 	{
-		const StageObjectBinaryData& objectData = stageData_.objects[index];
+		const StageDataLoader::StageObjectBinaryData& objectData =
+			stageData_.objects[index]; // 1オブジェクト分のデータ
 		Entity childEntity = indexToEntityMap[index];
 
-		if (objectData.parentIndex >= 0 && objectData.parentIndex < static_cast<int>(indexToEntityMap.size()))
+		if (objectData.parentIndex >= 0 &&
+			objectData.parentIndex < static_cast<int>(indexToEntityMap.size()))
 		{
 			Entity parentEntity = indexToEntityMap[objectData.parentIndex];
 
@@ -170,7 +198,7 @@ void StageBase::LoadStageDataFile(const std::wstring& csvFilePath,
 	StageDataLoader::LoadFromBinary(binaryFilePath, stageData_);
 
 	// ステージで使用する全モデルリソースの非同期ロードをここでキックする
-	for (const StageObjectBinaryData& objectData : stageData_.objects)
+	for (const StageDataLoader::StageObjectBinaryData& objectData : stageData_.objects)
 	{
 		std::wstring resourceKey(objectData.resourceKey);
 		if (!resourceKey.empty() && resourceKey != L"NONE" && resourceKey != L"0")

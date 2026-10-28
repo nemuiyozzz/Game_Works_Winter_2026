@@ -8,6 +8,7 @@
 #include "../../Ecs/EcsRegistry.h"
 #include "../../Ecs/Entity.h"
 
+/// @brief ステージの共通処理やロード管理を行う基底クラス
 class StageBase
 {
 public:
@@ -48,9 +49,9 @@ protected:
 	std::vector<Entity> stageEntities_; // 生成したエンティティ一覧
 
 	// ステージファイル・データ関連
-	LoadedStageData stageData_;         // バイナリから読み込んだステージ情報
-	std::wstring csvFilePath_;          // 読み込んだCSVファイルパス
-	std::wstring binaryFilePath_;       // 読み込んだバイナリファイルパス
+	StageDataLoader::LoadedStageData stageData_; // バイナリから読み込んだステージ情報
+	std::wstring csvFilePath_;                   // 読み込んだCSVファイルパス
+	std::wstring binaryFilePath_;                // 読み込んだバイナリファイルパス
 
 	/// @brief エンティティを生成し、管理リストに登録する
 	/// @return 生成したエンティティID

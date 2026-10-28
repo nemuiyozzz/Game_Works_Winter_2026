@@ -1,8 +1,10 @@
 #include "../../../Pch.h"
 #include "ColliderBase.h"
+#include <algorithm>
 #include "../../../Ecs/Component/TransformComponent.h"
 
-ColliderBase::ColliderBase(SHAPE shapeType, TAG collisionTag, const TransformComponent* followTarget)
+ColliderBase::ColliderBase(
+	SHAPE shapeType, TAG collisionTag, const TransformComponent* followTarget)
 	: shapeType_(shapeType)
 	, collisionTag_(collisionTag)
 	, followTarget_(followTarget)
@@ -55,6 +57,11 @@ ColliderBase::TAG ColliderBase::GetCollisionTag(void) const
 	return collisionTag_;
 }
 
+void ColliderBase::SetCollisionTag(TAG collisionTag)
+{
+	collisionTag_ = collisionTag;
+}
+
 bool ColliderBase::IsActive(void) const
 {
 	return isActive_;
@@ -86,6 +93,18 @@ void ColliderBase::AddTargetTag(TAG targetTag)
 	}
 
 	targetTags_.push_back(targetTag);
+}
+
+void ColliderBase::RemoveTargetTag(TAG targetTag)
+{
+	targetTags_.erase(
+		std::remove(targetTags_.begin(), targetTags_.end(), targetTag),
+		targetTags_.end());
+}
+
+void ColliderBase::ClearTargetTags(void)
+{
+	targetTags_.clear();
 }
 
 bool ColliderBase::IsTargetTag(TAG targetTag) const

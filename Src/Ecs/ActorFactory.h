@@ -49,7 +49,13 @@ private:
 	/// @return 生成されたプレイヤーのエンティティID
 	static Entity BuildPlayer(EcsRegistry& registry);
 
+	/// @brief 剣エンティティを生成する内部レシピ
+	/// @param registry 登録先のECSレジストリ
+	/// @return 生成された剣のエンティティID
 	static Entity BuildSword(EcsRegistry& registry);
 
+	/// @brief エネミーエンティティを生成する内部レシピ
+	/// @param registry 登録先のECSレジストリ
+	/// @return 生成されたエネミーのエンティティID
 	static Entity BuildEnemy(EcsRegistry& registry);
 };

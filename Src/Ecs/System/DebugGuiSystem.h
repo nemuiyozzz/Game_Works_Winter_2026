@@ -27,12 +27,12 @@ private:
 	// 現在選択されているエンティティID
 	Entity selectedEntity_;
 
-	/// @brief エンティティ選択リスト（Hierarchyウィンドウ）を描画する
+	/// @brief エンティティ選択リストを描画する
 	/// @param registry ECSレジストリ
 	/// @param entities 表示対象のエンティティ一覧
 	void DrawHierarchyGui(EcsRegistry& registry, const std::vector<Entity>& entities);
 
-	/// @brief 選択中エンティティの詳細パラメータ（Inspectorウィンドウ）を描画する
+	/// @brief 選択中エンティティの詳細パラメータを描画する
 	/// @param registry ECSレジストリ
 	/// @param entity 選択中のエンティティ
 	void DrawInspectorGui(EcsRegistry& registry, Entity entity);

@@ -23,6 +23,7 @@
 #include "../../Engine/Utility/UtilityMath.h"
 #include "../Component/ModelComponent.h"
 #include "../Component/StatusComponent.h"
+#include "../Component/EnemyComponent.h"
 
 namespace
 {
@@ -31,6 +32,111 @@ namespace
 	constexpr float DRAG_SPEED_SIZE = 0.5f;      // サイズ・半径ドラッグ時の変化量
 	constexpr float MIN_COLLIDER_SIZE = 0.1f;    // 半径やサイズの最小値
 	constexpr float MAX_COLLIDER_SIZE = 5000.0f; // 半径やサイズの最大値
+
+	// ColliderBase::SHAPE の定義順（NONE, LINE, SPHERE, CAPSULE, MODEL, BOX）と完全一致
+	const char* COLLIDER_SHAPE_NAMES[] =
+	{
+		"None",
+		"Line",
+		"Sphere",
+		"Capsule",
+		"Model",
+		"Box"
+	};
+	constexpr int COLLIDER_SHAPE_COUNT = IM_ARRAYSIZE(COLLIDER_SHAPE_NAMES);
+
+	// ColliderBase::TAG の定義順（STAGE, PLAYER, PLAYER_SWORD, ENEMY, WALL）と完全一致
+	const char* COLLIDER_TAG_NAMES[] =
+	{
+		"STAGE",
+		"PLAYER",
+		"PLAYER_SWORD",
+		"ENEMY",
+		"WALL"
+	};
+	constexpr int COLLIDER_TAG_COUNT = IM_ARRAYSIZE(COLLIDER_TAG_NAMES);
+
+	/// @brief 現在のCollisionComponentから汎用スロット配列へコライダー情報を抽出する
+	void ExtractColliderSlots(
+		EcsRegistry& registry,
+		Entity entity,
+		int& outColliderCount,
+		ActorDataLoader::ColliderSlotBinaryData* outSlots)
+	{
+		outColliderCount = 0;
+		if (!registry.HasComponent<CollisionComponent>(entity))
+		{
+			return;
+		}
+
+		const CollisionComponent& collision =
+			registry.GetComponent<CollisionComponent>(entity); // 衝突コンポーネント
+
+		for (const auto& collider : collision.colliders)
+		{
+			if (collider == nullptr || outColliderCount >= ActorDataLoader::MAX_ACTOR_COLLIDERS)
+			{
+				continue;
+			}
+
+			ActorDataLoader::ColliderSlotBinaryData& slot = outSlots[outColliderCount]; // スロットデータ
+			slot.shapeType = static_cast<int>(collider->GetShapeType());
+			slot.isTrigger = collider->IsTrigger() ? 1 : 0;
+			slot.selfTag = static_cast<int>(collider->GetCollisionTag());
+			slot.targetTagMask = 0;
+
+			// ホワイトリスト（Target Tags）をビットマスク化して保存
+			for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+			{
+				auto checkTag = static_cast<ColliderBase::TAG>(tagIndex);
+				if (collider->IsTargetTag(checkTag))
+				{
+					slot.targetTagMask |= (1u << tagIndex);
+				}
+			}
+
+			switch (collider->GetShapeType())
+			{
+			case ColliderBase::SHAPE::SPHERE:
+			{
+				auto* sphere = static_cast<ColliderSphere*>(collider.get());
+				slot.vectorParameter1 = sphere->GetLocalPosition();
+				slot.radius = sphere->GetRadius();
+			}
+			break;
+
+			case ColliderBase::SHAPE::CAPSULE:
+			{
+				auto* capsule = static_cast<ColliderCapsule*>(collider.get());
+				slot.vectorParameter1 = capsule->GetLocalStartPos();
+				slot.vectorParameter2 = capsule->GetLocalEndPos();
+				slot.radius = capsule->GetRadius();
+			}
+			break;
+
+			case ColliderBase::SHAPE::BOX:
+			{
+				auto* box = static_cast<ColliderBox*>(collider.get());
+				slot.vectorParameter1 = box->GetLocalCenter();
+				slot.vectorParameter2 = box->GetSize();
+			}
+			break;
+
+			case ColliderBase::SHAPE::LINE:
+			{
+				auto* line = static_cast<ColliderLine*>(collider.get());
+				slot.vectorParameter1 = line->GetLocalStartPos();
+				slot.vectorParameter2 = line->GetLocalEndPos();
+			}
+			break;
+
+			default:
+				break;
+			}
+
+			outColliderCount++;
+		}
+	}
 }
 
 DebugGuiSystem::DebugGuiSystem(void)
@@ -85,7 +191,8 @@ void DebugGuiSystem::DrawHierarchyGui(
 
 			if (registry.HasComponent<HierarchyComponent>(currentEntity))
 			{
-				const auto& hierarchy = registry.GetComponent<HierarchyComponent>(currentEntity);
+				const auto& hierarchy =
+					registry.GetComponent<HierarchyComponent>(currentEntity);
 
 				for (Entity child : hierarchy.children)
 				{
@@ -123,7 +230,8 @@ void DebugGuiSystem::DrawHierarchyGui(
 
 			if (hasChildren && isNodeOpen)
 			{
-				const auto& hierarchy = registry.GetComponent<HierarchyComponent>(currentEntity);
+				const auto& hierarchy =
+					registry.GetComponent<HierarchyComponent>(currentEntity);
 
 				for (Entity child : hierarchy.children)
 				{
@@ -142,7 +250,8 @@ void DebugGuiSystem::DrawHierarchyGui(
 
 		if (registry.HasComponent<HierarchyComponent>(entity))
 		{
-			Entity parentEntity = registry.GetComponent<HierarchyComponent>(entity).parent;
+			Entity parentEntity =
+				registry.GetComponent<HierarchyComponent>(entity).parent;
 
 			if (parentEntity != NULL_ENTITY &&
 				registry.HasComponent<DebugGuiComponent>(parentEntity))
@@ -175,7 +284,7 @@ void DebugGuiSystem::DrawInspectorGui(EcsRegistry& registry, Entity entity)
 	{
 		DrawCameraGui(registry, entity);
 	}
-	else if (registry.HasComponent<TransformComponent>(entity))
+	if (registry.HasComponent<TransformComponent>(entity))
 	{
 		DrawTransformGui(registry, entity);
 	}
@@ -185,9 +294,21 @@ void DebugGuiSystem::DrawInspectorGui(EcsRegistry& registry, Entity entity)
 		DrawPlayerMovementGui(registry, entity);
 	}
 
+	if (registry.HasComponent<StatusComponent>(entity))
+	{
+		DrawStatusGui(registry, entity);
+	}
+
 	if (registry.HasComponent<CollisionComponent>(entity))
 	{
 		DrawCollisionGui(registry, entity);
+	}
+	else
+	{
+		if (ImGui::Button("Add CollisionComponent (3D)"))
+		{
+			registry.AddComponent<CollisionComponent>(entity, CollisionComponent{});
+		}
 	}
 
 	if (registry.HasComponent<Collision2DComponent>(entity))
@@ -200,11 +321,6 @@ void DebugGuiSystem::DrawInspectorGui(EcsRegistry& registry, Entity entity)
 		DrawSaveButtonGui(registry, entity, debugGuiData);
 	}
 
-	if (registry.HasComponent<StatusComponent>(entity))
-	{
-		DrawStatusGui(registry, entity);
-	}
-
 	ImGui::End();
 }
 
@@ -214,9 +330,9 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		constexpr float DRAG_SPEED_ROTATION = 0.1f;   // 回転ドラッグ時の変化量
-		constexpr float MIN_ROTATION_DEG = -360.0f;   // 回転の最小角度
-		constexpr float MAX_ROTATION_DEG = 360.0f;    // 回転の最大角度
+		constexpr float DRAG_SPEED_ROTATION = 0.1f; // 回転ドラッグ時の変化量
+		constexpr float MIN_ROTATION_DEG = -360.0f; // 回転の最小角度
+		constexpr float MAX_ROTATION_DEG = 360.0f;  // 回転の最大角度
 
 		bool hasParent = false;
 		if (registry.HasComponent<HierarchyComponent>(entity))
@@ -268,19 +384,22 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 		}
 		else
 		{
-			HierarchyComponent& hierarchy = registry.GetComponent<HierarchyComponent>(entity);
+			HierarchyComponent& hierarchy =
+				registry.GetComponent<HierarchyComponent>(entity);
 
 			int parentId = (hierarchy.parent == NULL_ENTITY) ? -1
 				: static_cast<int>(hierarchy.parent);
-			
+
 			if (ImGui::InputInt("Parent Entity ID", &parentId))
 			{
 				if (hierarchy.parent != NULL_ENTITY &&
 					registry.HasComponent<HierarchyComponent>(hierarchy.parent))
 				{
-					auto& oldParentHier = registry.GetComponent<HierarchyComponent>(hierarchy.parent);
+					auto& oldParentHier =
+						registry.GetComponent<HierarchyComponent>(hierarchy.parent);
 					oldParentHier.children.erase(
-						std::remove(oldParentHier.children.begin(), oldParentHier.children.end(), entity),
+						std::remove(oldParentHier.children.begin(),
+							oldParentHier.children.end(), entity),
 						oldParentHier.children.end());
 				}
 
@@ -288,11 +407,11 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 				{
 					hierarchy.parent = NULL_ENTITY;
 
-					// 親を解除したときは、ローカル座標をそのままワールド座標に戻す
 					if (registry.HasComponent<TransformComponent>(entity))
 					{
-						auto& t = registry.GetComponent<TransformComponent>(entity);
-						t.localPosition = t.position;
+						auto& transformComp =
+							registry.GetComponent<TransformComponent>(entity);
+						transformComp.localPosition = transformComp.position;
 					}
 				}
 				else
@@ -304,7 +423,7 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 					{
 						registry.AddComponent<HierarchyComponent>(newParent, HierarchyComponent{});
 					}
-					
+
 					registry.GetComponent<HierarchyComponent>(newParent).children.push_back(entity);
 
 					if (registry.HasComponent<TransformComponent>(entity) &&
@@ -314,9 +433,8 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 						auto& parentTransform = registry.GetComponent<TransformComponent>(newParent);
 
 						VECTOR offset = VSub(childTransform.position, parentTransform.position);
-
-						Quaternion invParentRot = parentTransform.rotation_.Inverse();
-						childTransform.localPosition = invParentRot.PosAxis(offset);
+						Quaternion inverseParentRotation = parentTransform.rotation_.Inverse();
+						childTransform.localPosition = inverseParentRotation.PosAxis(offset);
 					}
 				}
 			}
@@ -325,56 +443,139 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 
 			if (ImGui::Button("Duplicate Hierarchy (Copy All)"))
 			{
-				// 再帰的にエンティティとコンポーネントを複製するラムダ関数
-				auto duplicateEntity = [&](auto& self, Entity srcEntity) -> Entity
+				auto duplicateEntity = [&](auto& self, Entity sourceEntity) -> Entity
 					{
-						Entity dstEntity = registry.CreateEntity();
+						Entity destinationEntity = registry.CreateEntity();
 
-						// Transformのコピー
-						if (registry.HasComponent<TransformComponent>(srcEntity))
+						if (registry.HasComponent<TransformComponent>(sourceEntity))
 						{
-							registry.AddComponent<TransformComponent>(
-								dstEntity, registry.GetComponent<TransformComponent>(srcEntity));
+							TransformComponent transformCopy =
+								registry.GetComponent<TransformComponent>(sourceEntity);
+							registry.AddComponent<TransformComponent>(destinationEntity, transformCopy);
 						}
-						// モデルのコピー（同じハンドルを使い回す）
-						if (registry.HasComponent<ModelComponent>(srcEntity))
-						{
-							registry.AddComponent<ModelComponent>(
-								dstEntity, registry.GetComponent<ModelComponent>(srcEntity));
-						}
-						// ImGui表示と保存用データのコピー
-						if (registry.HasComponent<DebugGuiComponent>(srcEntity))
-						{
-							registry.AddComponent<DebugGuiComponent>(
-								dstEntity, registry.GetComponent<DebugGuiComponent>(srcEntity));
-						}
-						// 階層（子）のコピー
-						if (registry.HasComponent<HierarchyComponent>(srcEntity))
-						{
-							HierarchyComponent srcHier = registry.GetComponent<HierarchyComponent>(srcEntity);
-							HierarchyComponent dstHier{};
 
-							for (Entity child : srcHier.children)
+						if (registry.HasComponent<ModelComponent>(sourceEntity))
+						{
+							ModelComponent modelCopy =
+								registry.GetComponent<ModelComponent>(sourceEntity);
+							registry.AddComponent<ModelComponent>(destinationEntity, modelCopy);
+						}
+
+						if (registry.HasComponent<DebugGuiComponent>(sourceEntity))
+						{
+							DebugGuiComponent guiCopy =
+								registry.GetComponent<DebugGuiComponent>(sourceEntity);
+							registry.AddComponent<DebugGuiComponent>(destinationEntity, guiCopy);
+						}
+
+						if (registry.HasComponent<CollisionComponent>(sourceEntity))
+						{
+							const CollisionComponent& sourceCollision =
+								registry.GetComponent<CollisionComponent>(sourceEntity);
+							CollisionComponent destinationCollision{};
+
+							for (const auto& sourceCollider : sourceCollision.colliders)
 							{
-								// 子供も再帰的に複製する
-								Entity duplicatedChild = self(self, child);
-								dstHier.children.push_back(duplicatedChild);
-
-								// 複製された子供の親を、複製された新しい親（自分）に向ける
-								if (registry.HasComponent<HierarchyComponent>(duplicatedChild))
+								if (sourceCollider == nullptr)
 								{
-									registry.GetComponent<HierarchyComponent>(duplicatedChild).parent = dstEntity;
+									continue;
+								}
+
+								std::shared_ptr<ColliderBase> newCollider = nullptr;
+								ColliderBase::TAG tag = sourceCollider->GetCollisionTag();
+
+								switch (sourceCollider->GetShapeType())
+								{
+								case ColliderBase::SHAPE::SPHERE:
+								{
+									auto* sphere = static_cast<ColliderSphere*>(sourceCollider.get());
+									newCollider = std::make_shared<ColliderSphere>(
+										tag, nullptr, sphere->GetLocalPosition(), sphere->GetRadius());
+								}
+								break;
+
+								case ColliderBase::SHAPE::CAPSULE:
+								{
+									auto* capsule = static_cast<ColliderCapsule*>(sourceCollider.get());
+									newCollider = std::make_shared<ColliderCapsule>(
+										tag, nullptr, capsule->GetLocalStartPos(),
+										capsule->GetLocalEndPos(), capsule->GetRadius());
+								}
+								break;
+
+								case ColliderBase::SHAPE::BOX:
+								{
+									auto* box = static_cast<ColliderBox*>(sourceCollider.get());
+									newCollider = std::make_shared<ColliderBox>(
+										tag, nullptr, box->GetLocalCenter(), box->GetSize());
+								}
+								break;
+
+								case ColliderBase::SHAPE::LINE:
+								{
+									auto* line = static_cast<ColliderLine*>(sourceCollider.get());
+									newCollider = std::make_shared<ColliderLine>(
+										tag, nullptr, line->GetLocalStartPos(), line->GetLocalEndPos());
+								}
+								break;
+
+								case ColliderBase::SHAPE::MODEL:
+								{
+									auto* modelCol = static_cast<ColliderModel*>(sourceCollider.get());
+									auto newModelCol = std::make_shared<ColliderModel>(tag, nullptr);
+									newModelCol->SetModelHandle(modelCol->GetModelHandle());
+									newCollider = newModelCol;
+								}
+								break;
+
+								default:
+									break;
+								}
+
+								if (newCollider != nullptr)
+								{
+									newCollider->SetTrigger(sourceCollider->IsTrigger());
+									newCollider->SetActive(sourceCollider->IsActive());
+
+									for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+									{
+										auto checkTag = static_cast<ColliderBase::TAG>(tagIndex);
+										if (sourceCollider->IsTargetTag(checkTag))
+										{
+											newCollider->AddTargetTag(checkTag);
+										}
+									}
+									destinationCollision.colliders.push_back(newCollider);
 								}
 							}
-							registry.AddComponent<HierarchyComponent>(dstEntity, dstHier);
+							registry.AddComponent<CollisionComponent>(
+								destinationEntity, destinationCollision);
 						}
-						return dstEntity;
+
+						if (registry.HasComponent<HierarchyComponent>(sourceEntity))
+						{
+							HierarchyComponent sourceHierarchy =
+								registry.GetComponent<HierarchyComponent>(sourceEntity);
+							HierarchyComponent destinationHierarchy{};
+
+							for (Entity child : sourceHierarchy.children)
+							{
+								Entity duplicatedChild = self(self, child);
+								destinationHierarchy.children.push_back(duplicatedChild);
+
+								if (registry.HasComponent<HierarchyComponent>(duplicatedChild))
+								{
+									registry.GetComponent<HierarchyComponent>(duplicatedChild).parent = destinationEntity;
+								}
+							}
+							registry.AddComponent<HierarchyComponent>(
+								destinationEntity, destinationHierarchy);
+						}
+						return destinationEntity;
 					};
 
-				// 自分自身をルートとして複製処理を実行
 				Entity duplicatedRoot = duplicateEntity(duplicateEntity, entity);
 
-				// コピーした村が重ならないように、少しX方向にずらして配置する
 				if (registry.HasComponent<TransformComponent>(duplicatedRoot))
 				{
 					registry.GetComponent<TransformComponent>(duplicatedRoot).localPosition.x += 300.0f;
@@ -411,6 +612,29 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 		ImGui::Text("Hit Entities Count : %d",
 			static_cast<int>(collision.hitEntities.size()));
 
+		ColliderBase::TAG defaultTag = ColliderBase::TAG::STAGE; // デフォルトコライダタグ
+		if (registry.HasComponent<PlayerInputComponent>(entity))
+		{
+			defaultTag = ColliderBase::TAG::PLAYER;
+		}
+		else if (registry.HasComponent<EnemyComponent>(entity))
+		{
+			defaultTag = ColliderBase::TAG::ENEMY;
+		}
+
+		if (ImGui::Button("+ Add Collider Slot"))
+		{
+			auto newBox = std::make_shared<ColliderBox>(
+				defaultTag, nullptr, VGet(0.0f, 50.0f, 0.0f), VGet(50.0f, 50.0f, 50.0f));
+			newBox->AddTargetTag(ColliderBase::TAG::STAGE);
+			newBox->AddTargetTag(ColliderBase::TAG::WALL);
+			newBox->AddTargetTag(ColliderBase::TAG::PLAYER);
+			newBox->AddTargetTag(ColliderBase::TAG::ENEMY);
+			collision.colliders.push_back(newBox);
+		}
+
+		int removeIndex = -1;
+
 		for (size_t index = 0; index < collision.colliders.size(); ++index)
 		{
 			auto& collider = collision.colliders[index];
@@ -422,6 +646,79 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			ImGui::PushID(static_cast<int>(index));
 			ImGui::Separator();
 
+			// 1. 形状（Shape Type）の変更プルダウン
+			int currentShape = static_cast<int>(collider->GetShapeType());
+			if (ImGui::Combo("Shape Type", &currentShape,
+				COLLIDER_SHAPE_NAMES, COLLIDER_SHAPE_COUNT))
+			{
+				ColliderBase::TAG oldTag = collider->GetCollisionTag();
+				bool oldTrigger = collider->IsTrigger();
+				bool oldActive = collider->IsActive();
+
+				std::shared_ptr<ColliderBase> newCollider = nullptr;
+				switch (static_cast<ColliderBase::SHAPE>(currentShape))
+				{
+				case ColliderBase::SHAPE::LINE:
+					newCollider = std::make_shared<ColliderLine>(
+						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), VGet(0.0f, -10.0f, 0.0f));
+					break;
+				case ColliderBase::SHAPE::SPHERE:
+					newCollider = std::make_shared<ColliderSphere>(
+						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), 30.0f);
+					break;
+				case ColliderBase::SHAPE::CAPSULE:
+					newCollider = std::make_shared<ColliderCapsule>(
+						oldTag, nullptr, VGet(0.0f, 20.0f, 0.0f), VGet(0.0f, 100.0f, 0.0f), 25.0f);
+					break;
+				case ColliderBase::SHAPE::MODEL:
+				{
+					auto modelCollider = std::make_shared<ColliderModel>(oldTag, nullptr);
+					if (registry.HasComponent<ModelComponent>(entity))
+					{
+						modelCollider->SetModelHandle(
+							registry.GetComponent<ModelComponent>(entity).modelHandle);
+					}
+					newCollider = modelCollider;
+				}
+				break;
+				case ColliderBase::SHAPE::BOX:
+					newCollider = std::make_shared<ColliderBox>(
+						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), VGet(100.0f, 100.0f, 100.0f));
+					break;
+				default:
+					break;
+				}
+
+				if (newCollider != nullptr)
+				{
+					newCollider->SetTrigger(oldTrigger);
+					newCollider->SetActive(oldActive);
+					// 設定されていたホワイトリストをそのまま新しいコライダーへ引き継ぐ
+					for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+					{
+						auto targetTag = static_cast<ColliderBase::TAG>(tagIndex);
+						if (collider->IsTargetTag(targetTag))
+						{
+							newCollider->AddTargetTag(targetTag);
+						}
+					}
+					collider = newCollider;
+				}
+			}
+
+			// 2. 自身のタグ（Self Tag）の変更プルダウン
+			int currentSelfTag = static_cast<int>(collider->GetCollisionTag());
+			if (currentSelfTag >= 0 && currentSelfTag < COLLIDER_TAG_COUNT)
+			{
+				if (ImGui::Combo("Self Tag", &currentSelfTag,
+					COLLIDER_TAG_NAMES, COLLIDER_TAG_COUNT))
+				{
+					collider->SetCollisionTag(
+						static_cast<ColliderBase::TAG>(currentSelfTag));
+				}
+			}
+
+			// 3. 有効・押し出し・削除ボタン
 			bool isActive = collider->IsActive();
 			if (ImGui::Checkbox("Active", &isActive))
 			{
@@ -431,22 +728,56 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			ImGui::SameLine();
 
 			bool isTrigger = collider->IsTrigger();
-			if (ImGui::Checkbox("IsTrigger", &isTrigger))
+			if (ImGui::Checkbox("IsTrigger (PushOut)", &isTrigger))
 			{
 				collider->SetTrigger(isTrigger);
 			}
 
+			ImGui::SameLine();
+
+			if (ImGui::Button("Remove"))
+			{
+				removeIndex = static_cast<int>(index);
+			}
+
+			// 4. ホワイトリスト（Target Tags）のチェックボックス一覧
+			if (ImGui::TreeNode("Target Tags (Whitelist)"))
+			{
+				for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+				{
+					auto targetTag = static_cast<ColliderBase::TAG>(tagIndex);
+					bool isTargeted = collider->IsTargetTag(targetTag);
+
+					if (ImGui::Checkbox(COLLIDER_TAG_NAMES[tagIndex], &isTargeted))
+					{
+						if (isTargeted)
+						{
+							collider->AddTargetTag(targetTag);
+						}
+						else
+						{
+							collider->RemoveTargetTag(targetTag);
+						}
+					}
+
+					if (tagIndex % 2 == 0 && tagIndex + 1 < COLLIDER_TAG_COUNT)
+					{
+						ImGui::SameLine(160.0f);
+					}
+				}
+				ImGui::TreePop();
+			}
+
+			// 5. 各形状の座標・サイズ調整
 			switch (collider->GetShapeType())
 			{
 			case ColliderBase::SHAPE::SPHERE:
 			{
 				auto* sphere = static_cast<ColliderSphere*>(collider.get());
-				ImGui::Text("[3D Collider #%d : Sphere]", static_cast<int>(index));
-
-				VECTOR localPos = sphere->GetLocalPosition();
-				if (ImGui::DragFloat3("Local Pos", &localPos.x, DRAG_SPEED_POSITION))
+				VECTOR localPosition = sphere->GetLocalPosition();
+				if (ImGui::DragFloat3("Local Pos", &localPosition.x, DRAG_SPEED_POSITION))
 				{
-					sphere->SetLocalPosition(localPos);
+					sphere->SetLocalPosition(localPosition);
 				}
 
 				float radius = sphere->GetRadius();
@@ -461,8 +792,6 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			case ColliderBase::SHAPE::CAPSULE:
 			{
 				auto* capsule = static_cast<ColliderCapsule*>(collider.get());
-				ImGui::Text("[3D Collider #%d : Capsule]", static_cast<int>(index));
-
 				VECTOR startPos = capsule->GetLocalStartPos();
 				if (ImGui::DragFloat3("Local Start", &startPos.x, DRAG_SPEED_POSITION))
 				{
@@ -487,8 +816,6 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			case ColliderBase::SHAPE::BOX:
 			{
 				auto* box = static_cast<ColliderBox*>(collider.get());
-				ImGui::Text("[3D Collider #%d : Box]", static_cast<int>(index));
-
 				VECTOR localCenter = box->GetLocalCenter();
 				if (ImGui::DragFloat3("Local Center", &localCenter.x, DRAG_SPEED_POSITION))
 				{
@@ -507,8 +834,6 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			case ColliderBase::SHAPE::LINE:
 			{
 				auto* line = static_cast<ColliderLine*>(collider.get());
-				ImGui::Text("[3D Collider #%d : Line]", static_cast<int>(index));
-
 				VECTOR startPos = line->GetLocalStartPos();
 				if (ImGui::DragFloat3("Local Start", &startPos.x, DRAG_SPEED_POSITION))
 				{
@@ -526,8 +851,7 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			case ColliderBase::SHAPE::MODEL:
 			{
 				auto* modelCollider = static_cast<ColliderModel*>(collider.get());
-				ImGui::Text("[3D Collider #%d : Model] (Handle: %d)",
-					static_cast<int>(index), modelCollider->GetModelHandle());
+				ImGui::Text("Model Handle : %d", modelCollider->GetModelHandle());
 			}
 			break;
 
@@ -536,6 +860,11 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			}
 
 			ImGui::PopID();
+		}
+
+		if (removeIndex >= 0)
+		{
+			collision.colliders.erase(collision.colliders.begin() + removeIndex);
 		}
 	}
 }
@@ -639,16 +968,16 @@ void DebugGuiSystem::DrawCameraGui(EcsRegistry& registry, Entity entity)
 
 	if (ImGui::CollapsingHeader("Tracking & Rotation", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		const float SLIDER_MIN_DISTANCE = 50.0f;    // 距離の最小値
-		const float SLIDER_MAX_DISTANCE = 3000.0f;  // 距離の最大値
-		const float SLIDER_MIN_ROT_SPEED = 0.001f;  // 回転速度の最小値
-		const float SLIDER_MAX_ROT_SPEED = 0.2f;    // 回転速度の最大値
-		const float SLIDER_MIN_FREE_SPEED = 0.5f;   // フリー移動速度の最小値
-		const float SLIDER_MAX_FREE_SPEED = 50.0f;  // フリー移動速度の最大値
-		const float SLIDER_MIN_ANGLE_H = -180.0f;   // 水平角度の最小値
-		const float SLIDER_MAX_ANGLE_H = 180.0f;    // 水平角度の最大値
-		const float SLIDER_MIN_ANGLE_V = -80.0f;    // 垂直角度の最小値
-		const float SLIDER_MAX_ANGLE_V = 80.0f;     // 垂直角度の最大値
+		const float SLIDER_MIN_DISTANCE = 50.0f;   // 距離の最小値
+		const float SLIDER_MAX_DISTANCE = 3000.0f; // 距離の最大値
+		const float SLIDER_MIN_ROT_SPEED = 0.001f; // 回転速度の最小値
+		const float SLIDER_MAX_ROT_SPEED = 0.2f;   // 回転速度の最大値
+		const float SLIDER_MIN_FREE_SPEED = 0.5f;  // フリー移動速度の最小値
+		const float SLIDER_MAX_FREE_SPEED = 50.0f; // フリー移動速度の最大値
+		const float SLIDER_MIN_ANGLE_H = -180.0f;  // 水平角度の最小値
+		const float SLIDER_MAX_ANGLE_H = 180.0f;   // 水平角度の最大値
+		const float SLIDER_MIN_ANGLE_V = -80.0f;   // 垂直角度の最小値
+		const float SLIDER_MAX_ANGLE_V = 80.0f;    // 垂直角度の最大値
 
 		if (registry.HasComponent<TransformComponent>(entity))
 		{
@@ -735,54 +1064,28 @@ void DebugGuiSystem::DrawSaveButtonGui(
 	{
 		if (ImGui::Button("Save Player Data"))
 		{
-			PlayerBinaryData saveData{};
+			ActorDataLoader::PlayerBinaryData saveData{}; // 保存用プレイヤーデータ
+
 			if (registry.HasComponent<TransformComponent>(entity))
 			{
 				saveData.scale = registry.GetComponent<TransformComponent>(entity).scale;
 			}
-			
 			if (registry.HasComponent<PlayerInputComponent>(entity))
 			{
-				const auto& input = registry.GetComponent<PlayerInputComponent>(entity);
+				const PlayerInputComponent& input =
+					registry.GetComponent<PlayerInputComponent>(entity);
 				saveData.moveSpeed = input.moveSpeed;
 				saveData.jumpPower = input.jumpPower;
 			}
-			
 			if (registry.HasComponent<VelocityComponent>(entity))
 			{
 				saveData.maxSpeed =
 					registry.GetComponent<VelocityComponent>(entity).maxSpeed;
 			}
-			
-			if (registry.HasComponent<CollisionComponent>(entity))
-			{
-				const auto& collision = registry.GetComponent<CollisionComponent>(entity);
-				for (const auto& collider : collision.colliders)
-				{
-					if (collider == nullptr)
-					{
-						continue;
-					}
-
-					if (collider->GetShapeType() == ColliderBase::SHAPE::CAPSULE)
-					{
-						auto* capsule = static_cast<ColliderCapsule*>(collider.get());
-						saveData.capsuleStartPos = capsule->GetLocalStartPos();
-						saveData.capsuleEndPos = capsule->GetLocalEndPos();
-						saveData.capsuleRadius = capsule->GetRadius();
-					}
-					else if (collider->GetShapeType() == ColliderBase::SHAPE::LINE)
-					{
-						auto* line = static_cast<ColliderLine*>(collider.get());
-						saveData.rayStartPos = line->GetLocalStartPos();
-						saveData.rayEndPos = line->GetLocalEndPos();
-					}
-				}
-			}
-
 			if (registry.HasComponent<StatusComponent>(entity))
 			{
-				const auto& status = registry.GetComponent<StatusComponent>(entity);
+				const StatusComponent& status =
+					registry.GetComponent<StatusComponent>(entity);
 				saveData.maxHp = status.maxHp;
 				saveData.attackPower = status.attackPower;
 				saveData.defensePower = status.defensePower;
@@ -792,6 +1095,9 @@ void DebugGuiSystem::DrawSaveButtonGui(
 				saveData.growthDefense = status.growthDefense;
 			}
 
+			// 汎用コライダー情報（形状・タグ・ホワイトリスト含む）を抽出して格納
+			ExtractColliderSlots(registry, entity, saveData.colliderCount, saveData.colliders);
+
 			ActorDataLoader::SavePlayerData(
 				debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
 		}
@@ -800,62 +1106,39 @@ void DebugGuiSystem::DrawSaveButtonGui(
 	{
 		if (ImGui::Button("Save Enemy Data"))
 		{
-			EnemyBinaryData saveData{};
+			ActorDataLoader::EnemyBinaryData saveData{}; // 保存用エネミーデータ
 
-			// スケールの取得
 			if (registry.HasComponent<TransformComponent>(entity))
 			{
 				saveData.scale = registry.GetComponent<TransformComponent>(entity).scale;
 			}
-
-			// コライダーの座標・サイズの取得
-			if (registry.HasComponent<CollisionComponent>(entity))
-			{
-				const auto& collision = registry.GetComponent<CollisionComponent>(entity);
-				for (const auto& collider : collision.colliders)
-				{
-					if (collider == nullptr)
-					{
-						continue;
-					}
-					if (collider->GetShapeType() == ColliderBase::SHAPE::CAPSULE)
-					{
-						auto* capsule = static_cast<ColliderCapsule*>(collider.get());
-						saveData.capsuleStartPos = capsule->GetLocalStartPos();
-						saveData.capsuleEndPos = capsule->GetLocalEndPos();
-						saveData.capsuleRadius = capsule->GetRadius();
-					}
-					else if (collider->GetShapeType() == ColliderBase::SHAPE::LINE)
-					{
-						auto* line = static_cast<ColliderLine*>(collider.get());
-						saveData.rayStartPos = line->GetLocalStartPos();
-						saveData.rayEndPos = line->GetLocalEndPos();
-					}
-				}
-			}
-
-			// ステータスの取得
 			if (registry.HasComponent<StatusComponent>(entity))
 			{
-				const auto& status = registry.GetComponent<StatusComponent>(entity);
+				const StatusComponent& status =
+					registry.GetComponent<StatusComponent>(entity);
 				saveData.maxHp = status.maxHp;
 				saveData.attackPower = status.attackPower;
 				saveData.defensePower = status.defensePower;
 				saveData.rewardExperience = status.rewardExperience;
 			}
 
-			// CSVとバイナリに書き出し
+			// 汎用コライダー情報を抽出して格納
+			ExtractColliderSlots(registry, entity, saveData.colliderCount, saveData.colliders);
+
 			ActorDataLoader::SaveEnemyData(
 				debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
 		}
+	}
 	else if (debugGui.saveType == DEBUG_SAVE_TYPE::CAMERA)
 	{
 		if (ImGui::Button("Save Camera Data"))
 		{
 			if (registry.HasComponent<CameraComponent>(entity))
 			{
-				const auto& cameraData = registry.GetComponent<CameraComponent>(entity);
-				CameraBinaryData saveData{};
+				const CameraComponent& cameraData =
+					registry.GetComponent<CameraComponent>(entity);
+				ActorDataLoader::CameraBinaryData saveData{}; // 保存用カメラデータ
+
 				saveData.targetOffset = cameraData.targetOffset;
 				saveData.distance = cameraData.distance;
 				saveData.angleHorizontal = cameraData.angleH;
@@ -866,6 +1149,9 @@ void DebugGuiSystem::DrawSaveButtonGui(
 				saveData.nearZ = cameraData.nearZ;
 				saveData.farZ = cameraData.farZ;
 
+				// 汎用コライダー情報を抽出して格納
+				ExtractColliderSlots(registry, entity, saveData.colliderCount, saveData.colliders);
+
 				ActorDataLoader::SaveCameraData(
 					debugGui.csvFilePath, debugGui.binaryFilePath, saveData);
 			}
@@ -875,10 +1161,9 @@ void DebugGuiSystem::DrawSaveButtonGui(
 	{
 		if (ImGui::Button("Save Stage Layout (All Stage Objects)"))
 		{
-			LoadedStageData saveStageData{};
+			StageDataLoader::LoadedStageData saveStageData{}; // 保存用ステージデータ
 
-			// 既存のスポーン座標が消えないように読み込んで引き継ぐ
-			LoadedStageData existingData{};
+			StageDataLoader::LoadedStageData existingData{}; // 既存ステージデータ
 			if (StageDataLoader::LoadFromBinary(debugGui.binaryFilePath, existingData))
 			{
 				saveStageData.playerSpawnPosition = existingData.playerSpawnPosition;
@@ -889,7 +1174,8 @@ void DebugGuiSystem::DrawSaveButtonGui(
 
 			for (Entity targetEntity : allGuiEntities)
 			{
-				const auto& targetGui = registry.GetComponent<DebugGuiComponent>(targetEntity);
+				const DebugGuiComponent& targetGui =
+					registry.GetComponent<DebugGuiComponent>(targetEntity);
 				if (targetGui.saveType == DEBUG_SAVE_TYPE::STAGE &&
 					targetGui.csvFilePath == debugGui.csvFilePath &&
 					registry.HasComponent<TransformComponent>(targetEntity))
@@ -900,11 +1186,14 @@ void DebugGuiSystem::DrawSaveButtonGui(
 
 			for (Entity targetEntity : stageEntitiesToSave)
 			{
-				const auto& targetGui = registry.GetComponent<DebugGuiComponent>(targetEntity);
-				const auto& transform = registry.GetComponent<TransformComponent>(targetEntity);
+				const DebugGuiComponent& targetGui =
+					registry.GetComponent<DebugGuiComponent>(targetEntity);
+				const TransformComponent& transform =
+					registry.GetComponent<TransformComponent>(targetEntity);
 
-				StageObjectBinaryData objectData{};
-				wcsncpy_s(objectData.resourceKey, targetGui.stageResourceKey.c_str(), MAX_RESOURCE_KEY_LENGTH - 1);
+				StageDataLoader::StageObjectBinaryData objectData{}; // 1オブジェクト分のデータ
+				wcsncpy_s(objectData.resourceKey, targetGui.stageResourceKey.c_str(),
+					StageDataLoader::MAX_RESOURCE_KEY_LENGTH - 1);
 
 				objectData.position = transform.localPosition;
 				objectData.rotation = transform.rotationEuler;
@@ -913,38 +1202,46 @@ void DebugGuiSystem::DrawSaveButtonGui(
 
 				if (registry.HasComponent<HierarchyComponent>(targetEntity))
 				{
-					Entity parentEntity = registry.GetComponent<HierarchyComponent>(targetEntity).parent;
+					Entity parentEntity =
+						registry.GetComponent<HierarchyComponent>(targetEntity).parent;
 					if (parentEntity != NULL_ENTITY)
 					{
-						auto it = std::find(stageEntitiesToSave.begin(), stageEntitiesToSave.end(), parentEntity);
-						if (it != stageEntitiesToSave.end())
+						auto iterator = std::find(
+							stageEntitiesToSave.begin(), stageEntitiesToSave.end(), parentEntity);
+						if (iterator != stageEntitiesToSave.end())
 						{
-							objectData.parentIndex = static_cast<int>(std::distance(stageEntitiesToSave.begin(), it));
+							objectData.parentIndex = static_cast<int>(
+								std::distance(stageEntitiesToSave.begin(), iterator));
 						}
 					}
 				}
 
-				// ボックスコライダーの情報を保存データに反映
-				if (registry.HasComponent<CollisionComponent>(targetEntity))
+				// ステージオブジェクトの汎用コライダー情報（タグ・マスク含む）を抽出して反映
+				int colliderCount = 0;
+				ActorDataLoader::ColliderSlotBinaryData temporarySlots
+					[ActorDataLoader::MAX_ACTOR_COLLIDERS]{};
+				ExtractColliderSlots(registry, targetEntity, colliderCount, &temporarySlots[0]);
+
+				if (colliderCount > 0)
 				{
-					const auto& collision = registry.GetComponent<CollisionComponent>(targetEntity);
-					for (const auto& collider : collision.colliders)
-					{
-						if (collider != nullptr &&
-							collider->GetShapeType() == ColliderBase::SHAPE::BOX)
-						{
-							auto* box = static_cast<ColliderBox*>(collider.get());
-							objectData.boxCenter = box->GetLocalCenter();
-							objectData.boxSize = box->GetSize();
-							break;
-						}
-					}
+					objectData.colliderShape = temporarySlots[0].shapeType;
+					objectData.isTrigger = temporarySlots[0].isTrigger;
+					objectData.selfTag = temporarySlots[0].selfTag;
+					objectData.targetTagMask = temporarySlots[0].targetTagMask;
+					objectData.colParam1 = temporarySlots[0].vectorParameter1;
+					objectData.colParam2 = temporarySlots[0].vectorParameter2;
+					objectData.colRadius = temporarySlots[0].radius;
+				}
+				else
+				{
+					objectData.colliderShape = 0; // NONE
 				}
 
 				saveStageData.objects.push_back(objectData);
 			}
 
-			StageDataLoader::SaveStageData(debugGui.csvFilePath, debugGui.binaryFilePath, saveStageData);
+			StageDataLoader::SaveStageData(
+				debugGui.csvFilePath, debugGui.binaryFilePath, saveStageData);
 		}
 	}
 }
