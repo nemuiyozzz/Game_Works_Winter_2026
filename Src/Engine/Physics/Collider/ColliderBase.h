@@ -19,6 +19,7 @@ public:
 		CAPSULE, // カプセル
 		MODEL,   // モデル
 		BOX,     // 3Dボックス
+		MAX      // 要素数カウント用
 	};
 
 	// 衝突種別
@@ -29,7 +30,49 @@ public:
 		PLAYER_SWORD, // プレイヤーの剣
 		ENEMY,        // エネミー
 		WALL,         // 壁
+		MAX           // 要素数カウント用
 	};
+
+	// 形状・タグの総数定数関連
+	static constexpr int SHAPE_COUNT = static_cast<int>(SHAPE::MAX); // 形状の総数
+	static constexpr int TAG_COUNT = static_cast<int>(TAG::MAX);     // タグの総数
+
+	/// @brief ImGui表示用の形状名リストを取得する
+	/// @return 形状名の文字列配列ポインタ
+	static const char* const* GetShapeNames(void)
+	{
+		static const char* const SHAPE_NAMES[] =
+		{
+			"None",
+			"Line",
+			"Sphere",
+			"Capsule",
+			"Model",
+			"Box"
+		};
+		static_assert(
+			(sizeof(SHAPE_NAMES) / sizeof(SHAPE_NAMES[0])) == SHAPE_COUNT,
+			"SHAPE enum and SHAPE_NAMES array size mismatch!");
+		return SHAPE_NAMES;
+	}
+
+	/// @brief ImGui表示用のタグ名リストを取得する
+	/// @return タグ名の文字列配列ポインタ
+	static const char* const* GetTagNames(void)
+	{
+		static const char* const TAG_NAMES[] =
+		{
+			"STAGE",
+			"PLAYER",
+			"PLAYER_SWORD",
+			"ENEMY",
+			"WALL",
+		};
+		static_assert(
+			(sizeof(TAG_NAMES) / sizeof(TAG_NAMES[0])) == TAG_COUNT,
+			"TAG enum and TAG_NAMES array size mismatch!");
+		return TAG_NAMES;
+	}
 
 	/// @brief コンストラクタ
 	/// @param shapeType コライダー形状

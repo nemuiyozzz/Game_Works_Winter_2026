@@ -1,6 +1,5 @@
 #include "../../../Pch.h"
 #include "ColliderBase.h"
-#include <algorithm>
 #include "../../../Ecs/Component/TransformComponent.h"
 
 ColliderBase::ColliderBase(

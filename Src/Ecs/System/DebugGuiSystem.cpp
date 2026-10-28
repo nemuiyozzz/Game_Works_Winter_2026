@@ -33,29 +33,6 @@ namespace
 	constexpr float MIN_COLLIDER_SIZE = 0.1f;    // 半径やサイズの最小値
 	constexpr float MAX_COLLIDER_SIZE = 5000.0f; // 半径やサイズの最大値
 
-	// ColliderBase::SHAPE の定義順（NONE, LINE, SPHERE, CAPSULE, MODEL, BOX）と完全一致
-	const char* COLLIDER_SHAPE_NAMES[] =
-	{
-		"None",
-		"Line",
-		"Sphere",
-		"Capsule",
-		"Model",
-		"Box"
-	};
-	constexpr int COLLIDER_SHAPE_COUNT = IM_ARRAYSIZE(COLLIDER_SHAPE_NAMES);
-
-	// ColliderBase::TAG の定義順（STAGE, PLAYER, PLAYER_SWORD, ENEMY, WALL）と完全一致
-	const char* COLLIDER_TAG_NAMES[] =
-	{
-		"STAGE",
-		"PLAYER",
-		"PLAYER_SWORD",
-		"ENEMY",
-		"WALL"
-	};
-	constexpr int COLLIDER_TAG_COUNT = IM_ARRAYSIZE(COLLIDER_TAG_NAMES);
-
 	/// @brief 現在のCollisionComponentから汎用スロット配列へコライダー情報を抽出する
 	void ExtractColliderSlots(
 		EcsRegistry& registry,
@@ -86,7 +63,7 @@ namespace
 			slot.targetTagMask = 0;
 
 			// ホワイトリスト（Target Tags）をビットマスク化して保存
-			for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+			for (int tagIndex = 0; tagIndex < ColliderBase::TAG_COUNT; ++tagIndex)
 			{
 				auto checkTag = static_cast<ColliderBase::TAG>(tagIndex);
 				if (collider->IsTargetTag(checkTag))
@@ -537,7 +514,7 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 									newCollider->SetTrigger(sourceCollider->IsTrigger());
 									newCollider->SetActive(sourceCollider->IsActive());
 
-									for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+									for (int tagIndex = 0; tagIndex < ColliderBase::TAG_COUNT; ++tagIndex)
 									{
 										auto checkTag = static_cast<ColliderBase::TAG>(tagIndex);
 										if (sourceCollider->IsTargetTag(checkTag))
@@ -646,10 +623,10 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 			ImGui::PushID(static_cast<int>(index));
 			ImGui::Separator();
 
-			// 1. 形状（Shape Type）の変更プルダウン
+			// 形状の変更プルダウン
 			int currentShape = static_cast<int>(collider->GetShapeType());
 			if (ImGui::Combo("Shape Type", &currentShape,
-				COLLIDER_SHAPE_NAMES, COLLIDER_SHAPE_COUNT))
+				ColliderBase::GetShapeNames(), ColliderBase::SHAPE_COUNT))
 			{
 				ColliderBase::TAG oldTag = collider->GetCollisionTag();
 				bool oldTrigger = collider->IsTrigger();
@@ -658,18 +635,28 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 				std::shared_ptr<ColliderBase> newCollider = nullptr;
 				switch (static_cast<ColliderBase::SHAPE>(currentShape))
 				{
+				
 				case ColliderBase::SHAPE::LINE:
+				{
 					newCollider = std::make_shared<ColliderLine>(
 						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), VGet(0.0f, -10.0f, 0.0f));
 					break;
+				}
+
 				case ColliderBase::SHAPE::SPHERE:
+				{
 					newCollider = std::make_shared<ColliderSphere>(
 						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), 30.0f);
 					break;
+				}
+					
 				case ColliderBase::SHAPE::CAPSULE:
+				{
 					newCollider = std::make_shared<ColliderCapsule>(
 						oldTag, nullptr, VGet(0.0f, 20.0f, 0.0f), VGet(0.0f, 100.0f, 0.0f), 25.0f);
 					break;
+				}
+					
 				case ColliderBase::SHAPE::MODEL:
 				{
 					auto modelCollider = std::make_shared<ColliderModel>(oldTag, nullptr);
@@ -679,12 +666,17 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 							registry.GetComponent<ModelComponent>(entity).modelHandle);
 					}
 					newCollider = modelCollider;
+
+					break;
 				}
-				break;
+				
 				case ColliderBase::SHAPE::BOX:
+				{
 					newCollider = std::make_shared<ColliderBox>(
 						oldTag, nullptr, VGet(0.0f, 50.0f, 0.0f), VGet(100.0f, 100.0f, 100.0f));
 					break;
+				}
+					
 				default:
 					break;
 				}
@@ -694,7 +686,7 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 					newCollider->SetTrigger(oldTrigger);
 					newCollider->SetActive(oldActive);
 					// 設定されていたホワイトリストをそのまま新しいコライダーへ引き継ぐ
-					for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+					for (int tagIndex = 0; tagIndex < ColliderBase::TAG_COUNT; ++tagIndex)
 					{
 						auto targetTag = static_cast<ColliderBase::TAG>(tagIndex);
 						if (collider->IsTargetTag(targetTag))
@@ -706,19 +698,19 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 				}
 			}
 
-			// 2. 自身のタグ（Self Tag）の変更プルダウン
+			// 自身のタグの変更プルダウン
 			int currentSelfTag = static_cast<int>(collider->GetCollisionTag());
-			if (currentSelfTag >= 0 && currentSelfTag < COLLIDER_TAG_COUNT)
+			if (currentSelfTag >= 0 && currentSelfTag < ColliderBase::TAG_COUNT)
 			{
 				if (ImGui::Combo("Self Tag", &currentSelfTag,
-					COLLIDER_TAG_NAMES, COLLIDER_TAG_COUNT))
+					ColliderBase::GetTagNames(), ColliderBase::TAG_COUNT))
 				{
 					collider->SetCollisionTag(
 						static_cast<ColliderBase::TAG>(currentSelfTag));
 				}
 			}
 
-			// 3. 有効・押し出し・削除ボタン
+			// 有効・押し出し・削除ボタン
 			bool isActive = collider->IsActive();
 			if (ImGui::Checkbox("Active", &isActive))
 			{
@@ -740,15 +732,15 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 				removeIndex = static_cast<int>(index);
 			}
 
-			// 4. ホワイトリスト（Target Tags）のチェックボックス一覧
+			// ホワイトリストのチェックボックス一覧
 			if (ImGui::TreeNode("Target Tags (Whitelist)"))
 			{
-				for (int tagIndex = 0; tagIndex < COLLIDER_TAG_COUNT; ++tagIndex)
+				for (int tagIndex = 0; tagIndex < ColliderBase::TAG_COUNT; ++tagIndex)
 				{
 					auto targetTag = static_cast<ColliderBase::TAG>(tagIndex);
 					bool isTargeted = collider->IsTargetTag(targetTag);
 
-					if (ImGui::Checkbox(COLLIDER_TAG_NAMES[tagIndex], &isTargeted))
+					if (ImGui::Checkbox(ColliderBase::GetTagNames()[tagIndex], &isTargeted))
 					{
 						if (isTargeted)
 						{
@@ -760,7 +752,7 @@ void DebugGuiSystem::DrawCollisionGui(EcsRegistry& registry, Entity entity)
 						}
 					}
 
-					if (tagIndex % 2 == 0 && tagIndex + 1 < COLLIDER_TAG_COUNT)
+					if (tagIndex % 2 == 0 && tagIndex + 1 < ColliderBase::TAG_COUNT)
 					{
 						ImGui::SameLine(160.0f);
 					}
