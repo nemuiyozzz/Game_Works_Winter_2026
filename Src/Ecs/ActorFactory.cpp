@@ -235,7 +235,7 @@ Entity ActorFactory::BuildSword(EcsRegistry& registry)
 		UtilityMath::Deg2RadF(0.0f),  // Y軸の角度
 		UtilityMath::Deg2RadF(0.0f)   // Z軸の角度
 	);
-	transform.rotation_ = Quaternion::Euler(
+	transform.rotation_ = Quaternion::CreateEuler(
 		transform.rotationEuler.x,
 		transform.rotationEuler.y,
 		transform.rotationEuler.z

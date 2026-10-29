@@ -126,7 +126,7 @@ void Application::Run(void)
 
 		ClearDrawScreen();
 
-		if (KeyConfInputManager::GetInstance().isTrigerDown(L"CANCEL"))
+		if (KeyConfInputManager::GetInstance().IsTriggerDown(L"CANCEL"))
 		{
 			isGameEnd_ = true;
 		}

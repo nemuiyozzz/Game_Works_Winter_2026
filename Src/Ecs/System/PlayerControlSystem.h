@@ -4,11 +4,12 @@
 #include "../EcsRegistry.h"
 #include "../Entity.h"
 
-/// @brief プレイヤー入力を受け取り、エンティティを操作するシステムクラス
+/// @brief プレイヤー入力を受け取り、ステートパターンとFacadeを介してエンティティを操作するシステムクラス
 class PlayerControlSystem : public ISystem
 {
 public:
 
+	// プレイヤーのアニメーション種別
 	enum class PLAYER_ANIM
 	{
 		IDLE,
@@ -27,9 +28,16 @@ public:
 	/// @param registry ECSデータベース
 	void Update(EcsRegistry& registry) override;
 
-	/// @brief プレイヤー入力に応じてエンティティの速度を変更する
+	/// @brief プレイヤーのステート更新とスタミナ回復を行う
 	/// @param registry ECSデータベース
 	/// @param entity 対象のエンティティID
 	void UpdatePlayerControl(EcsRegistry& registry, Entity entity);
-};
 
+private:
+
+	/// @brief スタミナの自然回復処理を行う
+	/// @param registry ECSデータベース
+	/// @param entity 対象のエンティティID
+	/// @param deltaTime フレーム経過時間
+	void UpdateStaminaRecovery(EcsRegistry& registry, Entity entity, float deltaTime);
+};

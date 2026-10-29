@@ -33,7 +33,7 @@ void CameraSystem::Update(EcsRegistry& registry)
 		CameraComponent& camera =
 			registry.GetComponent<CameraComponent>(cameraEntity);
 
-		if (KeyConfInputManager::GetInstance().isTrigerDown(L"DEBUG_GUI"))
+		if (KeyConfInputManager::GetInstance().IsTriggerDown(L"DEBUG_GUI"))
 		{
 			camera.isCursorLocked = false;
 			SetMouseDispFlag(true);
@@ -194,7 +194,7 @@ void CameraSystem::UpdateFreeCamera(TransformComponent& cameraTransform,
 	if (!isImGuiCapturingMouse)
 	{
 		// マウスホイール回転：向いている方向へ拡大・縮小
-		int wheelRotation = inputManager.GetMouseWheel();
+		int wheelRotation = inputManager.GetMouseWheelVolume();
 		if (wheelRotation != 0)
 		{
 			float zoomDistance =
@@ -217,23 +217,23 @@ void CameraSystem::UpdateFreeCamera(TransformComponent& cameraTransform,
 	// キーボード移動
 	VECTOR moveVector = VGet(0.0f, 0.0f, 0.0f);
 
-	if (inputManager.isPressed(L"CAMERA_UP") ||
-		(isRightMouseDown && inputManager.isPressed(L"UP")))
+	if (inputManager.IsPressed(L"CAMERA_UP") ||
+		(isRightMouseDown && inputManager.IsPressed(L"UP")))
 	{
 		moveVector = VAdd(moveVector, forwardVector);
 	}
-	if (inputManager.isPressed(L"CAMERA_DOWN") ||
-		(isRightMouseDown && inputManager.isPressed(L"DOWN")))
+	if (inputManager.IsPressed(L"CAMERA_DOWN") ||
+		(isRightMouseDown && inputManager.IsPressed(L"DOWN")))
 	{
 		moveVector = VSub(moveVector, forwardVector);
 	}
-	if (inputManager.isPressed(L"CAMERA_RIGHT") ||
-		(isRightMouseDown && inputManager.isPressed(L"RIGHT")))
+	if (inputManager.IsPressed(L"CAMERA_RIGHT") ||
+		(isRightMouseDown && inputManager.IsPressed(L"RIGHT")))
 	{
 		moveVector = VAdd(moveVector, rightVector);
 	}
-	if (inputManager.isPressed(L"CAMERA_LEFT") ||
-		(isRightMouseDown && inputManager.isPressed(L"LEFT")))
+	if (inputManager.IsPressed(L"CAMERA_LEFT") ||
+		(isRightMouseDown && inputManager.IsPressed(L"LEFT")))
 	{
 		moveVector = VSub(moveVector, rightVector);
 	}

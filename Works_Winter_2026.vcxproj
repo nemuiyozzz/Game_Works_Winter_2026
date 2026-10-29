@@ -167,6 +167,14 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerEvadeState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerAttackComboState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerJumpAttackState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerJumpState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerSprintState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerMoveState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerIdleState.cpp" />
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerActionFacade.cpp" />
     <ClCompile Include="Src\Ecs\System\EffectSystem.cpp" />
     <ClCompile Include="Src\Ecs\ActorFactory.cpp" />
     <ClCompile Include="Src\Ecs\EcsWorld.cpp" />
@@ -240,6 +248,16 @@
     <ClCompile Include="Src\Ecs\System\StatusSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerEvadeState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerAttackComboState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerJumpAttackState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerJumpState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerSprintState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerMoveState.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerIdleState.h" />
+    <ClInclude Include="Src\Ecs\Component\PlayerStateComponent.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerActionFacade.h" />
+    <ClInclude Include="Src\Ecs\Component\EnemyAiComponent.h" />
     <ClInclude Include="Src\Ecs\System\EffectSystem.h" />
     <ClInclude Include="Src\Ecs\ActorFactory.h" />
     <ClInclude Include="Src\Ecs\Component\EffectComponent.h" />
@@ -257,6 +275,7 @@
     <ClInclude Include="Libs\ImGui\imstb_textedit.h" />
     <ClInclude Include="Libs\ImGui\imstb_truetype.h" />
     <ClInclude Include="Src\Ecs\Component\DebugGuiComponent.h" />
+    <ClInclude Include="Src\Ecs\System\PlayerState\IPlayerState.h" />
     <ClInclude Include="Src\Engine\System\ImGui\ImGuiWrapper.h" />
     <ClInclude Include="Src\Engine\System\ExternalLoader\ActorDataLoader.h" />
     <ClInclude Include="Src\Ecs\Component\AnimationComponent.h" />

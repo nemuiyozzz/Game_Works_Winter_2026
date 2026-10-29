@@ -344,7 +344,7 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 			transform.rotationEuler.x = UtilityMath::Deg2RadF(rotationDegree[0]);
 			transform.rotationEuler.y = UtilityMath::Deg2RadF(rotationDegree[1]);
 			transform.rotationEuler.z = UtilityMath::Deg2RadF(rotationDegree[2]);
-			transform.rotation_ = Quaternion::Euler(
+			transform.rotation_ = Quaternion::CreateEuler(
 				transform.rotationEuler.x,
 				transform.rotationEuler.y,
 				transform.rotationEuler.z);
@@ -410,8 +410,8 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 						auto& parentTransform = registry.GetComponent<TransformComponent>(newParent);
 
 						VECTOR offset = VSub(childTransform.position, parentTransform.position);
-						Quaternion inverseParentRotation = parentTransform.rotation_.Inverse();
-						childTransform.localPosition = inverseParentRotation.PosAxis(offset);
+						Quaternion inverseParentRotation = parentTransform.rotation_.CalculateInverse();
+						childTransform.localPosition = inverseParentRotation.RotatePosition(offset);
 					}
 				}
 			}
