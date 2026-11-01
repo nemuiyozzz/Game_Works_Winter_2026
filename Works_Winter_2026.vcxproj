@@ -167,6 +167,9 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\HudDrawSystem.cpp" />
+    <ClCompile Include="Src\Ecs\System\EnemyState\EnemyActionFacade.cpp" />
+    <ClCompile Include="Src\Ecs\System\EnemyAiSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\PlayerState\PlayerEvadeState.cpp" />
     <ClCompile Include="Src\Ecs\System\PlayerState\PlayerAttackComboState.cpp" />
     <ClCompile Include="Src\Ecs\System\PlayerState\PlayerJumpAttackState.cpp" />
@@ -248,6 +251,9 @@
     <ClCompile Include="Src\Ecs\System\StatusSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\HudDrawSystem.h" />
+    <ClInclude Include="Src\Ecs\System\EnemyState\EnemyActionFacade.h" />
+    <ClInclude Include="Src\Ecs\System\EnemyAiSystem.h" />
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerEvadeState.h" />
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerAttackComboState.h" />
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerJumpAttackState.h" />
@@ -257,7 +263,6 @@
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerIdleState.h" />
     <ClInclude Include="Src\Ecs\Component\PlayerStateComponent.h" />
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerActionFacade.h" />
-    <ClInclude Include="Src\Ecs\Component\EnemyAiComponent.h" />
     <ClInclude Include="Src\Ecs\System\EffectSystem.h" />
     <ClInclude Include="Src\Ecs\ActorFactory.h" />
     <ClInclude Include="Src\Ecs\Component\EffectComponent.h" />

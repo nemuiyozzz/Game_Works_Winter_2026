@@ -13,7 +13,7 @@ public:
 
 	/// @brief コンストラクタ
 	/// @param comboStep コンボ段数
-	explicit PlayerAttackComboState(int comboStep = 0);
+	explicit PlayerAttackComboState(PlayerActionFacade::ATTACK_HAND hand, int comboStep = 0);
 
 	/// @brief デストラクタ
 	~PlayerAttackComboState(void) override = default;
@@ -38,6 +38,9 @@ public:
 	STATE_ID GetStateId(void) const override;
 
 private:
+
+	// どしらの手で攻撃しているか
+	PlayerActionFacade::ATTACK_HAND hand_; 
 
 	// 現在のコンボ段数
 	int currentStep_;

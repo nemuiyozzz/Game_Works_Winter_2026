@@ -1,5 +1,7 @@
 #pragma once
 
+#include <DxLib.h>
+
 #include "../../EcsRegistry.h"
 #include "../../Entity.h"
 
@@ -7,6 +9,13 @@
 class PlayerActionFacade
 {
 public:
+
+	// 攻撃の種別を定義
+	enum class ATTACK_HAND
+	{
+		RIGHT, // 右手武器攻撃
+		LEFT   // 左手武器攻撃
+	};
 
 	// アクション別のスタミナ消費量関連
 	static constexpr float COST_SPRINT_PER_SECOND = 15.0f; // 戦闘中ダッシュの秒間消費量
@@ -94,7 +103,7 @@ public:
 
 	/// @brief 剣の攻撃判定コライダーの有効・無効を切り替える
 	/// @param isActive 有効にするならtrue
-	void SetSwordColliderActive(bool isActive);
+	void SetWeaponColliderActive(ATTACK_HAND hand, bool isActive);
 
 	/// @brief 現在のステート経過時間を取得する
 	/// @return 経過秒数
@@ -128,11 +137,16 @@ public:
 	/// @brief ジャンプアニメーションを再生する
 	void PlayJumpAnimation(void);
 
+	/// @brief ジャンプ攻撃アニメーションを再生する
+	void PlayJumpAttackAnimation(void);
+
 	/// @brief 回避アニメーションを再生する
 	void PlayEvadeAnimation(void);
 
-	/// @brief 攻撃アニメーションを再生する
-	void PlayAttackAnimation(void);
+	/// @brief コンボ段階と手に応じた攻撃アニメーションを再生する
+	/// @param hand 攻撃する手
+	/// @param comboStep コンボの段数
+	void PlayAttackComboAnimation(ATTACK_HAND hand, int comboStep);
 
 private:
 

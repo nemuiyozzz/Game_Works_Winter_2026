@@ -25,7 +25,7 @@ std::shared_ptr<IPlayerState> PlayerSprintState::UpdateState(
 	{
 		if (action.TryConsumeStamina(PlayerActionFacade::COST_ATTACK))
 		{
-			return std::make_shared<PlayerAttackComboState>(0);
+			return std::make_shared<PlayerAttackComboState>(PlayerActionFacade::ATTACK_HAND::RIGHT, 0);
 		}
 	}
 

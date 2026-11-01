@@ -15,7 +15,11 @@ public:
 		IDLE,
 		MOVE,
 		JUMP,
-		ATTACK
+		ATTACK_RIGHT_1, // 右手コンボ1段目
+		ATTACK_RIGHT_2, // 右手コンボ2段目
+		ATTACK_LEFT_1,  // 左手コンボ1段目
+		ATTACK_LEFT_2,  // 左手コンボ2段目
+		JUMP_ATTACK     // ジャンプ攻撃
 	};
 
 	/// @brief コンストラクタ 

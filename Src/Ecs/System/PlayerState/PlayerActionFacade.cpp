@@ -10,7 +10,7 @@
 #include "../../Component/StatusComponent.h"
 #include "../../Component/PlayerInputComponent.h"
 #include "../../Component/PlayerStateComponent.h"
-#include "../../Component/EnemyAiComponent.h"
+#include "../../Component/EnemyComponent.h"
 #include "../../Component/CollisionComponent.h"
 #include "../AnimationSystem.h"
 #include "../PlayerControlSystem.h"
@@ -234,11 +234,11 @@ bool PlayerActionFacade::TryConsumeStamina(float cost)
 bool PlayerActionFacade::CheckInCombat(void) const
 {
 	std::vector<Entity> enemies =
-		registry_.GetEntitiesWith<EnemyAiComponent>(); // エネミー一覧
+		registry_.GetEntitiesWith<EnemyComponent>(); // エネミー一覧
 	for (Entity enemyEntity : enemies)
 	{
-		const EnemyAiComponent& enemyAi =
-			registry_.GetComponent<EnemyAiComponent>(enemyEntity); // エネミーAI参照
+		const EnemyComponent& enemyAi =
+			registry_.GetComponent<EnemyComponent>(enemyEntity); // エネミーAI参照
 		if (enemyAi.isPlayerDetected)
 		{
 			return true;
@@ -252,24 +252,26 @@ void PlayerActionFacade::SetInvincibleTimer(float invincibleTime)
 	if (registry_.HasComponent<StatusComponent>(entity_))
 	{
 		StatusComponent& status =
-			registry_.GetComponent<StatusComponent>(entity_); // ステータス参照
+			registry_.GetComponent<StatusComponent>(entity_);
 		status.invincibleTimer = invincibleTime;
 	}
 }
 
-void PlayerActionFacade::SetSwordColliderActive(bool isActive)
+void PlayerActionFacade::SetWeaponColliderActive(ATTACK_HAND hand, bool isActive)
 {
 	if (!registry_.HasComponent<CollisionComponent>(entity_))
 	{
 		return;
 	}
 
-	CollisionComponent& collision =
-		registry_.GetComponent<CollisionComponent>(entity_); // 衝突コンポーネント
+	CollisionComponent& collision = registry_.GetComponent<CollisionComponent>(entity_);
+	ColliderBase::TAG targetTag = (hand == ATTACK_HAND::RIGHT)
+		? ColliderBase::TAG::PLAYER_SWORD
+		: ColliderBase::TAG::PLAYER_SWORD;
+
 	for (auto& collider : collision.colliders)
 	{
-		if (collider != nullptr &&
-			collider->GetCollisionTag() == ColliderBase::TAG::PLAYER_SWORD)
+		if (collider != nullptr && collider->GetCollisionTag() == targetTag)
 		{
 			collider->SetActive(isActive);
 		}
@@ -359,6 +361,17 @@ void PlayerActionFacade::PlayJumpAnimation(void)
 		BLEND_TIME_JUMP);
 }
 
+void PlayerActionFacade::PlayJumpAttackAnimation(void)
+{
+	AnimationSystem::Play(
+		registry_,
+		entity_,
+		static_cast<int>(PlayerControlSystem::PLAYER_ANIM::JUMP_ATTACK),
+		false,
+		BLEND_TIME_ATTACK
+	);
+}
+
 void PlayerActionFacade::PlayEvadeAnimation(void)
 {
 	AnimationSystem::Play(
@@ -369,14 +382,29 @@ void PlayerActionFacade::PlayEvadeAnimation(void)
 		BLEND_TIME_EVADE);
 }
 
-void PlayerActionFacade::PlayAttackAnimation(void)
+void PlayerActionFacade::PlayAttackComboAnimation(ATTACK_HAND hand, int comboStep)
 {
+	int animType = 0;
+	if (hand == ATTACK_HAND::RIGHT)
+	{
+		animType = (comboStep == 0)
+			? static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_RIGHT_1)
+			: static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_RIGHT_2);
+	}
+	else
+	{
+		animType = (comboStep == 0)
+			? static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_LEFT_1)
+			: static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_LEFT_2);
+	}
+
 	AnimationSystem::Play(
 		registry_,
 		entity_,
-		static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK),
-		false,
-		BLEND_TIME_ATTACK);
+		animType,
+		false,             
+		BLEND_TIME_ATTACK 
+	);
 }
 
 bool PlayerActionFacade::ApplyCameraRelativeMovement(float moveSpeed)

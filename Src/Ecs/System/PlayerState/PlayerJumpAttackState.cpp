@@ -7,8 +7,13 @@ void PlayerJumpAttackState::EnterState(PlayerActionFacade& action)
 	constexpr float JUMP_ATTACK_DIVE_RATIO = 1.5f;
 
 	action.ExecuteDownwardDive(JUMP_ATTACK_DIVE_RATIO);
-	action.SetSwordColliderActive(true);
-	action.PlayAttackAnimation();
+
+	// 右手武器のコライダーを有効化
+	action.SetWeaponColliderActive(PlayerActionFacade::ATTACK_HAND::RIGHT, true);
+	action.SetWeaponColliderActive(PlayerActionFacade::ATTACK_HAND::LEFT, true);
+
+	// ジャンプ攻撃アニメーションを再生
+	action.PlayJumpAttackAnimation();
 }
 
 std::shared_ptr<IPlayerState> PlayerJumpAttackState::UpdateState(
@@ -33,7 +38,8 @@ std::shared_ptr<IPlayerState> PlayerJumpAttackState::UpdateState(
 
 void PlayerJumpAttackState::ExitState(PlayerActionFacade& action)
 {
-	action.SetSwordColliderActive(false);
+	action.SetWeaponColliderActive(PlayerActionFacade::ATTACK_HAND::RIGHT, false);
+	action.SetWeaponColliderActive(PlayerActionFacade::ATTACK_HAND::LEFT, false);
 }
 
 IPlayerState::STATE_ID PlayerJumpAttackState::GetStateId(void) const

@@ -10,6 +10,8 @@
 #include "System/ColliderDebugDrawSystem.h"
 #include "System/DebugGuiSystem.h"
 #include "System/AnimationSystem.h"
+#include "System/EnemyAiSystem.h"
+#include "System/HudDrawSystem.h"
 
 void EcsWorld::Initialize(void)
 {
@@ -17,6 +19,7 @@ void EcsWorld::Initialize(void)
 	drawSystems_.clear();
 
 	AddUpdateSystem<PlayerControlSystem>();
+	AddUpdateSystem<EnemyAiSystem>();
 	AddUpdateSystem<MovementSystem>();
 	AddUpdateSystem<CollisionSystem>();
 	AddUpdateSystem<Collision2DSystem>();
@@ -30,6 +33,7 @@ void EcsWorld::Initialize(void)
 #endif // _DEBUG
 
 	AddDrawSystem<ModelSystem>();
+	AddDrawSystem<HudDrawSystem>();
 
 	ActorFactory::RegisterDefaultRecipes();
 }
@@ -57,11 +61,14 @@ void EcsWorld::Draw(void)
 	}
 
 #ifdef _DEBUG
+	colliderDebugDrawSystem_->Draw(ecsRegistry_);
 	if (colliderDebugDrawSystem_ != nullptr)
 	{
 		colliderDebugDrawSystem_->Draw(ecsRegistry_);
 	}
-#endif // _DEBUG
+
+	EnemyAiSystem::DrawDebugVision(ecsRegistry_);
+#endif
 }
 
 void EcsWorld::Release(void)

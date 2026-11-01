@@ -13,26 +13,27 @@ namespace
 	constexpr float STEP_DECELERATION_RATE = 0.85f; // 踏み込み速度の減衰率
 }
 
-PlayerAttackComboState::PlayerAttackComboState(int comboStep)
-	: currentStep_(comboStep)
+PlayerAttackComboState::PlayerAttackComboState(PlayerActionFacade::ATTACK_HAND hand, int comboStep)
+	: hand_(hand)
+	, currentStep_(comboStep)
 {
 }
-
 void PlayerAttackComboState::EnterState(PlayerActionFacade& action)
 {
 	action.SetupComboStep(currentStep_);
 	action.ExecuteForwardStep(ATTACK_STEP_SPEED_RATIO);
-	action.PlayAttackAnimation();
+	action.PlayAttackComboAnimation(hand_, currentStep_);
+	action.SetWeaponColliderActive(hand_, true);
 }
 
 std::shared_ptr<IPlayerState> PlayerAttackComboState::UpdateState(
 	PlayerActionFacade& action, float deltaTime)
 {
-	float currentTimer = action.GetStateTimer(); // 現在のステート経過時間
+	float currentTimer = action.GetStateTimer();
 
 	bool isHitActiveWindow = (currentTimer >= ATTACK_HIT_START_TIME &&
-		currentTimer <= ATTACK_HIT_END_TIME); // 攻撃判定有効期間か
-	action.SetSwordColliderActive(isHitActiveWindow);
+		currentTimer <= ATTACK_HIT_END_TIME);
+	action.SetWeaponColliderActive(hand_, isHitActiveWindow);
 
 	if (currentTimer > ATTACK_HIT_START_TIME)
 	{
@@ -61,7 +62,7 @@ std::shared_ptr<IPlayerState> PlayerAttackComboState::UpdateState(
 		{
 			if (action.TryConsumeStamina(PlayerActionFacade::COST_ATTACK))
 			{
-				return std::make_shared<PlayerAttackComboState>(currentStep_ + 1);
+				return std::make_shared<PlayerAttackComboState>(hand_, currentStep_ + 1); 
 			}
 		}
 		return std::make_shared<PlayerIdleState>();
@@ -72,7 +73,7 @@ std::shared_ptr<IPlayerState> PlayerAttackComboState::UpdateState(
 
 void PlayerAttackComboState::ExitState(PlayerActionFacade& action)
 {
-	action.SetSwordColliderActive(false);
+	action.SetWeaponColliderActive(hand_, false);
 }
 
 IPlayerState::STATE_ID PlayerAttackComboState::GetStateId(void) const

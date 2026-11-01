@@ -198,7 +198,11 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 
 	int handleMove = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_RUN");
 	int handleJump = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_JUMP");
-	int handleAttack = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK");
+	int handleRight1 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_R1");
+	int handleRight2 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_R2");
+	int handleLeft1 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_L1");
+	int handleLeft2 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_L2");
+	int handleJumpAttack = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_JUMP_ATTACK");
 
 	AnimationSystem::AddInternal(
 		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::IDLE), 0, 60.0f);
@@ -207,7 +211,15 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	AnimationSystem::AddExternal(
 		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::JUMP), handleJump, 30.0f);
 	AnimationSystem::AddExternal(
-		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK), handleAttack, 60.0f);
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_RIGHT_1), handleRight1, 60.0f);
+	AnimationSystem::AddExternal(
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_RIGHT_2), handleRight2, 60.0f);
+	AnimationSystem::AddExternal(
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_LEFT_1), handleLeft1, 60.0f);
+	AnimationSystem::AddExternal(
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_LEFT_2), handleLeft2, 60.0f);
+	AnimationSystem::AddExternal(
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::JUMP_ATTACK), handleJumpAttack, 60.0f);
 
 	// 初期状態はIDLEをループ再生
 	AnimationSystem::Play(

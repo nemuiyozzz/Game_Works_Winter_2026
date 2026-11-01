@@ -237,6 +237,15 @@
     <ClCompile Include="Src\Ecs\System\PlayerState\PlayerEvadeState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Ecs\System\EnemyState\EnemyActionFacade.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Ecs\System\EnemyAiSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Ecs\System\HudDrawSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Pch.h">
@@ -503,9 +512,6 @@
     <ClInclude Include="Src\Ecs\System\PlayerState\IPlayerState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Ecs\Component\EnemyAiComponent.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerActionFacade.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -531,6 +537,15 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Ecs\System\PlayerState\PlayerEvadeState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\System\EnemyState\EnemyActionFacade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\System\EnemyAiSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Ecs\System\HudDrawSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
