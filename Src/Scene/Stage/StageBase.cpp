@@ -66,7 +66,7 @@ void StageBase::Initialize(void)
 				ecsRegistry_.AddComponent<ModelComponent>(objectEntity, modelComponent);
 
 				CollisionComponent collisionComponent{};
-				auto stageTag = ColliderBase::TAG::STAGE;
+				auto stageTag = static_cast<ColliderBase::TAG>(objectData.selfTag);
 				std::shared_ptr<ColliderBase> createdCollider = nullptr;
 
 				switch (static_cast<ColliderBase::SHAPE>(objectData.colliderShape))
@@ -114,8 +114,23 @@ void StageBase::Initialize(void)
 				if (createdCollider != nullptr)
 				{
 					createdCollider->SetTrigger(objectData.isTrigger != 0);
-					createdCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
-					createdCollider->AddTargetTag(ColliderBase::TAG::ENEMY);
+					
+					if (objectData.targetTagMask != 0)
+					{
+						for (int tagIndex = 0; tagIndex < ColliderBase::TAG_COUNT; ++tagIndex)
+						{
+							if (objectData.targetTagMask & (1u << tagIndex))
+							{
+								createdCollider->AddTargetTag(static_cast<ColliderBase::TAG>(tagIndex));
+							}
+						}
+					}
+					else
+					{
+						createdCollider->AddTargetTag(ColliderBase::TAG::PLAYER);
+						createdCollider->AddTargetTag(ColliderBase::TAG::ENEMY);
+					}
+
 					collisionComponent.colliders.push_back(createdCollider);
 				}
 

@@ -80,6 +80,38 @@ namespace
 			return L"NONE";
 		}
 	}
+
+	int ParseIntSafe(const std::wstring& targetString, int defaultValue = 0)
+	{
+		if (targetString.empty())
+		{
+			return defaultValue;
+		}
+		try
+		{
+			return std::stoi(targetString);
+		}
+		catch (...)
+		{
+			return defaultValue;
+		}
+	}
+
+	float ParseFloatSafe(const std::wstring& targetString, float defaultValue = 0.0f)
+	{
+		if (targetString.empty())
+		{
+			return defaultValue;
+		}
+		try
+		{
+			return std::stof(targetString);
+		}
+		catch (...)
+		{
+			return defaultValue;
+		}
+	}
 }
 
 bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,
@@ -134,35 +166,35 @@ bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,
 		}
 		else if (dataType == L"OBJECT")
 		{
-			StageObjectBinaryData objectData{}; // 1オブジェクト分のデータ
+			StageObjectBinaryData objectData{}; 
 			wcsncpy_s(objectData.resourceKey, cells[COLUMN_MODEL_KEY].c_str(),
 				MAX_RESOURCE_KEY_LENGTH - 1);
 
-			objectData.position.x = std::stof(cells[COLUMN_POS_X]);
-			objectData.position.y = std::stof(cells[COLUMN_POS_Y]);
-			objectData.position.z = std::stof(cells[COLUMN_POS_Z]);
+			objectData.position.x = ParseFloatSafe(cells[COLUMN_POS_X]);
+			objectData.position.y = ParseFloatSafe(cells[COLUMN_POS_Y]);
+			objectData.position.z = ParseFloatSafe(cells[COLUMN_POS_Z]);
 
-			objectData.rotation.x = UtilityMath::Deg2RadF(std::stof(cells[COLUMN_ROT_X]));
-			objectData.rotation.y = UtilityMath::Deg2RadF(std::stof(cells[COLUMN_ROT_Y]));
-			objectData.rotation.z = UtilityMath::Deg2RadF(std::stof(cells[COLUMN_ROT_Z]));
+			objectData.rotation.x = UtilityMath::Deg2RadF(ParseFloatSafe(cells[COLUMN_ROT_X]));
+			objectData.rotation.y = UtilityMath::Deg2RadF(ParseFloatSafe(cells[COLUMN_ROT_Y]));
+			objectData.rotation.z = UtilityMath::Deg2RadF(ParseFloatSafe(cells[COLUMN_ROT_Z]));
 
-			objectData.scale.x = std::stof(cells[COLUMN_SCALE_X]);
-			objectData.scale.y = std::stof(cells[COLUMN_SCALE_Y]);
-			objectData.scale.z = std::stof(cells[COLUMN_SCALE_Z]);
+			objectData.scale.x = ParseFloatSafe(cells[COLUMN_SCALE_X], 1.0f);
+			objectData.scale.y = ParseFloatSafe(cells[COLUMN_SCALE_Y], 1.0f);
+			objectData.scale.z = ParseFloatSafe(cells[COLUMN_SCALE_Z], 1.0f);
 
 			if (cells.size() > COLUMN_PARENT_INDEX && !cells[COLUMN_PARENT_INDEX].empty())
 			{
-				objectData.parentIndex = std::stoi(cells[COLUMN_PARENT_INDEX]);
+				objectData.parentIndex = ParseIntSafe(cells[COLUMN_PARENT_INDEX], -1);
 			}
 
-			std::wstring keyString(objectData.resourceKey); // リソースキー文字列
+			std::wstring keyString(objectData.resourceKey);
 			if (keyString.find(L"GROUND") != std::wstring::npos)
 			{
-				objectData.colliderShape = 4; // MODEL
+				objectData.colliderShape = 4; 
 			}
 			else
 			{
-				objectData.colliderShape = 5; // BOX
+				objectData.colliderShape = 5; 
 			}
 
 			if (cells.size() > COLUMN_COL_SHAPE && !cells[COLUMN_COL_SHAPE].empty())
@@ -171,32 +203,38 @@ bool StageDataLoader::ConvertCsvToBinary(const std::wstring& csvFilePath,
 			}
 			if (cells.size() > COLUMN_COL_TRIGGER && !cells[COLUMN_COL_TRIGGER].empty())
 			{
-				objectData.isTrigger = std::stoi(cells[COLUMN_COL_TRIGGER]);
+				objectData.isTrigger = ParseIntSafe(cells[COLUMN_COL_TRIGGER], 1);
 			}
 			if (cells.size() > COLUMN_COL_P1_Z && !cells[COLUMN_COL_P1_X].empty())
 			{
-				objectData.colParam1.x = std::stof(cells[COLUMN_COL_P1_X]);
-				objectData.colParam1.y = std::stof(cells[COLUMN_COL_P1_Y]);
-				objectData.colParam1.z = std::stof(cells[COLUMN_COL_P1_Z]);
+				objectData.colParam1.x = ParseFloatSafe(cells[COLUMN_COL_P1_X]);
+				objectData.colParam1.y = ParseFloatSafe(cells[COLUMN_COL_P1_Y]);
+				objectData.colParam1.z = ParseFloatSafe(cells[COLUMN_COL_P1_Z]);
 			}
 			if (cells.size() > COLUMN_COL_P2_Z && !cells[COLUMN_COL_P2_X].empty())
 			{
-				objectData.colParam2.x = std::stof(cells[COLUMN_COL_P2_X]);
-				objectData.colParam2.y = std::stof(cells[COLUMN_COL_P2_Y]);
-				objectData.colParam2.z = std::stof(cells[COLUMN_COL_P2_Z]);
+				objectData.colParam2.x = ParseFloatSafe(cells[COLUMN_COL_P2_X]);
+				objectData.colParam2.y = ParseFloatSafe(cells[COLUMN_COL_P2_Y]);
+				objectData.colParam2.z = ParseFloatSafe(cells[COLUMN_COL_P2_Z]);
 			}
 			if (cells.size() > COLUMN_COL_RADIUS && !cells[COLUMN_COL_RADIUS].empty())
 			{
-				objectData.colRadius = std::stof(cells[COLUMN_COL_RADIUS]);
+				objectData.colRadius = ParseFloatSafe(cells[COLUMN_COL_RADIUS], 50.0f);
 			}
 			if (cells.size() > COLUMN_COL_SELF_TAG && !cells[COLUMN_COL_SELF_TAG].empty())
 			{
-				objectData.selfTag = std::stoi(cells[COLUMN_COL_SELF_TAG]);
+				objectData.selfTag = ParseIntSafe(cells[COLUMN_COL_SELF_TAG]);
 			}
 			if (cells.size() > COLUMN_COL_TARGET_MASK && !cells[COLUMN_COL_TARGET_MASK].empty())
 			{
-				objectData.targetTagMask =
-					static_cast<unsigned int>(std::stoul(cells[COLUMN_COL_TARGET_MASK]));
+				try
+				{
+					objectData.targetTagMask = static_cast<unsigned int>(std::stoul(cells[COLUMN_COL_TARGET_MASK]));
+				}
+				catch (...)
+				{
+					objectData.targetTagMask = 0;
+				}
 			}
 
 			objectList.push_back(objectData);
@@ -345,3 +383,4 @@ bool StageDataLoader::SaveStageData(const std::wstring& csvFilePath,
 	csvFile.close();
 	return true;
 }
+

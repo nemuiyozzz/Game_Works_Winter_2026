@@ -30,6 +30,7 @@ public:
 		PLAYER_SWORD, // プレイヤーの剣
 		ENEMY,        // エネミー
 		WALL,         // 壁
+		BLESSING,     // 祝福
 		MAX           // 要素数カウント用
 	};
 
@@ -67,6 +68,7 @@ public:
 			"PLAYER_SWORD",
 			"ENEMY",
 			"WALL",
+			"BLESSING",
 		};
 		static_assert(
 			(sizeof(TAG_NAMES) / sizeof(TAG_NAMES[0])) == TAG_COUNT,
