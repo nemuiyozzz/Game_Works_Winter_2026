@@ -1,16 +1,16 @@
-#include "../../Pch.h"
 #include "PlayerControlSystem.h"
+#include "PlayerState/PlayerActionFacade.h"
+#include "PlayerState/PlayerIdleState.h"
 #include "../Component/PlayerInputComponent.h"
+#include "../Component/PlayerStateComponent.h"
 #include "../Component/VelocityComponent.h"
-#include "../Component/CameraComponent.h"
 #include "../Component/TransformComponent.h"
-#include "../../Engine/System/Input/KeyConfInputManager.h"
-#include "../../Engine/Utility/UtilityMath.h"
-#include "AnimationSystem.h"
+#include "../../Engine/System/Time/TimeManager.h"
 
 void PlayerControlSystem::Update(EcsRegistry& registry)
 {
-	auto entities = registry.GetEntitiesWith<PlayerInputComponent, VelocityComponent>();
+	std::vector<Entity> entities =
+		registry.GetEntitiesWith<PlayerInputComponent, VelocityComponent>(); 
 
 	for (Entity entity : entities)
 	{
@@ -27,99 +27,65 @@ void PlayerControlSystem::UpdatePlayerControl(EcsRegistry& registry, Entity enti
 		return;
 	}
 
-	PlayerInputComponent& inputInfo = registry.GetComponent<PlayerInputComponent>(entity);
-	VelocityComponent& velocityData = registry.GetComponent<VelocityComponent>(entity);
-	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
-
-	VECTOR moveDirection = KeyConfInputManager::GetInstance().GetLeftStickDirection();
-
-	if (VSize(moveDirection) == 0.0f)
+	if (!registry.HasComponent<PlayerStateComponent>(entity))
 	{
-		float x = 0.0f;
-		float z = 0.0f;
+		registry.AddComponent<PlayerStateComponent>(entity, PlayerStateComponent{});
+	}
 
-		if (KeyConfInputManager::GetInstance().isPressed(L"UP"))    z += 1.0f;
-		if (KeyConfInputManager::GetInstance().isPressed(L"DOWN"))  z -= 1.0f;
-		if (KeyConfInputManager::GetInstance().isPressed(L"RIGHT")) x += 1.0f;
-		if (KeyConfInputManager::GetInstance().isPressed(L"LEFT"))  x -= 1.0f;
+	PlayerStateComponent& stateComponent =
+		registry.GetComponent<PlayerStateComponent>(entity);
 
-		VECTOR wasdDir = VGet(x, 0.0f, z);
-		if (VSize(wasdDir) > 0.0f)
+	// サブシステム操作用のFacade窓口を生成する
+	PlayerActionFacade actionFacade(registry, entity);
+
+	// 初回フレーム時は待機ステートで初期化する
+	if (stateComponent.currentState == nullptr)
+	{
+		stateComponent.currentState = std::make_shared<PlayerIdleState>();
+		stateComponent.stateTimer = 0.0f;
+		stateComponent.currentState->EnterState(actionFacade);
+	}
+
+	stateComponent.stateTimer += TimeManager::GetInstance().GetDeltaTime();
+
+	// 現在ステートの更新と遷移判定
+	std::shared_ptr<IPlayerState> nextState =
+		stateComponent.currentState->UpdateState(actionFacade, TimeManager::GetInstance().GetDeltaTime());
+
+	if (nextState != nullptr)
+	{
+		stateComponent.currentState->ExitState(actionFacade);
+		stateComponent.currentState = nextState;
+		stateComponent.stateTimer = 0.0f;
+		stateComponent.currentState->EnterState(actionFacade);
+	}
+
+	UpdateStaminaRecovery(registry, entity, TimeManager::GetInstance().GetDeltaTime());
+}
+
+void PlayerControlSystem::UpdateStaminaRecovery(
+	EcsRegistry& registry, Entity entity, float deltaTime)
+{
+	if (!registry.HasComponent<PlayerStateComponent>(entity))
+	{
+		return;
+	}
+
+	PlayerStateComponent& stateComponent =
+		registry.GetComponent<PlayerStateComponent>(entity);
+
+	if (stateComponent.staminaRecoveryDelayTimer > 0.0f)
+	{
+		stateComponent.staminaRecoveryDelayTimer -= deltaTime;
+		return;
+	}
+
+	if (stateComponent.stamina < stateComponent.maxStamina)
+	{
+		stateComponent.stamina += stateComponent.staminaRecoveryRate * deltaTime;
+		if (stateComponent.stamina > stateComponent.maxStamina)
 		{
-			moveDirection = UtilityMath::VNormalize(wasdDir);
-		}
-	}
-
-	// 移動・回転処理
-	if (VSize(moveDirection) > 0.0f)
-	{
-		float cameraAngleH = 0.0f;
-		auto cameras = registry.GetEntitiesWith<CameraComponent>();
-
-		if (!cameras.empty())
-		{
-			CameraComponent& camera = registry.GetComponent<CameraComponent>(cameras[0]);
-			cameraAngleH = camera.angleH;
-		}
-
-		float cosH = cosf(cameraAngleH);
-		float sinH = sinf(cameraAngleH);
-		VECTOR rotatedDir;
-
-		rotatedDir.x = moveDirection.x * cosH - moveDirection.z * sinH;
-		rotatedDir.y = 0.0f;
-		rotatedDir.z = moveDirection.x * sinH + moveDirection.z * cosH;
-		rotatedDir = UtilityMath::VNormalize(rotatedDir);
-
-		VECTOR moveVelocity = VScale(rotatedDir, inputInfo.moveSpeed);
-		velocityData.velocity.x = moveVelocity.x;
-		velocityData.velocity.z = moveVelocity.z;
-
-		constexpr float ROTATION_SMOOTHNESS = 0.2f;
-		float targetAngle = atan2f(rotatedDir.x, rotatedDir.z) + DX_PI_F;
-
-		float currentAngle = transform.rotationEuler.y;
-		float diffAngle = targetAngle - currentAngle;
-		float shortestAngle = atan2f(sinf(diffAngle), cosf(diffAngle));
-		float newAngle = currentAngle + (shortestAngle * ROTATION_SMOOTHNESS);
-
-		transform.rotationEuler = VGet(0.0f, newAngle, 0.0f);
-		transform.rotation_ = Quaternion::Euler(0.0f, newAngle, 0.0f);
-	}
-	else
-	{
-		velocityData.velocity.x = 0.0f;
-		velocityData.velocity.z = 0.0f;
-	}
-
-	// アニメーションとアクション処理
-	if (KeyConfInputManager::GetInstance().isTrigerDown(L"ATTACK_NORMAL"))
-	{
-		AnimationSystem::Play(registry, entity, static_cast<int>(PLAYER_ANIM::ATTACK), false, 0.1f);
-	}
-	else if (KeyConfInputManager::GetInstance().isTrigerDown(L"JUMP"))
-	{
-		velocityData.velocity.y = inputInfo.jumpPower;
-		AnimationSystem::Play(registry, entity, static_cast<int>(PLAYER_ANIM::JUMP), false, 0.2f);
-	}
-	else
-	{
-		int currentAnim = AnimationSystem::GetPlayType(registry, entity);
-		bool isActionFinished = AnimationSystem::IsEnd(registry, entity);
-
-		if (currentAnim == -1 ||
-			currentAnim == static_cast<int>(PLAYER_ANIM::IDLE) ||
-			currentAnim == static_cast<int>(PLAYER_ANIM::MOVE) ||
-			isActionFinished)
-		{
-			if (VSize(moveDirection) > 0.0f)
-			{
-				AnimationSystem::Play(registry, entity, static_cast<int>(PLAYER_ANIM::MOVE), true, 0.15f);
-			}
-			else
-			{
-				AnimationSystem::Play(registry, entity, static_cast<int>(PLAYER_ANIM::IDLE), true, 0.15f);
-			}
+			stateComponent.stamina = stateComponent.maxStamina;
 		}
 	}
 }

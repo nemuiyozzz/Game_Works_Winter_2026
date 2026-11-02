@@ -40,7 +40,7 @@ void StageBase::Initialize(void)
 		transform.position = objectData.position;
 		transform.localPosition = objectData.position;
 		transform.rotationEuler = objectData.rotation;
-		transform.rotation_ = Quaternion::Euler(
+		transform.rotation_ = Quaternion::CreateEuler(
 			objectData.rotation.x, objectData.rotation.y, objectData.rotation.z);
 		transform.scale = objectData.scale;
 		ecsRegistry_.AddComponent<TransformComponent>(objectEntity, transform);

@@ -125,11 +125,7 @@ void TimeManager::ResetTimer(const std::string& timerId)
 
 float TimeManager::GetDeltaTime(void) const
 {
-#ifdef _DEBUG
 	// デバッグ用の固定デルタタイム
 	const float FIXED_DELTA_TIME = 1.0f / 60.0f;
 	return FIXED_DELTA_TIME;
-#else
-	return deltaTime_;
-#endif
 }

@@ -30,7 +30,7 @@ void SceneResult::Initialize(void)
 
 void SceneResult::Update(void)
 {
-	if (KeyConfInputManager::GetInstance().isTrigerDown(L"OK"))
+	if (KeyConfInputManager::GetInstance().IsTriggerDown(L"OK"))
 	{
 		SceneManager::GetInstance().ChangeScene(std::make_shared<SceneTitle>());
 	}

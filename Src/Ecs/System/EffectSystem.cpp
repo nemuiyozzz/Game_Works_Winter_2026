@@ -44,7 +44,7 @@ void EffectSystem::Update(EcsRegistry& registry)
 		if (isCurrentlyPlaying && effect.isFollow)
 		{
 			VECTOR worldPos = VAdd(transform.position, effect.localOffset);
-			VECTOR euler = transform.rotation_.ToEuler();
+			VECTOR euler = transform.rotation_.ConvertToEuler();
 
 			SetPosPlayingEffekseer3DEffect(
 				effect.playHandle, worldPos.x, worldPos.y, worldPos.z);

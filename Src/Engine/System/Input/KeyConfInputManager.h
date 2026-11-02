@@ -22,13 +22,13 @@ public:
 	};
 
 	/// @brief 右スティックの感度設定
-	struct RStickSensitivity
+	struct RightStickSensitivity
 	{
 		float x = 1.0f;          // X軸感度
 		float y = 1.0f;          // Y軸感度
 		bool invertX = false;    // X軸反転
 		bool invertY = false;    // Y軸反転
-		float deadZone = 0.35f;  // デットゾーンのしきい値
+		float deadZone = 0.35f;  // デッドゾーンのしきい値
 	};
 
 	/// @brief インスタンの生成
@@ -47,21 +47,21 @@ public:
 	/// @brief 押し続けている間 true を返す
 	/// @param _name イベント名
 	/// @return 押されていれば true
-	bool isPressed(const std::wstring& _name) const;
+	bool IsPressed(const std::wstring& _name) const;
 
 	/// @brief 離した瞬間のみ true を返す
 	/// @param _name イベント名
 	/// @return 離した瞬間のみ true
-	bool isTrigerUp(const std::wstring& _name) const;
+	bool IsTriggerUp(const std::wstring& _name) const;
 
 	/// @brief 押した瞬間のみ true を返す
 	/// @param _name イベント名
 	/// @return 押した瞬間のみ true
-	bool isTrigerDown(const std::wstring& _name) const;
+	bool IsTriggerDown(const std::wstring& _name) const;
 
 	/// @brief マウスカーソルの座標を取得 
 	/// @return スクリーン座標のマウスカーソル位置
-	Vector2 GetMousePosition(void) const;
+	Vector2 GetMousePosition(void) const {	return mousePosition_; }
 
 	/// @brief マウスの移動量を取得し、カーソルを画面中央に固定・非表示にする
 	/// @return 前フレームからの移動量
@@ -73,7 +73,7 @@ public:
 
 	/// @brief 現在のマウス感度設定を取得する
 	/// @return 現在の感度設定
-	const MouseSensitivity& GetMouseSensitivity(void) const;
+	const MouseSensitivity& GetMouseSensitivity(void) const { return mouseSensitivity_; }
 
 	/// @brief 左スティックの入力方向を正規化したXZベクトルで返す
 	/// @return 正規化済みの方向ベクトル
@@ -93,11 +93,11 @@ public:
 
 	/// @brief 右スティックの感度設定を変更する
 	/// @param _sensitivity 設定する感度データ
-	void SetRStickSensitivity(const RStickSensitivity& _sensitivity);
+	void SetRightStickSensitivity(const RightStickSensitivity& _sensitivity);
 
 	/// @brief 現在の右スティックの感度設定を取得する
 	/// @return 現在の感度設定
-	const RStickSensitivity& GetRStickSensitivity(void) const;
+	const RightStickSensitivity& GetRightStickSensitivity(void) const { return rightStickSensitivity_; }
 
 	/// @brief 現在の入力テーブルをファイルに保存する
 	void SaveInputTable(void);
@@ -113,11 +113,11 @@ public:
 
 	/// @brief 使用するパッドの番号を設定する
 	/// @param _padNo DxLib定数
-	void SetUsePadNo(int _padNo);
+	void  SetUsePadNumber(int _padNo);
 
 	/// @brief マウスホイールの回転量を取得する
 	/// @return 前フレームからの回転量 
-	int GetMouseWheel(void) const;
+	int  GetMouseWheelVolume(void) const { return mouseWheelVol_; }
 
 private:
 
@@ -194,7 +194,7 @@ private:
 
 	// スティック関連
 	StickInfo stickInfo_;                  // 現フレームのスティック入力値
-	RStickSensitivity rStickSensitivity_;  // 右スティックの感度設定
+	RightStickSensitivity rightStickSensitivity_;  // 右スティックの感度設定
 
 	// マウス関連
 	Vector2 mousePosition_;               // マウスカーソルの座標

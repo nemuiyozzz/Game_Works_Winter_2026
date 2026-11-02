@@ -70,14 +70,14 @@ bool CollisionBox3D::CheckBoxVsBox(const ColliderBase* boxA, const ColliderBase*
 
 	// ボックスのローカル軸を取得
 	VECTOR axesA[3] = {
-		TRANSFORM_A->rotation_.PosAxis(VGet(1.0f, 0.0f, 0.0f)),
-		TRANSFORM_A->rotation_.PosAxis(VGet(0.0f, 1.0f, 0.0f)),
-		TRANSFORM_A->rotation_.PosAxis(VGet(0.0f, 0.0f, 1.0f))
+		TRANSFORM_A->rotation_.RotatePosition(VGet(1.0f, 0.0f, 0.0f)),
+		TRANSFORM_A->rotation_.RotatePosition(VGet(0.0f, 1.0f, 0.0f)),
+		TRANSFORM_A->rotation_.RotatePosition(VGet(0.0f, 0.0f, 1.0f))
 	};
 	VECTOR axesB[3] = {
-		TRANSFORM_B->rotation_.PosAxis(VGet(1.0f, 0.0f, 0.0f)),
-		TRANSFORM_B->rotation_.PosAxis(VGet(0.0f, 1.0f, 0.0f)),
-		TRANSFORM_B->rotation_.PosAxis(VGet(0.0f, 0.0f, 1.0f))
+		TRANSFORM_B->rotation_.RotatePosition(VGet(1.0f, 0.0f, 0.0f)),
+		TRANSFORM_B->rotation_.RotatePosition(VGet(0.0f, 1.0f, 0.0f)),
+		TRANSFORM_B->rotation_.RotatePosition(VGet(0.0f, 0.0f, 1.0f))
 	};
 
 	// 判定する15本の分離軸
@@ -157,9 +157,9 @@ bool CollisionBox3D::CheckBoxVsSphere(const ColliderBase* boxCol, const Collider
 	const float SPHERE_RADIUS = SPHERE->GetRadius();
 
 	// ボックスのローカル軸を取得
-	VECTOR axisRight = TRANSFORM->rotation_.PosAxis(VGet(1.0f, 0.0f, 0.0f));
-	VECTOR axisUp = TRANSFORM->rotation_.PosAxis(VGet(0.0f, 1.0f, 0.0f));
-	VECTOR axisForward = TRANSFORM->rotation_.PosAxis(VGet(0.0f, 0.0f, 1.0f));
+	VECTOR axisRight = TRANSFORM->rotation_.RotatePosition(VGet(1.0f, 0.0f, 0.0f));
+	VECTOR axisUp = TRANSFORM->rotation_.RotatePosition(VGet(0.0f, 1.0f, 0.0f));
+	VECTOR axisForward = TRANSFORM->rotation_.RotatePosition(VGet(0.0f, 0.0f, 1.0f));
 
 	// 球体の中心座標を、ボックス中心からの相対ベクトルに変換
 	VECTOR offset = VSub(SPHERE_CENTER, BOX_CENTER);
@@ -228,9 +228,9 @@ bool CollisionBox3D::CheckBoxVsCapsule(const ColliderBase* boxCol, const Collide
 
 	// ボックスのローカル軸を取得
 	VECTOR boxAxes[3] = {
-		TRANSFORM->rotation_.PosAxis(VGet(1.0f, 0.0f, 0.0f)),
-		TRANSFORM->rotation_.PosAxis(VGet(0.0f, 1.0f, 0.0f)),
-		TRANSFORM->rotation_.PosAxis(VGet(0.0f, 0.0f, 1.0f))
+		TRANSFORM->rotation_.RotatePosition(VGet(1.0f, 0.0f, 0.0f)),
+		TRANSFORM->rotation_.RotatePosition(VGet(0.0f, 1.0f, 0.0f)),
+		TRANSFORM->rotation_.RotatePosition(VGet(0.0f, 0.0f, 1.0f))
 	};
 
 	// カプセルの情報を取得

@@ -34,7 +34,7 @@ KeyConfInputManager::KeyConfInputManager(void)
 	, currentInputState_()
 	, previousInputState_()
 	, stickInfo_{}
-	, rStickSensitivity_{}
+	, rightStickSensitivity_{}
 	, mouseSensitivity_{}
 	, mouseWheelVol_(0)
 	, usePadNo_(DX_INPUT_PAD1)
@@ -300,14 +300,14 @@ void KeyConfInputManager::Update(void)
 	}
 }
 
-bool KeyConfInputManager::isPressed(const std::wstring& _name) const
+bool KeyConfInputManager::IsPressed(const std::wstring& _name) const
 {
 	auto input = currentInputState_.find(_name);
 
 	return (input != currentInputState_.end()) && input->second;
 }
 
-bool KeyConfInputManager::isTrigerUp(const std::wstring& _name) const
+bool KeyConfInputManager::IsTriggerUp(const std::wstring& _name) const
 {
 	auto curInput = currentInputState_.find(_name);
 	auto preInput = previousInputState_.find(_name);
@@ -320,7 +320,7 @@ bool KeyConfInputManager::isTrigerUp(const std::wstring& _name) const
 	return !(curInput->second) && preInput->second;
 }
 
-bool KeyConfInputManager::isTrigerDown(const std::wstring& _name) const
+bool KeyConfInputManager::IsTriggerDown(const std::wstring& _name) const
 {
 	auto curInput = currentInputState_.find(_name);
 	auto preInput = previousInputState_.find(_name);
@@ -331,11 +331,6 @@ bool KeyConfInputManager::isTrigerDown(const std::wstring& _name) const
 	}
 
 	return curInput->second && !(preInput->second);
-}
-
-Vector2 KeyConfInputManager::GetMousePosition(void) const
-{
-	return mousePosition_;
 }
 
 Vector2F KeyConfInputManager::GetMouseVelocityAndFixCenter(void)
@@ -372,11 +367,6 @@ void KeyConfInputManager::SetMouseSensitivity(const MouseSensitivity& _sensitivi
 	mouseSensitivity_ = _sensitivity;
 }
 
-const KeyConfInputManager::MouseSensitivity& KeyConfInputManager::GetMouseSensitivity(void) const
-{
-	return mouseSensitivity_;
-}
-
 void KeyConfInputManager::CalculateNormalizedStick(int _rawX, int _rawY, float _deadZone,
 	float& _outNormalX, float& _outNormalY) const
 {
@@ -402,20 +392,20 @@ void KeyConfInputManager::ApplyRightStickSensitivity(int _rightStickX, int _righ
 {
 	float normalX = 0.0f;
 	float normalY = 0.0f;
-	CalculateNormalizedStick(_rightStickX, _rightStickY, rStickSensitivity_.deadZone,
+	CalculateNormalizedStick(_rightStickX, _rightStickY, rightStickSensitivity_.deadZone,
 		normalX, normalY);
 
-	normalX *= rStickSensitivity_.x;
-	normalY *= rStickSensitivity_.y;
+	normalX *= rightStickSensitivity_.x;
+	normalY *= rightStickSensitivity_.y;
 
 	normalX = std::fmax(-1.0f, std::fmin(1.0f, normalX));
 	normalY = std::fmax(-1.0f, std::fmin(1.0f, normalY));
 
-	if (rStickSensitivity_.invertX)
+	if (rightStickSensitivity_.invertX)
 	{
 		normalX = -normalX;
 	}
-	if (rStickSensitivity_.invertY)
+	if (rightStickSensitivity_.invertY)
 	{
 		normalY = -normalY;
 	}
@@ -621,7 +611,7 @@ Vector2F KeyConfInputManager::GetRightStickRaw(void) const
 	// スティックの傾きの長さ
 	float length = sqrtf(normalX * normalX + normalY * normalY);
 
-	if (length < rStickSensitivity_.deadZone)
+	if (length < rightStickSensitivity_.deadZone)
 	{
 		return UtilityMath::VECTOR2F_ZERO;
 	}
@@ -629,14 +619,9 @@ Vector2F KeyConfInputManager::GetRightStickRaw(void) const
 	return Vector2F(normalX, normalY);
 }
 
-void KeyConfInputManager::SetRStickSensitivity(const RStickSensitivity& _sensitivity)
+void KeyConfInputManager::SetRightStickSensitivity(const RightStickSensitivity& _sensitivity)
 {
-	rStickSensitivity_ = _sensitivity;
-}
-
-const KeyConfInputManager::RStickSensitivity& KeyConfInputManager::GetRStickSensitivity(void) const
-{
-	return rStickSensitivity_;
+	rightStickSensitivity_ = _sensitivity;
 }
 
 void KeyConfInputManager::SaveInputTable(void)
@@ -730,7 +715,7 @@ void KeyConfInputManager::SaveSensitivitySettings(void) const
 	memcpy(header.signature, "sens", 4);
 	fwrite(&header, sizeof(header), 1, file);
 	fwrite(&mouseSensitivity_, sizeof(mouseSensitivity_), 1, file);
-	fwrite(&rStickSensitivity_, sizeof(rStickSensitivity_), 1, file);
+	fwrite(&rightStickSensitivity_, sizeof(rightStickSensitivity_), 1, file);
 
 	fclose(file);
 }
@@ -756,17 +741,12 @@ void KeyConfInputManager::LoadSensitivitySettings(void)
 	}
 
 	FileRead_read(&mouseSensitivity_, sizeof(mouseSensitivity_), handle);
-	FileRead_read(&rStickSensitivity_, sizeof(rStickSensitivity_), handle);
+	FileRead_read(&rightStickSensitivity_, sizeof(rightStickSensitivity_), handle);
 
 	FileRead_close(handle);
 }
 
-void KeyConfInputManager::SetUsePadNo(int _padNo)
+void KeyConfInputManager::SetUsePadNumber(int _padNo)
 {
 	usePadNo_ = _padNo;
-}
-
-int KeyConfInputManager::GetMouseWheel(void) const
-{
-	return mouseWheelVol_;
 }

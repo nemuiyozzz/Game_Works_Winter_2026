@@ -15,8 +15,8 @@ struct TransformComponent
 	VECTOR previousPosition = UtilityMath::VECTOR_ZERO; // 1フレーム前の位置
 
 	// クォータニオン関連
-	Quaternion rotation_ = Quaternion().Identity();      // ワールド回転
-	Quaternion localRotation = Quaternion().Identity(); // ローカル回転
+	Quaternion rotation_ = Quaternion().GetIdentity();      // ワールド回転
+	Quaternion localRotation = Quaternion().GetIdentity(); // ローカル回転
 
 	// 行列関連
 	MATRIX scaleMatrix = MGetIdent();    // スケール行列

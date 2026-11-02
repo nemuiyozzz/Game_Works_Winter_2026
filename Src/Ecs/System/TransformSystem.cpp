@@ -68,8 +68,8 @@ void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
 	transform.previousPosition = transform.position;
 	transform.scaleMatrix = MGetScale(transform.scale);
-	transform.rotationEuler = transform.rotation_.ToEuler();
-	transform.rotationMatrix = transform.rotation_.ToMatrix();
+	transform.rotationEuler = transform.rotation_.ConvertToEuler();
+	transform.rotationMatrix = transform.rotation_.ConvertToMatrix();
 
 	bool hasParent = false;
 	if (registry.HasComponent<HierarchyComponent>(entity))
@@ -92,8 +92,8 @@ void TransformSystem::UpdateTransform(EcsRegistry& registry, Entity entity)
 
 	MATRIX tempMatrix = MGetIdent();
 	tempMatrix = MMult(tempMatrix, transform.scaleMatrix);
-	Quaternion combinedQuaternion = transform.rotation_.Mult(transform.localRotation);
-	tempMatrix = MMult(tempMatrix, combinedQuaternion.ToMatrix());
+	Quaternion combinedQuaternion = transform.rotation_.Multiply(transform.localRotation);
+	tempMatrix = MMult(tempMatrix, combinedQuaternion.ConvertToMatrix());
 
 	transform.combinedMatrix = MMult(tempMatrix, transform.positionMatrix);
 }
@@ -121,7 +121,7 @@ void TransformSystem::RotateQuaternion(
 	}
 
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
-	transform.rotation_ = Quaternion::Mult(transform.rotation_, rotation);
+	transform.rotation_ = Quaternion::Multiply(transform.rotation_, rotation);
 
 	UpdateTransform(registry, entity);
 }
@@ -153,5 +153,5 @@ VECTOR TransformSystem::GetTargetDirection(
 	}
 
 	TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
-	return transform.rotation_.PosAxis(baseDirection);
+	return transform.rotation_.RotatePosition(baseDirection);
 }

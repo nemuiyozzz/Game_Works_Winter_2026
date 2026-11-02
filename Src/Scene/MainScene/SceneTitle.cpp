@@ -32,7 +32,7 @@ void SceneTitle::Initialize(void)
 
 void SceneTitle::Update(void)
 {
-	if (KeyConfInputManager::GetInstance().isTrigerDown(L"OK"))
+	if (KeyConfInputManager::GetInstance().IsTriggerDown(L"OK"))
 	{
 		SceneManager::GetInstance().ChangeScene(std::make_shared<SceneGame>());
 	}
