@@ -418,7 +418,7 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 
 			ImGui::Separator();
 
-			if (ImGui::Button("Duplicate Hierarchy (Copy All)"))
+			if (ImGui::Button("Duplicate Entity (Copy All)"))
 			{
 				auto duplicateEntity = [&](auto& self, Entity sourceEntity) -> Entity
 					{
@@ -558,6 +558,48 @@ void DebugGuiSystem::DrawTransformGui(EcsRegistry& registry, Entity entity)
 					registry.GetComponent<TransformComponent>(duplicatedRoot).localPosition.x += 300.0f;
 				}
 			}
+
+			ImGui::Separator();
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
+
+			if (ImGui::Button("Delete Entity (Remove All)"))
+			{
+				auto deleteEntityAndChildren = [&](auto& self, Entity targetEntity) -> void
+					{
+						if (registry.HasComponent<HierarchyComponent>(targetEntity))
+						{
+							const auto& hierarchy = registry.GetComponent<HierarchyComponent>(targetEntity);
+							auto childernCopy = hierarchy.children;
+
+							for (Entity child : childernCopy)
+							{
+								self(self, child);
+							}
+						}
+
+						registry.DestroyEntity(targetEntity);
+					};
+
+				if (registry.HasComponent<HierarchyComponent>(entity))
+				{
+					Entity parent = registry.GetComponent<HierarchyComponent>(entity).parent;
+
+					if (parent != NULL_ENTITY && registry.HasComponent<HierarchyComponent>(parent))
+					{
+						auto& parentHier = registry.GetComponent<HierarchyComponent>(parent);
+						parentHier.children.erase(
+							std::remove(parentHier.children.begin(), parentHier.children.end(), 
+								entity),parentHier.children.end());
+					}
+				}
+
+				deleteEntityAndChildren(deleteEntityAndChildren, entity);
+			}
+
+			ImGui::PopStyleColor(3);
 		}
 	}
 }
