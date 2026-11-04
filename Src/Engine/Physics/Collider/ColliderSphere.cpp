@@ -38,8 +38,10 @@ float ColliderSphere::GetRadius(void) const
 
 void ColliderSphere::DrawDebug(int debugColor) const
 {
+    unsigned int color = IsActive() ? GetColor(255, 30, 30) : GetColor(30, 100, 255);
+
     const VECTOR worldPosition = GetWorldPosition();
 
     // デバッグ用に球体を描画
-    DrawSphere3D(worldPosition, radius_, DEBUG_SEGMENT_COUNT, debugColor, debugColor, false);
+    DrawSphere3D(worldPosition, radius_, DEBUG_SEGMENT_COUNT, color, color, FALSE);
 }

@@ -41,6 +41,11 @@ private:
 	/// @param entities 対象のエンティティリスト
 	void UpdateCollidersTarget(EcsRegistry& registry, const std::vector<Entity>& entities);
 
+	/// @brief 距離によるコライダーの有効/無効を切り替える
+	/// @param registry ECSデータベース
+	/// @param entities 対象のエンティティリスト
+	void ApplyDistanceCulling(EcsRegistry& registry, const std::vector<Entity>& entities);
+
 	/// @brief すべてのエンティティ間の総当たり判定を行う
 	/// @param registry ECSデータベース
 	/// @param entities 対象のエンティティリスト
@@ -62,6 +67,5 @@ private:
 	/// @param info 衝突情報
 	void ResolvePenetration(EcsRegistry& registry, Entity entityA, Entity entityB,
 		const CollisionInfo& info);
-
 };
 

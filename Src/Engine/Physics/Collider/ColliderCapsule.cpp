@@ -52,9 +52,11 @@ float ColliderCapsule::GetRadius(void) const
 
 void ColliderCapsule::DrawDebug(int debugColor) const
 {
+    unsigned int color = IsActive() ? GetColor(255, 30, 30) : GetColor(30, 100, 255);
+
     const VECTOR WORLD_START_POS = GetWorldStartPos();
     const VECTOR WORLD_END_POS = GetWorldEndPos();
 
     // カプセルを描画
-    DrawCapsule3D(WORLD_START_POS, WORLD_END_POS, radius_, DEBUG_SEGMENT_COUNT, debugColor, debugColor, false);
+    DrawCapsule3D(WORLD_START_POS, WORLD_END_POS, radius_, DEBUG_SEGMENT_COUNT, color, color, FALSE);
 }

@@ -42,6 +42,10 @@ void SceneGame::Load(void)
 	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_RUN");
 	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_JUMP");
 	ResourceManager::GetInstance().Load(L"ANIM_PLAYER_ATTACK");
+
+	ResourceManager::GetInstance().Load(L"VS_LAMBERT");
+	ResourceManager::GetInstance().Load(L"PS_LAMBERT");
+	ResourceManager::GetInstance().Load(L"PS_METAL");
 }
 
 void SceneGame::Initialize(void)

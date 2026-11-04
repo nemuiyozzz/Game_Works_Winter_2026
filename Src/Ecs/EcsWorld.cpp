@@ -7,11 +7,15 @@
 #include "System/TransformSystem.h"
 #include "System/CameraSystem.h"
 #include "System/ModelSystem.h"
+#include "System/ShaderSystem.h"
 #include "System/ColliderDebugDrawSystem.h"
 #include "System/DebugGuiSystem.h"
 #include "System/AnimationSystem.h"
 #include "System/EnemyAiSystem.h"
 #include "System/HudDrawSystem.h"
+#include "System/SoundSystem.h"
+
+std::shared_ptr<ShaderSystem> shaderSystem_ = nullptr;
 
 void EcsWorld::Initialize(void)
 {
@@ -32,7 +36,11 @@ void EcsWorld::Initialize(void)
 	colliderDebugDrawSystem_ = std::make_shared<ColliderDebugDrawSystem>();
 #endif // _DEBUG
 
-	AddDrawSystem<ModelSystem>();
+	//AddDrawSystem<ModelSystem>();
+	shaderSystem_ = std::make_shared<ShaderSystem>();
+	shaderSystem_->Initialize();           
+	drawSystems_.push_back(shaderSystem_);
+
 	AddDrawSystem<HudDrawSystem>();
 
 	ActorFactory::RegisterDefaultRecipes();
@@ -60,8 +68,12 @@ void EcsWorld::Draw(void)
 		system->Update(ecsRegistry_);
 	}
 
+	if (shaderSystem_ != nullptr)
+	{
+		shaderSystem_->ExecuteDrawCommands();
+	}
+
 #ifdef _DEBUG
-	colliderDebugDrawSystem_->Draw(ecsRegistry_);
 	if (colliderDebugDrawSystem_ != nullptr)
 	{
 		colliderDebugDrawSystem_->Draw(ecsRegistry_);
@@ -76,6 +88,12 @@ void EcsWorld::Release(void)
 	updateSystems_.clear();
 	drawSystems_.clear();
 	colliderDebugDrawSystem_.reset();
+
+	if (shaderSystem_ != nullptr)
+	{
+		shaderSystem_->Release();
+		shaderSystem_.reset();
+	}
 }
 
 Entity EcsWorld::SpawnActor(const std::wstring& actorName)

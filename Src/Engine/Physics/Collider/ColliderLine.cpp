@@ -44,13 +44,15 @@ VECTOR ColliderLine::GetWorldEndPos(void) const
 
 void ColliderLine::DrawDebug(int debugColor) const
 {
+    unsigned int color = IsActive() ? GetColor(255, 30, 30) : GetColor(30, 100, 255);
+
     const VECTOR WORLD_START_POS = GetWorldStartPos();
     const VECTOR WORLD_END_POS = GetWorldEndPos();
 
     // 線分を描画
-    DrawLine3D(WORLD_START_POS, WORLD_END_POS, debugColor);
+    DrawLine3D(WORLD_START_POS, WORLD_END_POS, color);
 
     // 開始点と終了点に分かりやすく球体を描画
-    DrawSphere3D(WORLD_START_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, debugColor, debugColor, false);
-    DrawSphere3D(WORLD_END_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, debugColor, debugColor, false);
+    DrawSphere3D(WORLD_START_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, FALSE);
+    DrawSphere3D(WORLD_END_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, FALSE);
 }

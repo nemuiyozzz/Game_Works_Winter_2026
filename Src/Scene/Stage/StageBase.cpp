@@ -12,6 +12,8 @@
 #include "../../Engine/Physics/Collider/ColliderModel.h"
 #include "../../Engine/System/Resource/ResourceManager.h"
 #include "../../Common/Quaternion.h"
+#include "../../Ecs/Component/ShaderComponent.h"
+#include "../../Engine/Graphics/Shader/ShaderParameters.h"
 
 StageBase::StageBase(EcsRegistry& registry)
 	: ecsRegistry_(registry)
@@ -63,7 +65,18 @@ void StageBase::Initialize(void)
 			{
 				ModelComponent modelComponent{};
 				modelComponent.modelHandle = modelHandle;
+				modelComponent.BuildFrameInfos();
 				ecsRegistry_.AddComponent<ModelComponent>(objectEntity, modelComponent);
+
+				ShaderComponent shaderComponent{};
+				shaderComponent.vertexShaderHandle = ResourceManager::GetInstance().GetHandleId(L"VS_LAMBERT");
+				shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");
+
+				CB_PixelLambert lambertParam{};
+				lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+				shaderComponent.SetPixelParameter(lambertParam);
+
+				ecsRegistry_.AddComponent<ShaderComponent>(objectEntity, shaderComponent);
 
 				CollisionComponent collisionComponent{};
 				auto stageTag = static_cast<ColliderBase::TAG>(objectData.selfTag);

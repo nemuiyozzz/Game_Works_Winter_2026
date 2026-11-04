@@ -53,4 +53,3 @@ private:
 	VECTOR localCenter_; // ローカル空間での中心座標
 	VECTOR size_;        // ボックスのサイズ（幅X、高さY、奥行きZ）
 };
-

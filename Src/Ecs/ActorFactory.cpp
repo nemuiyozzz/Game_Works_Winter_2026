@@ -22,6 +22,8 @@
 #include "System/AnimationSystem.h"
 #include "System/PlayerControlSystem.h"
 #include "Component/StatusComponent.h"
+#include "Component/ShaderComponent.h"
+#include "../Engine/Graphics/Shader/ShaderParameters.h"
 
 namespace
 {
@@ -164,8 +166,19 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	registry.AddComponent<PlayerInputComponent>(playerEntity, playerInput);
 
 	ModelComponent modelComponent{};
+
 	modelComponent.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_PLAYER);
+	modelComponent.BuildFrameInfos();
 	registry.AddComponent<ModelComponent>(playerEntity, modelComponent);
+
+	ShaderComponent shaderComponent{};
+	shaderComponent.vertexShaderHandle = ResourceManager::GetInstance().GetHandleId(L"VS_LAMBERT"); // 頂点シェーダ
+	shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");   // ピクセルシェーダ
+
+	CB_PixelLambert lambertParam{};
+	lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+	shaderComponent.SetPixelParameter(lambertParam);
+	registry.AddComponent<ShaderComponent>(playerEntity, shaderComponent);
 
 	StatusComponent playerStatus{};
 	playerStatus.maxHp = playerParam.maxHp;
@@ -257,7 +270,26 @@ Entity ActorFactory::BuildSword(EcsRegistry& registry)
 
 	ModelComponent modelComponent{};
 	modelComponent.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_SWORD);
+	modelComponent.BuildFrameInfos();
 	registry.AddComponent<ModelComponent>(swordEntity, modelComponent);
+
+	ShaderComponent shaderComponent{};
+	shaderComponent.vertexShaderHandle = ResourceManager::GetInstance().GetHandleId(L"VS_LAMBERT");
+	shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_METAL"); 
+
+	CB_PixelMetal metalParam{};
+	metalParam.diffuseColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	metalParam.ambientColor = GetColorF(0.2f, 0.2f, 0.2f, 1.0f);
+	metalParam.specularColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f); // 鋭く白い反射
+	metalParam.lightDirection = VGet(1.0f, -1.0f, 1.0f);
+	metalParam.specularPower = 20.0f; // 反射の鋭さ
+	
+	VECTOR camPos = GetCameraPosition();
+	metalParam.cameraPosX = camPos.x;
+	metalParam.cameraPosY = camPos.y;
+	metalParam.cameraPosZ = camPos.z;
+	shaderComponent.SetPixelParameter(metalParam);
+	registry.AddComponent<ShaderComponent>(swordEntity, shaderComponent);
 
 	HierarchyComponent hierarchy{};
 	hierarchy.attachBoneName = L"mixamorig:RightHandIndex2";
@@ -308,7 +340,17 @@ Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 
 	ModelComponent modelComponent{};
 	modelComponent.modelHandle = ResourceManager::GetInstance().GetHandleId(KEY_MODEL_ENEMY);
+	modelComponent.BuildFrameInfos();
 	registry.AddComponent<ModelComponent>(enemyEntity, modelComponent);
+
+	ShaderComponent shaderComponent{};
+	shaderComponent.vertexShaderHandle = ResourceManager::GetInstance().GetHandleId(L"VS_LAMBERT");
+	shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");
+
+	CB_PixelLambert lambertParam{};
+	lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+	shaderComponent.SetPixelParameter(lambertParam);
+	registry.AddComponent<ShaderComponent>(enemyEntity, shaderComponent);
 
 	StatusComponent enemyStatus{};
 	enemyStatus.maxHp = enemyParam.maxHp;

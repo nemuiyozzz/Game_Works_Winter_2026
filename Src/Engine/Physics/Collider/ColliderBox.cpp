@@ -30,12 +30,15 @@ VECTOR ColliderBox::GetWorldCenter(void) const
 	return TransformLocalToWorld(localCenter_);
 }
 
-void ColliderBox::DrawDebug(int color) const
+void ColliderBox::DrawDebug(int debugColor) const
 {
+	// 判定が動いているなら赤、動いていないなら青色にする
+	unsigned int color = IsActive() ? GetColor(255, 30, 30) : GetColor(30, 100, 255);
+
 	VECTOR halfSize = VScale(size_, 0.5f);
 
 	// ローカル座標での8つの頂点を定義
-	VECTOR localVertices[VERTEX_COUNT] = 
+	VECTOR localVertices[VERTEX_COUNT] =
 	{
 		VGet(localCenter_.x - halfSize.x, localCenter_.y + halfSize.y, localCenter_.z - halfSize.z),
 		VGet(localCenter_.x + halfSize.x, localCenter_.y + halfSize.y, localCenter_.z - halfSize.z),

@@ -2,6 +2,7 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/VelocityComponent.h"
 #include "../Component/CollisionComponent.h"
+#include "../Component/PlayerInputComponent.h"
 #include "../../Engine/Physics/Collision/CollisionCapsule.h"
 #include "../../Engine/Physics/Collision/CollisionLine.h"
 #include "../../Engine/Physics/Collision/CollisionSphere.h"
@@ -14,6 +15,9 @@ namespace
 	constexpr float PUSH_BACK_STATIC_RATIO = 1.0f;  // 静的オブジェクトに対する押し戻し率
 	constexpr float PUSH_BACK_DYNAMIC_RATIO = 0.5f; // 動的オブジェクト同士の押し戻し率
 	constexpr float GROUND_NORMAL_Y = 0.5f;         // 地面と判定する法線Yのしきい値
+
+	constexpr float CULLING_DISTANCE = 1500.0f;
+	constexpr float CULLING_DISTANCE_SQ = CULLING_DISTANCE * CULLING_DISTANCE;
 }
 
 void CollisionSystem::Update(EcsRegistry& registry)
@@ -22,6 +26,9 @@ void CollisionSystem::Update(EcsRegistry& registry)
 
 	// ポインタ更新と履歴の初期化
 	UpdateCollidersTarget(registry, entities);
+
+	// 距離に応じてコライダーの状態を切り替える
+	ApplyDistanceCulling(registry, entities);
 
 	// 総当たり判定と押し戻しの実行
 	CheckAllCollisions(registry, entities);
@@ -73,6 +80,43 @@ void CollisionSystem::UpdateCollidersTarget(EcsRegistry& registry,
 		for (auto& collider : collision.colliders)
 		{
 			collider->SetFollowTarget(&transform);
+		}
+	}
+}
+
+void CollisionSystem::ApplyDistanceCulling(EcsRegistry& registry, 
+	const std::vector<Entity>& entities)
+{
+	auto players = registry.GetEntitiesWith<TransformComponent, PlayerInputComponent>();
+
+	if (players.empty()) { return; }
+
+	const VECTOR playerPos = registry.GetComponent<TransformComponent>(players.front()).position;
+
+	for (Entity entity : entities)
+	{
+		const TransformComponent& transform = registry.GetComponent<TransformComponent>(entity);
+		CollisionComponent& collision = registry.GetComponent<CollisionComponent>(entity);
+
+		float diffX = transform.position.x - playerPos.x;
+		float diffY = transform.position.y - playerPos.y;
+		float diffZ = transform.position.z - playerPos.z;
+		float distSq = (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ);
+		bool isNearPlayer = distSq <= CULLING_DISTANCE_SQ;
+
+		for (auto& collider : collision.colliders)
+		{
+			if (collider == nullptr) { continue; }
+
+			if (collider->GetCollisionTag() == ColliderBase::TAG::STAGE ||
+				collider->GetShapeType() == ColliderBase::SHAPE::MODEL)
+			{
+				collider->SetActive(true);
+			}
+			else
+			{
+				collider->SetActive(isNearPlayer);
+			}
 		}
 	}
 }

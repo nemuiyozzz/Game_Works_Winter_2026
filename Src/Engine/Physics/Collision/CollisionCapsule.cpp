@@ -5,6 +5,14 @@
 #include "CollisionSphere.h"
 #include "../../Utility/UtilityMath.h"
 
+namespace
+{
+	// ポリゴン判定・比率計算関連
+	constexpr float HALF_SCALE = 0.5f;             // 中間点算出用の係数
+	constexpr float WALL_NORMAL_Y_THRESHOLD = 0.5f; // 壁専用タグ時に床とみなす法線Yの閾値
+	constexpr float TRIANGLE_VERTEX_INV = 1.0f / 3.0f; // 三角形重心算出用の逆数
+}
+
 bool CollisionCapsule::CheckCapsuleVsCapsule(const ColliderBase* colliderA,
 	const ColliderBase* colliderB, CollisionInfo& outInfo)
 {
@@ -22,12 +30,15 @@ bool CollisionCapsule::CheckCapsuleVsCapsule(const ColliderBase* colliderA,
 	const VECTOR START_POS_B = CAPSULE_B->GetWorldStartPos();
 	const VECTOR END_POS_B = CAPSULE_B->GetWorldEndPos();
 
-	const VECTOR CENTER_A = VScale(VAdd(START_POS_A, END_POS_A), 0.5f);
+	const VECTOR CENTER_A = VScale(VAdd(START_POS_A, END_POS_A), HALF_SCALE);
 
-	VECTOR nearestPosB = UtilityMath::GetNearestPointOnSegment(START_POS_B, END_POS_B, CENTER_A);
-	VECTOR nearestPosA = UtilityMath::GetNearestPointOnSegment(START_POS_A, END_POS_A, nearestPosB);
+	VECTOR nearestPosB = UtilityMath::GetNearestPointOnSegment(
+		START_POS_B, END_POS_B, CENTER_A);
+	VECTOR nearestPosA = UtilityMath::GetNearestPointOnSegment(
+		START_POS_A, END_POS_A, nearestPosB);
 
-	nearestPosB = UtilityMath::GetNearestPointOnSegment(START_POS_B, END_POS_B, nearestPosA);
+	nearestPosB = UtilityMath::GetNearestPointOnSegment(
+		START_POS_B, END_POS_B, nearestPosA);
 
 	const VECTOR DISTANCE_VEC = VSub(nearestPosA, nearestPosB);
 	const float DIST_SQUARE = static_cast<float>(UtilityMath::SqrMagnitude(DISTANCE_VEC));
@@ -42,7 +53,8 @@ bool CollisionCapsule::CheckCapsuleVsCapsule(const ColliderBase* colliderA,
 		outInfo.hitCollider = colliderB;
 		outInfo.isActive = true;
 
-		outInfo.hitPosition = VAdd(nearestPosA, VScale(VSub(nearestPosB, nearestPosA), 0.5f));
+		outInfo.hitPosition = VAdd(
+			nearestPosA, VScale(VSub(nearestPosB, nearestPosA), HALF_SCALE));
 
 		if (DISTANCE > 0.0f)
 		{
@@ -93,67 +105,80 @@ bool CollisionCapsule::CheckCapsuleVsModel(const ColliderBase* capsuleCol,
 	const VECTOR END_POS = CAPSULE->GetWorldEndPos();
 	const float RADIUS = CAPSULE->GetRadius();
 
-	MV1_COLL_RESULT_POLY_DIM hitResult = MV1CollCheck_Capsule(MODEL_HANDLE, -1, START_POS, END_POS, RADIUS);
+	// カプセルの中心座標を基準に、最も近い最大4フレームを抽出する
+	const VECTOR CAPSULE_CENTER = VScale(VAdd(START_POS, END_POS), HALF_SCALE);
+	int targetFrames[ColliderModel::NEAREST_FRAME_COUNT]{}; // 判定対象フレーム配列
+	int frameCount = 0;                                     // 抽出されたフレーム数
+	MODEL->FindNearestFrames(CAPSULE_CENTER, targetFrames, frameCount);
 
-	if (hitResult.HitNum > 0)
+	float maxPenetration = -1.0f;            // 最大めり込み量
+	bool hasValidHit = false;                // 有効な衝突があったか
+	MV1_COLL_RESULT_POLY bestPolygon{};      // 最も深く当たったポリゴン情報
+	const ColliderBase::TAG MODEL_TAG = modelCol->GetCollisionTag(); // モデルのタグ
+
+	for (int frameIdx = 0; frameIdx < frameCount; ++frameIdx)
 	{
-		float maxPenetration = -1.0f;
-		int bestIndex = -1;
+		MV1_COLL_RESULT_POLY_DIM hitResult = MV1CollCheck_Capsule(
+			MODEL_HANDLE, targetFrames[frameIdx], START_POS, END_POS, RADIUS);
 
-		const ColliderBase::TAG MODEL_TAG = modelCol->GetCollisionTag();
-
-		for (int i = 0; i < hitResult.HitNum; ++i)
+		if (hitResult.HitNum > 0)
 		{
-			if (MODEL->IsExcludedFrame(hitResult.Dim[i].FrameIndex)) continue;
-
-			const auto& POLY = hitResult.Dim[i];
-
-			if (MODEL_TAG == ColliderBase::TAG::STAGE && POLY.Normal.y <= 0.5f) continue;
-			if (MODEL_TAG == ColliderBase::TAG::WALL && POLY.Normal.y > 0.5f) continue;
-
-			const VECTOR POLY_POINT = POLY.Position[0];
-			const VECTOR NEAREST_ON_AXIS = UtilityMath::GetNearestPointOnSegment(START_POS, END_POS, POLY_POINT);
-			const VECTOR TO_HIT = VSub(POLY_POINT, NEAREST_ON_AXIS);
-			const float DIST_ALONG_NORMAL = VDot(TO_HIT, POLY.Normal);
-			const float POLY_PENETRATION = RADIUS - DIST_ALONG_NORMAL;
-
-			if (POLY_PENETRATION > maxPenetration)
+			for (int polyIdx = 0; polyIdx < hitResult.HitNum; ++polyIdx)
 			{
-				maxPenetration = POLY_PENETRATION;
-				bestIndex = i;
+				const auto& POLY = hitResult.Dim[polyIdx];
+
+				if (MODEL->IsExcludedFrame(POLY.FrameIndex))
+				{
+					continue;
+				}
+
+				if (MODEL_TAG == ColliderBase::TAG::WALL &&
+					POLY.Normal.y > WALL_NORMAL_Y_THRESHOLD)
+				{
+					continue;
+				}
+
+				const VECTOR POLY_POINT = POLY.Position[0];
+				const VECTOR NEAREST_ON_AXIS = UtilityMath::GetNearestPointOnSegment(
+					START_POS, END_POS, POLY_POINT);
+				const VECTOR TO_HIT = VSub(POLY_POINT, NEAREST_ON_AXIS);
+				const float DIST_ALONG_NORMAL = VDot(TO_HIT, POLY.Normal);
+				const float POLY_PENETRATION = RADIUS - DIST_ALONG_NORMAL;
+
+				if (POLY_PENETRATION > maxPenetration)
+				{
+					maxPenetration = POLY_PENETRATION;
+					bestPolygon = POLY;
+					hasValidHit = true;
+				}
 			}
 		}
 
-		if (bestIndex == -1)
-		{
-			MV1CollResultPolyDimTerminate(hitResult);
-			return false;
-		}
-
-		const auto& BEST_HIT = hitResult.Dim[bestIndex];
-
-		outInfo.myCollider = capsuleCol;
-		outInfo.hitCollider = modelCol;
-
-		const VECTOR BEST_POLY_POINT = VScale(
-			VAdd(VAdd(BEST_HIT.Position[0], BEST_HIT.Position[1]), BEST_HIT.Position[2]),
-			1.0f / 3.0f);
-
-		outInfo.hitPosition = BEST_POLY_POINT;
-		outInfo.hitNormal = BEST_HIT.Normal;
-		outInfo.isActive = true;
-
-		const VECTOR NEAREST_ON_AXIS = UtilityMath::GetNearestPointOnSegment(START_POS, END_POS, BEST_POLY_POINT);
-		const VECTOR TO_HIT = VSub(BEST_POLY_POINT, NEAREST_ON_AXIS);
-		const float DIST_ALONG_NORMAL = VDot(TO_HIT, BEST_HIT.Normal);
-
-		outInfo.penetration = RADIUS - DIST_ALONG_NORMAL;
-		if (outInfo.penetration < 0.0f) outInfo.penetration = 0.0f;
-
 		MV1CollResultPolyDimTerminate(hitResult);
-		return true;
 	}
 
-	MV1CollResultPolyDimTerminate(hitResult);
-	return false;
+	if (!hasValidHit)
+	{
+		return false;
+	}
+
+	outInfo.myCollider = capsuleCol;
+	outInfo.hitCollider = modelCol;
+
+	const VECTOR BEST_POLY_POINT = VScale(
+		VAdd(VAdd(bestPolygon.Position[0], bestPolygon.Position[1]),
+			bestPolygon.Position[2]),
+		TRIANGLE_VERTEX_INV);
+
+	outInfo.hitPosition = BEST_POLY_POINT;
+	outInfo.hitNormal = bestPolygon.Normal;
+	outInfo.isActive = true;
+
+	outInfo.penetration = maxPenetration;
+	if (outInfo.penetration < 0.0f)
+	{
+		outInfo.penetration = 0.0f;
+	}
+
+	return true;
 }

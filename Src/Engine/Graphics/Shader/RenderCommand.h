@@ -25,6 +25,8 @@ struct RenderCommand
 	float positionY;                                          // 描画Y座標
 	float scaleSize;                                          // 描画スケール
 
+	MATRIX worldMatrix;
+
 	// テクスチャ関連
 	int textureHandleId;                                      // メインテクスチャのハンドル
 	int normalMapHandleId;                                    // ノーマルマップのハンドル
@@ -36,5 +38,8 @@ struct RenderCommand
 	int pixelParameterSize;                                   // ピクセルシェーダ用パラメータのサイズ
 
 	// クランプするかどうかのフラグ
-	bool isClamp = false;                                     
+	bool isClamp = false;                  
+
+	// 描画対象となるフレームインデックスのリスト
+	std::vector<int> targetFrameIndices;
 };

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <DxLib.h>
 
 #include "ISystem.h"
 #include "../../Ecs/EcsRegistry.h"
@@ -33,7 +34,8 @@ public:
 	/// @brief ECSデータベースから対象を検索し、描画命令をキューに登録する
 	/// @param registry ECSデータベース
 	/// @param entity 対象のエンティティID
-	void QueueDrawCommand(EcsRegistry& registry, Entity entity);
+	/// @param basePos 距離カリングの基準となる座標
+	void QueueDrawCommand(EcsRegistry& registry, Entity entity, const VECTOR& basePos);
 
 	/// @brief 溜まった描画命令をソートして一括実行する（描画フェーズの最後に呼ぶ）
 	void ExecuteDrawCommands(void);

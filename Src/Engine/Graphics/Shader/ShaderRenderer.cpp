@@ -22,6 +22,10 @@ void ShaderRenderer::Initialize(void)
 
 void ShaderRenderer::BeginBatch(void)
 {
+	SetUseZBuffer3D(true);
+	SetWriteZBuffer3D(true);
+	SetUseBackCulling(true);
+
 	// キャッシュを初期化する
 	currentVertexShaderHandleId_ = -1;
 	currentPixelShaderHandleId_ = -1;
@@ -133,6 +137,8 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 	}
 	else if (_renderCommand.renderType == RENDER_TYPE::DRAW_3D)
 	{
+		MV1SetMatrix(_renderCommand.modelHandleId, _renderCommand.worldMatrix);
+
 		if (_renderCommand.isClamp)
 		{
 			SetTextureAddressModeUV(DX_TEXADDRESS_CLAMP, DX_TEXADDRESS_CLAMP);
@@ -142,9 +148,17 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 			SetTextureAddressModeUV(DX_TEXADDRESS_WRAP, DX_TEXADDRESS_WRAP);
 		}
 
-		MV1SetUseOrigShader(true);
-		MV1DrawModel(_renderCommand.modelHandleId);
-		MV1SetUseOrigShader(false);
+		if (!_renderCommand.targetFrameIndices.empty())
+		{
+			for (int frameIndex : _renderCommand.targetFrameIndices)
+			{
+				MV1DrawFrame(_renderCommand.modelHandleId, frameIndex);
+			}
+		}
+		else
+		{
+			MV1DrawModel(_renderCommand.modelHandleId);
+		}
 
 		SetTextureAddressModeUV(DX_TEXADDRESS_CLAMP, DX_TEXADDRESS_CLAMP);
 	}
@@ -161,6 +175,10 @@ void ShaderRenderer::EndBatch(void)
 	SetShaderConstantBuffer(-1, DX_SHADERTYPE_VERTEX, CONSTANT_BUFFER_SLOT_BEGIN_VERTEX_SHADER);
 	SetShaderConstantBuffer(-1, DX_SHADERTYPE_PIXEL, CONSTANT_BUFFER_SLOT_BEGIN_PIXEL_SHADER);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	MV1SetUseOrigShader(false);
+	SetUseZBuffer3D(true);
+	SetWriteZBuffer3D(true);
 
 	// キャッシュをリセットする
 	currentVertexShaderHandleId_ = -1;

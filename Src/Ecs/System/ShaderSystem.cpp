@@ -4,6 +4,7 @@
 #include "../Component/ShaderComponent.h"
 #include "../Component/ModelComponent.h"
 #include "../Component/ImageComponent.h"
+#include "../Component/PlayerInputComponent.h"
 
 ShaderSystem::ShaderSystem(void)
 	: shaderRenderer_(std::make_unique<ShaderRenderer>())
@@ -24,14 +25,21 @@ void ShaderSystem::Release(void)
 void ShaderSystem::Update(EcsRegistry& registry)
 {
 	auto entities = registry.GetEntitiesWith<TransformComponent, ShaderComponent>();
+	VECTOR playerPos = VGet(0, 0, 0);
+	auto players = registry.GetEntitiesWith<TransformComponent, PlayerInputComponent>();
+
+	if (!players.empty())
+	{
+		playerPos = registry.GetComponent<TransformComponent>(players.front()).position;
+	}
 
 	for (Entity entity : entities)
 	{
-		QueueDrawCommand(registry, entity);
+		QueueDrawCommand(registry, entity, playerPos);
 	}
 }
 
-void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
+void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity, const VECTOR& basePos)
 {
 	// 必須コンポーネント（Transform と Shader）の確認
 	if (!registry.HasComponent<TransformComponent>(entity) ||
@@ -62,13 +70,39 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity)
 
 		command.renderType = RENDER_TYPE::DRAW_3D;
 		command.modelHandleId = model.modelHandle;
+		command.worldMatrix = transform.combinedMatrix;
 		command.positionX = 0.0f;
 		command.positionY = 0.0f;
 		command.scaleSize = 1.0f;
 
+		constexpr float CULLING_DISTANCE = 3000.0f;
+		constexpr float CULLING_DIST_SQ = CULLING_DISTANCE * CULLING_DISTANCE;
+
+		if (model.frameInfos.size() > 1)
+		{
+			for (const auto& frame : model.frameInfos)
+			{
+				VECTOR worldCenter = VTransform(frame.localCenterPos, transform.combinedMatrix);
+
+				float diffX = worldCenter.x - basePos.x;
+				float diffY = worldCenter.y - basePos.y;
+				float diffZ = worldCenter.z - basePos.z;
+				float distSq = (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ);
+
+				if (distSq <= CULLING_DIST_SQ)
+				{
+					command.targetFrameIndices.push_back(frame.frameIndex);
+				}
+			}
+
+			if (command.targetFrameIndices.empty())
+			{
+				return;
+			}
+		}
+
 		renderCommandQueue_.push_back(command);
 	}
-	// 2D画像を持つエンティティの場合
 	else if (registry.HasComponent<ImageComponent>(entity))
 	{
 		ImageComponent& image = registry.GetComponent<ImageComponent>(entity);
