@@ -4,7 +4,10 @@
 // ランバート
 struct CB_PixelLambert
 {
-	VECTOR lightDirection; 
+	COLOR_F diffuseColor; 
+	COLOR_F ambientColor; 
+	VECTOR  lightDirection;
+	float   padding;
 };
 
 // 金属

@@ -73,7 +73,9 @@ void StageBase::Initialize(void)
 				shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");
 
 				CB_PixelLambert lambertParam{};
-				lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+				lambertParam.diffuseColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+				lambertParam.ambientColor = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
+				lambertParam.lightDirection = VNorm(VGet(1.0f, -1.0f, 1.0f));
 				shaderComponent.SetPixelParameter(lambertParam);
 
 				ecsRegistry_.AddComponent<ShaderComponent>(objectEntity, shaderComponent);

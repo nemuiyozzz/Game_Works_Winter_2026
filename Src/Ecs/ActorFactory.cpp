@@ -173,11 +173,13 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	registry.AddComponent<ModelComponent>(playerEntity, modelComponent);
 
 	ShaderComponent shaderComponent{};
-	shaderComponent.vertexShaderHandle = ResourceManager::GetInstance().GetHandleId(L"VS_LAMBERT"); // 頂点シェーダ
-	shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");   // ピクセルシェーダ
+	shaderComponent.vertexShaderHandle = -1;// 頂点シェーダ
+	shaderComponent.pixelShaderHandle = -1;   // ピクセルシェーダ
 
 	CB_PixelLambert lambertParam{};
-	lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+	lambertParam.diffuseColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	lambertParam.ambientColor = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
+	lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f);
 	shaderComponent.SetPixelParameter(lambertParam);
 	registry.AddComponent<ShaderComponent>(playerEntity, shaderComponent);
 
@@ -283,7 +285,7 @@ Entity ActorFactory::BuildSword(EcsRegistry& registry)
 	CB_PixelMetal metalParam{};
 	metalParam.diffuseColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
 	metalParam.ambientColor = GetColorF(0.2f, 0.2f, 0.2f, 1.0f);
-	metalParam.specularColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f); // 鋭く白い反射
+	metalParam.specularColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f); 
 	metalParam.lightDirection = VGet(1.0f, -1.0f, 1.0f);
 	metalParam.specularPower = 20.0f; // 反射の鋭さ
 	
@@ -351,7 +353,9 @@ Entity ActorFactory::BuildEnemy(EcsRegistry& registry)
 	shaderComponent.pixelShaderHandle = ResourceManager::GetInstance().GetHandleId(L"PS_LAMBERT");
 
 	CB_PixelLambert lambertParam{};
-	lambertParam.lightDirection = VGet(1.0f, -1.0f, 1.0f); // 斜め上からの光
+	lambertParam.diffuseColor = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	lambertParam.ambientColor = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
+	lambertParam.lightDirection = VNorm(VGet(1.0f, -1.0f, 1.0f));
 	shaderComponent.SetPixelParameter(lambertParam);
 	registry.AddComponent<ShaderComponent>(enemyEntity, shaderComponent);
 

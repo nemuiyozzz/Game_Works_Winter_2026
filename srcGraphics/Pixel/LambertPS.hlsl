@@ -10,10 +10,12 @@ struct PS_INPUT
     float3 worldPos : TEXCOORD5;
 };
 
-cbuffer cbParam : register(b4)
+cbuffer cbPixelLambert : register(b4)
 {
-    float3 g_lightDirection;
-    float dummy;
+    float4 DiffuseColor;
+    float4 AmbientColor;
+    float3 LightDirection;
+    float Pad;
 };
 
 Texture2D diffuseTexture : register(t0);
@@ -21,19 +23,19 @@ SamplerState diffuseSampler : register(s0);
 
 float4 main(PS_INPUT input) : SV_TARGET0
 {
-    //float4 color = diffuseTexture.Sample(diffuseSampler, input.uv);
-    //if (color.a < 0.01f)
-    //{
-    //    discard;
-    //}
+    float4 color = diffuseTexture.Sample(diffuseSampler, input.uv);
+    if (color.a < 0.01f)
+    {
+        discard;
+    }
     
-    //float3 norm = normalize(input.normal);
-    //float lightDot = saturate(dot(norm, -g_lightDirection));
+    float3 norm = normalize(input.normal);
     
-    //float3 rgb = color.rgb * lightDot;
-    //rgb += color.rgb * float3(0.2f, 0.2f, 0.2f);
+    float lightDot = saturate(dot(norm, -LightDirection));
     
-    //return float4(rgb, color.a);
+    float3 rgb = color.rgb * DiffuseColor.rgb * lightDot;
     
-    return float4(1.0f, 0.0f, 0.0f, 1.0f);
+    rgb += color.rgb * AmbientColor.rgb;
+    
+    return float4(rgb, color.a);
 }

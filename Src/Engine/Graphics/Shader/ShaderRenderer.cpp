@@ -148,6 +148,9 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 			SetTextureAddressModeUV(DX_TEXADDRESS_WRAP, DX_TEXADDRESS_WRAP);
 		}
 
+		bool useCustomShader = (_renderCommand.vertexShaderHandleId != -1 || _renderCommand.pixelShaderHandleId != -1);
+		MV1SetUseOrigShader(useCustomShader);
+
 		if (!_renderCommand.targetFrameIndices.empty())
 		{
 			for (int frameIndex : _renderCommand.targetFrameIndices)
@@ -159,6 +162,8 @@ void ShaderRenderer::ExecuteCommand(const RenderCommand& _renderCommand)
 		{
 			MV1DrawModel(_renderCommand.modelHandleId);
 		}
+
+		MV1SetUseOrigShader(false);
 
 		SetTextureAddressModeUV(DX_TEXADDRESS_CLAMP, DX_TEXADDRESS_CLAMP);
 	}
