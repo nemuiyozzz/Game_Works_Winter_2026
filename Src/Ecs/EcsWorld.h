@@ -8,7 +8,7 @@
 #include "System/ISystem.h"
 
 class ColliderDebugDrawSystem;
-class SoundSystem;
+class ShaderSystem;
 
 /// @brief EcsRegistryと全Systemの実行順序を一元管理するファサードクラス
 class EcsWorld
@@ -84,5 +84,5 @@ private:
 	std::vector<std::shared_ptr<ISystem>> updateSystems_;				// 更新用システム一覧
 	std::vector<std::shared_ptr<ISystem>> drawSystems_;					// 描画用システム一覧
 	std::shared_ptr<ColliderDebugDrawSystem> colliderDebugDrawSystem_;	// コライダーデバッグ描画
-	std::shared_ptr<SoundSystem> soundSystem_;
+	std::shared_ptr<ShaderSystem> shaderSystem_;
 };

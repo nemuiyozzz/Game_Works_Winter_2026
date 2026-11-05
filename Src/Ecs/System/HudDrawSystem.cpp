@@ -15,8 +15,8 @@ namespace
 
 	// 色の定義 (DxLibのカラーコード)
 	constexpr unsigned int COLOR_BG = 0x333333;      // 背景色（暗いグレー）
-	constexpr unsigned int COLOR_HP = 0x33cc44;      // HPの色（緑色）
-	constexpr unsigned int COLOR_STAMINA = 0xddcc33; // スタミナの色（黄色）
+	constexpr unsigned int COLOR_HP = 0xff0000;      // HPの色（赤色）
+	constexpr unsigned int COLOR_STAMINA = 0x33cc44; // スタミナの色（緑色）
 	constexpr unsigned int COLOR_FRAME = 0xdddddd;   // 枠線の色（白灰）
 }
 

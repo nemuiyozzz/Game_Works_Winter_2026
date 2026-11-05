@@ -41,7 +41,6 @@ void ShaderSystem::Update(EcsRegistry& registry)
 
 void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity, const VECTOR& basePos)
 {
-	// 必須コンポーネント（Transform と Shader）の確認
 	if (!registry.HasComponent<TransformComponent>(entity) ||
 		!registry.HasComponent<ShaderComponent>(entity))
 	{
@@ -75,7 +74,7 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity, const 
 		command.positionY = 0.0f;
 		command.scaleSize = 1.0f;
 
-		constexpr float CULLING_DISTANCE = 3000.0f;
+		constexpr float CULLING_DISTANCE = 1000.0f;
 		constexpr float CULLING_DIST_SQ = CULLING_DISTANCE * CULLING_DISTANCE;
 
 		if (model.frameInfos.size() > 1)
@@ -107,7 +106,7 @@ void ShaderSystem::QueueDrawCommand(EcsRegistry& registry, Entity entity, const 
 	{
 		ImageComponent& image = registry.GetComponent<ImageComponent>(entity);
 
-		// 2Dの場合は画像のハンドルをテクスチャとして扱う（ShaderRendererの仕様に合わせる）
+		// 2Dの場合は画像のハンドルをテクスチャとして扱う
 		if (command.textureHandleId == -1)
 		{
 			command.textureHandleId = image.imageHandle;

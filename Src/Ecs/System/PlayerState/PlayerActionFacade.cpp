@@ -14,6 +14,7 @@
 #include "../../Component/CollisionComponent.h"
 #include "../AnimationSystem.h"
 #include "../PlayerControlSystem.h"
+#include "../../Component/SoundComponent.h"
 
 namespace
 {
@@ -370,6 +371,11 @@ void PlayerActionFacade::PlayJumpAttackAnimation(void)
 		false,
 		BLEND_TIME_ATTACK
 	);
+
+	if (registry_.HasComponent<SoundComponent>(entity_))
+	{
+		registry_.GetComponent<SoundComponent>(entity_).Play(SOUND_ID::SE_SWORD_SWING);
+	}
 }
 
 void PlayerActionFacade::PlayEvadeAnimation(void)
@@ -405,6 +411,11 @@ void PlayerActionFacade::PlayAttackComboAnimation(ATTACK_HAND hand, int comboSte
 		false,             
 		BLEND_TIME_ATTACK 
 	);
+
+	if (registry_.HasComponent<SoundComponent>(entity_))
+	{
+		registry_.GetComponent<SoundComponent>(entity_).Play(SOUND_ID::SE_SWORD_SWING);
+	}
 }
 
 bool PlayerActionFacade::ApplyCameraRelativeMovement(float moveSpeed)

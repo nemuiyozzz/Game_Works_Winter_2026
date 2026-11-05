@@ -37,12 +37,22 @@ const VECTOR& ColliderCapsule::GetLocalEndPos(void) const
 
 VECTOR ColliderCapsule::GetWorldStartPos(void) const
 {
-    return TransformLocalToWorld(localStartPos_);
+    if (followTarget_ != nullptr)
+    {
+        return VTransform(localStartPos_, followTarget_->combinedMatrix);
+    }
+    // 親がいない場合はローカル座標をそのまま返す
+    return localStartPos_;
 }
 
 VECTOR ColliderCapsule::GetWorldEndPos(void) const
 {
-    return TransformLocalToWorld(localEndPos_);
+    // 同様に親の行列で回転と移動を適用する
+    if (followTarget_ != nullptr)
+    {
+        return VTransform(localEndPos_, followTarget_->combinedMatrix);
+    }
+    return localEndPos_;
 }
 
 float ColliderCapsule::GetRadius(void) const

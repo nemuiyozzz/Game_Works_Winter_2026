@@ -23,6 +23,7 @@
 #include "System/PlayerControlSystem.h"
 #include "Component/StatusComponent.h"
 #include "Component/ShaderComponent.h"
+#include "Component/SoundComponent.h"
 #include "../Engine/Graphics/Shader/ShaderParameters.h"
 
 namespace
@@ -190,6 +191,8 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	playerStatus.growthAttack = playerParam.growthAttack;
 	playerStatus.growthDefense = playerParam.growthDefense;
 	registry.AddComponent<StatusComponent>(playerEntity, playerStatus);
+
+	registry.AddComponent<SoundComponent>(playerEntity, SoundComponent{});
 
 	// 汎用コライダーの構築
 	CollisionComponent collisionComponent{};

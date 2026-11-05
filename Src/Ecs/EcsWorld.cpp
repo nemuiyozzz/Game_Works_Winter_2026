@@ -15,8 +15,6 @@
 #include "System/HudDrawSystem.h"
 #include "System/SoundSystem.h"
 
-std::shared_ptr<ShaderSystem> shaderSystem_ = nullptr;
-
 void EcsWorld::Initialize(void)
 {
 	updateSystems_.clear();
@@ -30,6 +28,7 @@ void EcsWorld::Initialize(void)
 	AddUpdateSystem<TransformSystem>();
 	AddUpdateSystem<CameraSystem>();
 	AddUpdateSystem<AnimationSystem>();
+	AddUpdateSystem<SoundSystem>();
 
 #ifdef _DEBUG
 	AddUpdateSystem<DebugGuiSystem>();

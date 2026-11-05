@@ -46,6 +46,9 @@ void SceneGame::Load(void)
 	ResourceManager::GetInstance().Load(L"VS_LAMBERT");
 	ResourceManager::GetInstance().Load(L"PS_LAMBERT");
 	ResourceManager::GetInstance().Load(L"PS_METAL");
+
+	ResourceManager::GetInstance().Load(L"SE_SWORD_SWING");
+	ResourceManager::GetInstance().Load(L"SE_SWORD_HIT");
 }
 
 void SceneGame::Initialize(void)

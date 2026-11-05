@@ -31,10 +31,10 @@ public:
 	/// @brief 全BGMの停止
 	void StopAllBGM(void);
 
-	/// @brief BGMマスターボリュームの設定 (0-100)
+	/// @brief BGMマスターボリュームの設定 
 	void SetMasterVolumeBGM(int volume);
 
-	/// @brief SEマスターボリュームの設定 (0-100)
+	/// @brief SEマスターボリュームの設定 
 	void SetMasterVolumeSE(int volume);
 
 	/// @brief サウンドが再生中か確認

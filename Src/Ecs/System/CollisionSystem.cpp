@@ -16,7 +16,7 @@ namespace
 	constexpr float PUSH_BACK_DYNAMIC_RATIO = 0.5f; // 動的オブジェクト同士の押し戻し率
 	constexpr float GROUND_NORMAL_Y = 0.5f;         // 地面と判定する法線Yのしきい値
 
-	constexpr float CULLING_DISTANCE = 1500.0f;
+	constexpr float CULLING_DISTANCE = 200.0f;
 	constexpr float CULLING_DISTANCE_SQ = CULLING_DISTANCE * CULLING_DISTANCE;
 }
 
@@ -108,7 +108,7 @@ void CollisionSystem::ApplyDistanceCulling(EcsRegistry& registry,
 		{
 			if (collider == nullptr) { continue; }
 
-			if (collider->GetCollisionTag() == ColliderBase::TAG::STAGE ||
+			if (collider->GetCollisionTag() == ColliderBase::TAG::STAGE &&
 				collider->GetShapeType() == ColliderBase::SHAPE::MODEL)
 			{
 				collider->SetActive(true);
