@@ -7,6 +7,7 @@
 #include "System/TransformSystem.h"
 #include "System/CameraSystem.h"
 #include "System/ModelSystem.h"
+#include "System/ImageSystem.h"
 #include "System/ShaderSystem.h"
 #include "System/ColliderDebugDrawSystem.h"
 #include "System/DebugGuiSystem.h"
@@ -41,6 +42,8 @@ void EcsWorld::Initialize(void)
 	drawSystems_.push_back(shaderSystem_);
 
 	AddDrawSystem<HudDrawSystem>();
+
+	AddDrawSystem<ImageSystem>();
 
 	ActorFactory::RegisterDefaultRecipes();
 }

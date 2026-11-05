@@ -13,6 +13,9 @@ SoundSystem::SoundSystem(void)
 
 	int hitHandle = ResourceManager::GetInstance().GetHandleId(L"SE_SWORD_HIT");
 	if (hitHandle != -1) { AddSound(SOUND_TYPE::SE, SOUND_ID::SE_SWORD_HIT, hitHandle); }
+
+	int titleHandle = ResourceManager::GetInstance().GetHandleId(L"BGM_TTILE");
+	if (titleHandle != -1) { AddSound(SOUND_TYPE::BGM, SOUND_ID::BGM_TITLE, titleHandle); }
 }
 
 SoundSystem::~SoundSystem(void)

@@ -35,8 +35,8 @@ void StageBattle::Initialize(void)
 {
 	StageBase::Initialize();
 
-	constexpr int ENEMY_SPAWN_COUNT = 10;
-	constexpr float SPAWN_RADIUS = 50.0f;
+	constexpr int ENEMY_SPAWN_COUNT = 1;
+	constexpr float SPAWN_RADIUS = 70.0f;
 	VECTOR spawnCenter = VGet(1000.0f, 250.0f, -1000.0f);
 
 	for (int i = 0; i < ENEMY_SPAWN_COUNT; ++i)

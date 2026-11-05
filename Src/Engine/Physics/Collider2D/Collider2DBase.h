@@ -18,6 +18,9 @@ public:
 	enum class TAG_2D
 	{
 		NONE,                    // 未設定
+		MOUSE_CURSOR,
+		BUTTON_NEWGAME,
+		BUTTON_QUITGAME
 	};
 
 	/// @brief コンストラクタ
