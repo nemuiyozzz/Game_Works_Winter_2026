@@ -46,23 +46,23 @@ void HudDrawSystem::Update(EcsRegistry& registry)
 	int currentStaminaWidth = static_cast<int>(BAR_MAX_WIDTH * staminaRatio);
 
 	// 背景（ゲージが減った部分）
-	DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, HP_BAR_Y + BAR_HEIGHT, COLOR_BG, TRUE);
+	DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, HP_BAR_Y + BAR_HEIGHT, COLOR_BG, true);
 	// 現在のHP
 	if (currentHpWidth > 0)
 	{
-		DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + currentHpWidth, HP_BAR_Y + BAR_HEIGHT, COLOR_HP, TRUE);
+		DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + currentHpWidth, HP_BAR_Y + BAR_HEIGHT, COLOR_HP, true);
 	}
 	// 枠線
-	DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, HP_BAR_Y + BAR_HEIGHT, COLOR_FRAME, FALSE);
+	DrawBox(BAR_BASE_X, HP_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, HP_BAR_Y + BAR_HEIGHT, COLOR_FRAME, false);
 
 	// 背景
-	DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_BG, TRUE);
+	DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_BG, true);
 	
 	// 現在のスタミナ
 	if (currentStaminaWidth > 0)
 	{
-		DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + currentStaminaWidth, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_STAMINA, TRUE);
+		DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + currentStaminaWidth, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_STAMINA, true);
 	}
 	// 枠線
-	DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_FRAME, FALSE);
+	DrawBox(BAR_BASE_X, STAMINA_BAR_Y, BAR_BASE_X + BAR_MAX_WIDTH, STAMINA_BAR_Y + BAR_HEIGHT, COLOR_FRAME, false);
 }

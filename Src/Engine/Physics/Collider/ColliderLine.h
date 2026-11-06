@@ -54,7 +54,7 @@ protected:
 private:
 
 	// 定数関連
-	static constexpr float DEBUG_POINT_RADIUS = 5.0f; // デバック表示の球体半径
+	static constexpr float DEBUG_POINT_RADIUS = 1.0f; // デバック表示の球体半径
 	static constexpr int DEBUG_SEGMENT_COUNT = 6;     // デバック表示の球体ポリゴン分割数
 
 	// コライダーの形状パラメータ関連

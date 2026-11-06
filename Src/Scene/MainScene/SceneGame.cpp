@@ -91,11 +91,11 @@ void SceneGame::Update(void)
 		}
 	}
 
-	// 5体倒したらリザルトシーンへ遷移
-	if (defeatedEnemyCount_ >= 5)
-	{
-		SceneManager::GetInstance().ChangeScene(std::make_shared<SceneResult>());
-	}
+	//// 5体倒したらリザルトシーンへ遷移
+	//if (defeatedEnemyCount_ >= 5)
+	//{
+	//	SceneManager::GetInstance().ChangeScene(std::make_shared<SceneResult>());
+	//}
 
 #ifdef _DEBUG
 	EcsRegistry& registry = ecsWorld_.GetRegistry();

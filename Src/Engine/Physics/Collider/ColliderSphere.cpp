@@ -43,5 +43,5 @@ void ColliderSphere::DrawDebug(int debugColor) const
     const VECTOR worldPosition = GetWorldPosition();
 
     // デバッグ用に球体を描画
-    DrawSphere3D(worldPosition, radius_, DEBUG_SEGMENT_COUNT, color, color, FALSE);
+    DrawSphere3D(worldPosition, radius_, DEBUG_SEGMENT_COUNT, color, color, false);
 }

@@ -239,7 +239,7 @@ void EnemyActionFacade::DrawDebugVisionRange(void) const
 			DEBUG_SPHERE_DIV_NUM,
 			DEBUG_COLOR_SPHERE,
 			DEBUG_COLOR_SPHERE,
-			FALSE);
+			false);
 	}
 	else
 	{

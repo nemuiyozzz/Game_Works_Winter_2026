@@ -22,9 +22,11 @@ void ColliderDebugDrawSystem::Draw(EcsRegistry& registry) const
 		return;
 	}
 
-	// Zバッファを無効にして、壁の裏にあるコライダーも透けて見えるようにする
 	SetUseZBuffer3D(false);
 	SetWriteZBuffer3D(false);
+	SetUseZBufferFlag(false);  
+	SetWriteZBufferFlag(false); 
+	SetUseLighting(false);      
 
 	auto entities3D = registry.GetEntitiesWith<TransformComponent, CollisionComponent>();
 	for (Entity entity : entities3D)
@@ -57,7 +59,9 @@ void ColliderDebugDrawSystem::Draw(EcsRegistry& registry) const
 		}
 	}
 
-	// 描画設定を元に戻す
 	SetUseZBuffer3D(true);
 	SetWriteZBuffer3D(true);
+	SetUseZBufferFlag(true);
+	SetWriteZBufferFlag(true);
+	SetUseLighting(true);
 }

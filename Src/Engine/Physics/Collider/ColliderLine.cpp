@@ -53,6 +53,6 @@ void ColliderLine::DrawDebug(int debugColor) const
     DrawLine3D(WORLD_START_POS, WORLD_END_POS, color);
 
     // 開始点と終了点に分かりやすく球体を描画
-    DrawSphere3D(WORLD_START_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, FALSE);
-    DrawSphere3D(WORLD_END_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, FALSE);
+    DrawSphere3D(WORLD_START_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, false);
+    DrawSphere3D(WORLD_END_POS, DEBUG_POINT_RADIUS, DEBUG_SEGMENT_COUNT, color, color, false);
 }

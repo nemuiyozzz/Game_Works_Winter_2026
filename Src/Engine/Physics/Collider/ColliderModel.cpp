@@ -261,7 +261,7 @@ void ColliderModel::DrawDebug(int debugColor) const
 
         if (!isActiveFrame)
         {
-            DrawCube3D(info.worldMinPos, info.worldMaxPos, inactiveColor, inactiveColor, FALSE);
+            DrawCube3D(info.worldMinPos, info.worldMaxPos, inactiveColor, inactiveColor, false);
         }
     }
 
@@ -278,7 +278,7 @@ void ColliderModel::DrawDebug(int debugColor) const
             MV1DrawFrame(modelHandle_, info.frameIndex);
             SetDrawBlendMode(DX_BLENDMODE_NOBLEND, NO_BLEND_PARAM);
 
-            DrawCube3D(info.worldMinPos, info.worldMaxPos, activeColor, activeColor, FALSE);
+            DrawCube3D(info.worldMinPos, info.worldMaxPos, activeColor, activeColor, false);
         }
     }
 
