@@ -32,6 +32,7 @@ namespace
 	constexpr float BLEND_TIME_JUMP = 0.20f;         // ジャンプアニメーションのブレンド値
 	constexpr float BLEND_TIME_EVADE = 0.10f;        // 回避アニメーションのブレンド値
 	constexpr float BLEND_TIME_ATTACK = 0.10f;       // 攻撃アニメーションのブレンド値
+	constexpr float BLEND_TIME_DAMAGE = 0.10f;       // ダメージアニメーションのブレンド値
 }
 
 PlayerActionFacade::PlayerActionFacade(EcsRegistry& registry, Entity entity)
@@ -416,6 +417,17 @@ void PlayerActionFacade::PlayAttackComboAnimation(ATTACK_HAND hand, int comboSte
 	{
 		registry_.GetComponent<SoundComponent>(entity_).Play(SOUND_ID::SE_SWORD_SWING);
 	}
+}
+
+void PlayerActionFacade::PlayDamageAnimation(void)
+{
+	AnimationSystem::Play(
+		registry_,
+		entity_,
+		static_cast<int>(PlayerControlSystem::PLAYER_ANIM::DAMAGE), // ※DAMAGE が定義されている前提
+		false,             // ループさせない
+		BLEND_TIME_DAMAGE  // ブレンド時間
+	);
 }
 
 bool PlayerActionFacade::ApplyCameraRelativeMovement(float moveSpeed)

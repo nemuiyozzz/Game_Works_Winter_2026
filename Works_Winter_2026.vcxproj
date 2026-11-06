@@ -167,6 +167,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ecs\System\PlayerState\PlayerDamageState.cpp" />
     <ClCompile Include="Src\Ecs\System\SoundSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\HudDrawSystem.cpp" />
     <ClCompile Include="Src\Ecs\System\EnemyState\EnemyActionFacade.cpp" />
@@ -252,6 +253,7 @@
     <ClCompile Include="Src\Ecs\System\StatusSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ecs\System\PlayerState\PlayerDamageState.h" />
     <ClInclude Include="Src\Ecs\System\SoundSystem.h" />
     <ClInclude Include="Src\Ecs\Component\SoundComponent.h" />
     <ClInclude Include="Src\Ecs\System\HudDrawSystem.h" />

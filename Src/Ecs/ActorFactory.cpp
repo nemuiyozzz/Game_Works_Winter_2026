@@ -221,6 +221,7 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 	int handleLeft1 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_L1");
 	int handleLeft2 = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_ATTACK_L2");
 	int handleJumpAttack = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_JUMP_ATTACK");
+	int handleDamage = ResourceManager::GetInstance().GetHandleId(L"ANIM_PLAYER_DAMAGE");
 
 	AnimationSystem::AddInternal(
 		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::IDLE), 0, 60.0f);
@@ -238,6 +239,8 @@ Entity ActorFactory::BuildPlayer(EcsRegistry& registry)
 		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::ATTACK_LEFT_2), handleLeft2, 60.0f);
 	AnimationSystem::AddExternal(
 		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::JUMP_ATTACK), handleJumpAttack, 60.0f);
+	AnimationSystem::AddExternal(
+		registry, playerEntity, static_cast<int>(PlayerControlSystem::PLAYER_ANIM::DAMAGE), handleDamage, 60.0f);
 
 	// 初期状態はIDLEをループ再生
 	AnimationSystem::Play(
@@ -306,7 +309,7 @@ Entity ActorFactory::BuildSword(EcsRegistry& registry)
 		nullptr,
 		VGet(0.0f, 0.0f, 0.0f),
 		VGet(0.0f, 50.0f, 0.0f),
-		5.0f
+		0.5f
 	);
 	swordCapsule->AddTargetTag(ColliderBase::TAG::ENEMY);
 

@@ -65,14 +65,14 @@ void EcsWorld::Update(void)
 
 void EcsWorld::Draw(void)
 {
-	for (auto& system : drawSystems_)
-	{
-		system->Update(ecsRegistry_);
-	}
-
 	if (shaderSystem_ != nullptr)
 	{
 		shaderSystem_->ExecuteDrawCommands();
+	}
+
+	for (auto& system : drawSystems_)
+	{
+		system->Update(ecsRegistry_);
 	}
 
 #ifdef _DEBUG

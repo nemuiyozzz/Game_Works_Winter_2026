@@ -147,6 +147,9 @@ public:
 	/// @param hand 攻撃する手
 	/// @param comboStep コンボの段数
 	void PlayAttackComboAnimation(ATTACK_HAND hand, int comboStep);
+	
+	/// @brief ダメージアニメーションを再生する
+	void PlayDamageAnimation(void);
 
 private:
 

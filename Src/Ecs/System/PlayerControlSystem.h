@@ -19,7 +19,8 @@ public:
 		ATTACK_RIGHT_2, // 右手コンボ2段目
 		ATTACK_LEFT_1,  // 左手コンボ1段目
 		ATTACK_LEFT_2,  // 左手コンボ2段目
-		JUMP_ATTACK     // ジャンプ攻撃
+		JUMP_ATTACK,    // ジャンプ攻撃
+		DAMAGE
 	};
 
 	/// @brief コンストラクタ 
@@ -44,4 +45,5 @@ private:
 	/// @param entity 対象のエンティティID
 	/// @param deltaTime フレーム経過時間
 	void UpdateStaminaRecovery(EcsRegistry& registry, Entity entity, float deltaTime);
+	void CheckDamage(EcsRegistry& registry, Entity playerEntity);
 };

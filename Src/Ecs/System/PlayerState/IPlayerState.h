@@ -18,7 +18,9 @@ public:
 		JUMP,         // ジャンプ（空中）
 		JUMP_ATTACK,  // ジャンプ攻撃
 		ATTACK_COMBO, // 地上コンボ攻撃
-		EVADE         // 回避（無敵ステップ）
+		EVADE,        // 回避（無敵ステップ）
+		DAMAGE
+		
 	};
 
 	/// @brief コンストラクタ

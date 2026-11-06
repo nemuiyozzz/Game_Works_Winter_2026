@@ -24,5 +24,5 @@ struct StatusComponent
 
 	// 無敵時間（連続ヒット防止）関連
 	float invincibleTimer = 0.0f;    // 現在の無敵残り時間
-	float invincibleDuration = 0.5f; // 被弾時の無敵発生時間（秒）
+	float invincibleDuration = 0.1f; // 被弾時の無敵発生時間（秒）
 };

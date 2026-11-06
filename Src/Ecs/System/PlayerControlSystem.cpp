@@ -6,6 +6,12 @@
 #include "../Component/VelocityComponent.h"
 #include "../Component/TransformComponent.h"
 #include "../../Engine/System/Time/TimeManager.h"
+#include "PlayerState/PlayerDamageState.h"
+#include "../Component/CollisionComponent.h"
+#include "../Component/StatusComponent.h"
+#include "CollisionSystem.h"
+#include "../../Scene/MainScene/SceneResult.h"
+#include "../../Scene/SceneManager.h"
 
 void PlayerControlSystem::Update(EcsRegistry& registry)
 {
@@ -61,6 +67,8 @@ void PlayerControlSystem::UpdatePlayerControl(EcsRegistry& registry, Entity enti
 	}
 
 	UpdateStaminaRecovery(registry, entity, TimeManager::GetInstance().GetDeltaTime());
+
+	CheckDamage(registry, entity);
 }
 
 void PlayerControlSystem::UpdateStaminaRecovery(
@@ -86,6 +94,52 @@ void PlayerControlSystem::UpdateStaminaRecovery(
 		if (stateComponent.stamina > stateComponent.maxStamina)
 		{
 			stateComponent.stamina = stateComponent.maxStamina;
+		}
+	}
+}
+
+void PlayerControlSystem::CheckDamage(EcsRegistry& registry, Entity playerEntity)
+{
+	if (registry.HasComponent<StatusComponent>(playerEntity))
+	{
+		auto& status = registry.GetComponent<StatusComponent>(playerEntity);
+		if (status.invincibleTimer > 0.0f)
+		{
+			return;
+		}
+	}
+
+	bool isHitEnemy = CollisionSystem::CheckHitByTag(registry, playerEntity, ColliderBase::TAG::ENEMY);
+
+	if (isHitEnemy)
+	{
+		if (registry.HasComponent<StatusComponent>(playerEntity))
+		{
+			auto& status = registry.GetComponent<StatusComponent>(playerEntity);
+			status.currentHp -= 10;
+
+			if (status.currentHp <= 0)
+			{
+				status.currentHp = 0;
+
+				SceneManager::GetInstance().ChangeScene(std::make_shared<SceneResult>());
+				return;
+			}
+		}
+
+		if (registry.HasComponent<PlayerStateComponent>(playerEntity))
+		{
+			auto& stateComp = registry.GetComponent<PlayerStateComponent>(playerEntity);
+			PlayerActionFacade facade(registry, playerEntity);
+
+			// 現在のステートの終了処理を呼ぶ
+			if (stateComp.currentState != nullptr)
+			{
+				stateComp.currentState->ExitState(facade);
+			}
+
+			stateComp.currentState = std::make_shared<PlayerDamageState>();
+			stateComp.currentState->EnterState(facade);
 		}
 	}
 }
