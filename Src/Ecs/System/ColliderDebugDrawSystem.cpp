@@ -22,11 +22,9 @@ void ColliderDebugDrawSystem::Draw(EcsRegistry& registry) const
 		return;
 	}
 
-	SetUseZBuffer3D(false);
+	SetZBufferCmpType(DX_CMP_ALWAYS);
 	SetWriteZBuffer3D(false);
-	SetUseZBufferFlag(false);  
-	SetWriteZBufferFlag(false); 
-	SetUseLighting(false);      
+	SetUseLighting(false);
 
 	auto entities3D = registry.GetEntitiesWith<TransformComponent, CollisionComponent>();
 	for (Entity entity : entities3D)
@@ -59,9 +57,7 @@ void ColliderDebugDrawSystem::Draw(EcsRegistry& registry) const
 		}
 	}
 
-	SetUseZBuffer3D(true);
+	SetZBufferCmpType(DX_CMP_LESSEQUAL);
 	SetWriteZBuffer3D(true);
-	SetUseZBufferFlag(true);
-	SetWriteZBufferFlag(true);
 	SetUseLighting(true);
 }

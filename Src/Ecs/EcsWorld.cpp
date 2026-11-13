@@ -24,6 +24,7 @@ void EcsWorld::Initialize(void)
 	AddUpdateSystem<PlayerControlSystem>();
 	AddUpdateSystem<EnemyAiSystem>();
 	AddUpdateSystem<MovementSystem>();
+	AddUpdateSystem<TransformSystem>();
 	AddUpdateSystem<CollisionSystem>();
 	AddUpdateSystem<Collision2DSystem>();
 	AddUpdateSystem<TransformSystem>();

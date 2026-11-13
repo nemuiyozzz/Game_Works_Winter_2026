@@ -69,4 +69,5 @@ void ColliderCapsule::DrawDebug(int debugColor) const
 
     // カプセルを描画
     DrawCapsule3D(WORLD_START_POS, WORLD_END_POS, radius_, DEBUG_SEGMENT_COUNT, color, color, false);
+
 }

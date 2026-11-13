@@ -87,6 +87,25 @@ void AnimationSystem::UpdateAnimation(EcsRegistry& registry, Entity entity)
 				currentAnimation.attachNumber, 1.0f);
 		}
 	}
+
+	if (IsValidType(animationComp, animationComp.playType))
+	{
+		auto& animationData = animationComp.animations[animationComp.playType];
+		int rootFrame = 0;
+		int targetHandle = (animationData.mode == ANIM_MODE::EXTERNAL)
+			? animationData.modelHandle : modelComponent.modelHandle;
+
+		if (targetHandle != -1)
+		{
+			MATRIX localMat = MV1GetFrameLocalMatrix(targetHandle, rootFrame);
+
+			localMat.m[3][0] = 0.0f;
+			localMat.m[3][2] = 0.0f;
+			localMat.m[3][1] = 0.0f;
+			
+			MV1SetFrameUserLocalMatrix(targetHandle, rootFrame, localMat);
+		}
+	}
 }
 
 void AnimationSystem::AddInternal(EcsRegistry& registry, Entity entity, int type,

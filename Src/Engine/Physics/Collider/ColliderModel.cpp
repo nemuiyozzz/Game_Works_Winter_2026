@@ -241,14 +241,6 @@ void ColliderModel::DrawDebug(int debugColor) const
         return;
     }
 
-    if (subFrames_.empty())
-    {
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, INACTIVE_ALPHA_PARAM);
-        MV1DrawModel(modelHandle_);
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, NO_BLEND_PARAM);
-        return;
-    }
-
     unsigned int activeColor = GetColor(255, 30, 30);   // 稼働中のフレーム：赤色
     unsigned int inactiveColor = GetColor(0, 180, 255); // 待機中のフレーム：水色
 
@@ -274,10 +266,6 @@ void ColliderModel::DrawDebug(int debugColor) const
 
         if (isActiveFrame)
         {
-            SetDrawBlendMode(DX_BLENDMODE_ALPHA, ACTIVE_ALPHA_PARAM);
-            MV1DrawFrame(modelHandle_, info.frameIndex);
-            SetDrawBlendMode(DX_BLENDMODE_NOBLEND, NO_BLEND_PARAM);
-
             DrawCube3D(info.worldMinPos, info.worldMaxPos, activeColor, activeColor, false);
         }
     }

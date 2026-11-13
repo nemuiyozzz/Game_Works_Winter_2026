@@ -115,13 +115,6 @@ void SceneManager::Init3D(void)
 
 void SceneManager::ChangeScene(std::shared_ptr<SceneBase> _scene)
 {
-    // CollisionController::GetInstance().Clear();
-    // if (camera_)
-    // {
-    //     CollisionController::GetInstance().RegisterActor(camera_.get());
-    // }
-    // SoundManager::GetInstance().StopAllBGM();
-
     nextScene_ = _scene;
     isSceneChanging_ = true;
 
